@@ -377,6 +377,7 @@ Ext.onReady(function() {
                             var cmdSetPanel = Ext.getCmp('commands' + appId);
                             cmdSetPanel.removeAll();
                             loadCmdSetForApp(appId);
+                            addCmdSetWin.close();
                         }
                     });
                 }
@@ -446,9 +447,6 @@ Ext.onReady(function() {
                                 cmdSetTreePanel.getRootNode().commit();
                                 addCmdSet();
                                 this.setDisabled(true);
-                                setTimeout(function() {
-                                    addCmdSetWin.close();
-                                }, 500);
                             }
                         }
                     ],
