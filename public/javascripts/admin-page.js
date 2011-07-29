@@ -419,18 +419,20 @@ Ext.onReady(function() {
                                 tooltip: '删除当前命令组',
                                 handler: function(grid, rowIndex, colIndex) {
                                     var r = cmdGroupGridStore.getAt(rowIndex);
+                                    var cascade = Ext.getCmp('cascade').checked;
                                     Ext.Ajax.request({
                                         url:'/admin/cmd_groups/' + r.get('id'),
                                         method:'DELETE',
                                         params:{
-                                            authenticity_token:$('meta[name="csrf-token"]').attr('content')
+                                            authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                            cascade:cascade
                                         },
                                         callback:function (options, success, response) {
 
                                         }
                                     });
                                     cmdGroupGridStore.remove(r);
-                                    cmdGroupGridStore.reload();
+                                    cmdGroupGridStore.load();
                                 }
                             }
                         ]
@@ -478,10 +480,12 @@ Ext.onReady(function() {
                                                         form.submit({
                                                             success: function(form, action) {
                                                                 cmdGroupGridStore.load();
+                                                                editCmdDefCmdGroupComboStore.load();
                                                                 addCmdGroupWin.close();
                                                             },
                                                             failure: function(form, action) {
                                                                 cmdGroupGridStore.load();
+                                                                editCmdDefCmdGroupComboStore.load();
                                                                 addCmdGroupWin.close();
                                                             }
                                                         });
@@ -500,6 +504,15 @@ Ext.onReady(function() {
                             });
                             addCmdGroupWin.show();
                         }
+                    },
+                    {
+                        iconCls:'delete',
+                        disabled:true
+                    },
+                    {
+                        boxLabel:'删除命令组时同时删除其下的所有命令',
+                        xtype:'checkbox',
+                        id:'cascade'
                     }
                 ],
                 listeners: {
@@ -551,6 +564,10 @@ Ext.onReady(function() {
 
     adminMenuTreePanel.getSelectionModel().on('select', function(selModel, record) {
         adminOperationPanel.layout.setActiveItem(record.get('id'));
+        if (record.get('id') == 2) {
+            editCmdDefCmdGroupComboStore.load();
+            cmdDefGridStore.load();
+        }
     });
 
     Ext.create('Ext.Viewport', {

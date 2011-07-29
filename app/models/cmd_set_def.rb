@@ -8,20 +8,32 @@ class CmdSetDef < ActiveRecord::Base
     build_commands cmd_set.id
   end
 
+  def cmd_defs
+    expression.split(',').inject([]){|result, item|
+      pair = item.squish.split('|')
+      cmd_def = CmdDef.find(pair[0].to_i) rescue nil
+      if cmd_def
+        if block_given?
+          yield cmd_def, (pair[1]=="true")
+        end
+        result << cmd_def
+      else
+        result
+      end
+    }
+  end
+
   # 根据 cmd set id 生成 command 记录（同时command会自动生成 operation 记录)
   def build_commands cmd_set_id
-    expression.split(',').collect{|item|
-      pair = item.squish.split('|')
-      cmd_def = CmdDef.where(:id => pair[0].to_i).first
-      next_when_fail = (pair[1]=="true")
-
+    cmd_defs do |cmd_def, next_when_fail|
       if cmd_def
-        command = Command.create(
+        Command.create(
             :cmd_def => cmd_def,
             :cmd_set_id => cmd_set_id,
             :next_when_fail => next_when_fail
         ).build_operations!
       end
-    }
+    end
   end
+
 end

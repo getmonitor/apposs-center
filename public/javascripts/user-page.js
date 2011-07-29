@@ -23,7 +23,7 @@ Ext.onReady(function() {
                 url = Ext.urlAppend(url, Ext.String.format("{0}={1}", me.cacheString, Ext.Date.now()));
             }
             return url;
-        },
+        }
 
     });
 
@@ -158,12 +158,12 @@ Ext.onReady(function() {
                     var cmdSetPanelCmps = [];
                     cmdSetPanelCmps[cmdSetPanelCmps.length] = {
                         xtype:'label',
-                        columnWidth:1 / columnCount,
+                        columnWidth:1 / 2,
                         html:cmdSet[j].name
                     };
                     for (var k = 1; k < columnCount; k++) {
                         cmdSetPanelCmps[cmdSetPanelCmps.length] = {
-                            columnWidth:1 / columnCount,
+                            columnWidth:(1 / (2 * (columnCount - 1))),
                             xtype:'button',
                             text:cmdSet[j].actions[k - 1].name,
                             handler:
@@ -223,14 +223,14 @@ Ext.onReady(function() {
                     items:[
                         {
                             xtype:'label',
-                            columnWidth:0.5,
+                            columnWidth:0.7,
                             html:'&nbsp;'
                         },
                         {
                             xtype:'button',
                             text:'增加',
                             id:'appAddButton' + appId,
-                            columnWidth:0.5,
+                            columnWidth:0.3,
                             handler:function() {
                                 addCmdSetWindow(this.id.substring(this.id.length - 1));
                             }

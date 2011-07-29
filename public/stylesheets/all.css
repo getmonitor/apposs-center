@@ -15,6 +15,10 @@ ul#welcome_info {
     background: url("/images/add.png");
 }
 
+.delete {
+    background: url("/images/delete.gif");
+}
+
 .admin_nav_menu table {
     margin-top: -55px;
 }

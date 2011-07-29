@@ -16,6 +16,17 @@ class Admin::CmdGroupsController < Admin::BaseController
   end
 
   def destroy
-    respond_with CmdGroup.find(params[:id]).delete
+    group = CmdGroup.find(params[:id])
+    if cascade?
+      group.cmd_defs.each{|cmd_def| cmd_def.delete }
+    else
+      group.cmd_defs.clear
+    end
+    respond_with group.delete
   end
+
+  private
+    def cascade?
+      params[:cascade]=='true'
+    end
 end

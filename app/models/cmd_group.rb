@@ -1,17 +1,10 @@
 class CmdGroup < ActiveRecord::Base
-  has_many :cmd_defs
+  has_many :cmd_defs, :dependent => :nullify
   
   has_many :app_binds, :class_name => 'AppCmdGroup'
   has_many :apps, :through => :app_binds
   
   attr_accessor :cmd_def_ids
-  
-  after_save :update_cmd_defs
-  
-  def update_cmd_defs
-    self.cmd_defs.clear
-    self.cmd_defs << CmdDef.where(:id => cmd_def_ids.split( ',' )) if cmd_def_ids
-  end
   
   def to_s
   	name
