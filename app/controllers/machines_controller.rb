@@ -1,7 +1,12 @@
 class MachinesController < BaseController
 
   def index
-    respond_with current_app.machines
+    machines = current_app.machines
+    if (params[:start] && params[:limit])
+      respond_with Machine.page(params[:start], params[:limit], machines)
+    else
+      respond_with machines
+    end
   end
 
 end
