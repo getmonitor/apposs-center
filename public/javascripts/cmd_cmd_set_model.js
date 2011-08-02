@@ -6,13 +6,27 @@
  * To change this template use File | Settings | File Templates.
  */
 //命令Model
+//createModel('CmdDef', ['id','name','alias','arg1','arg2','arg3','arg4','arg5','cmd_group_id'], {
+//    type:'ajax',
+//    url:'/admin/cmd_defs',
+//    reader:'json',
+//    extraParams: {
+//        authenticity_token:$('meta[name="csrf-token"]').attr('content')
+//    }
+//});
+var nsCmdCmdSet = {};
+nsCmdCmdSet.PAGE_SIZE = 50;
 Ext.define('CmdDef', {
     extend:'Ext.data.Model',
     fields:['id','name','alias','arg1','arg2','arg3','arg4','arg5','cmd_group_id'],
     proxy:{
         type:'ajax',
         url:'/admin/cmd_defs',
-        reader:'json',
+        reader:{
+            type:'json',
+            totalProperty:'totalCount',
+            root:'cmd_defs'
+        },
         extraParams: {
             authenticity_token:$('meta[name="csrf-token"]').attr('content')
         }
@@ -22,7 +36,7 @@ Ext.define('CmdDef', {
 //命令的GridPanel Store
 var cmdDefGridStore = Ext.create('Ext.data.Store', {
     model:CmdDef,
-    autoLoad:true
+    pageSize:nsCmdCmdSet.PAGE_SIZE
 });
 
 //命令组Model
@@ -32,7 +46,11 @@ Ext.define('CmdGroup', {
     proxy:{
         type:'ajax',
         url:'/admin/cmd_groups',
-        reader:'json'
+        reader:{
+            type:'json',
+            totalProperty:'totalCount',
+            root:'cmd_groups'
+        }
     }
 });
 
@@ -50,8 +68,9 @@ var addCmdDefCmdGroupComboStore = Ext.create('Ext.data.Store', {
 //编辑命令组中的数据store
 var cmdGroupGridStore = Ext.create('Ext.data.Store', {
     model:CmdGroup,
-    autoLoad:true
+    pageSize:nsCmdCmdSet.PAGE_SIZE
 });
+cmdGroupGridStore.loadPage(1)
 //命令中的命令组renderer
 function cmdGroupRender(value) {
     var comboRecord = editCmdDefCmdGroupComboStore.getById(value);

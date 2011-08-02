@@ -12,12 +12,12 @@ class Operation < ActiveRecord::Base
     isok ? ok : error
   end
 
-  state_machine :state, :initial => '已创建' do
-    event :download do transition '已创建' => '已下发' end
-    event :invoke do transition '已下发' => '执行中' end
-    event :error do transition '执行中' => '执行失败' end
-    event :ok do transition '执行中' => '结束' end
-    event :ack do transition '执行失败' => '结束' end
+  state_machine :state, :initial => :init do
+    event :download do transition :init => :ready end
+    event :invoke do transition :ready => :running end
+    event :error do transition :running => :failure end
+    event :ok do transition :running => :done end
+    event :ack do transition :failure => :done end
   end
 
 end

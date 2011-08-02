@@ -1,32 +1,27 @@
 class Admin::RoomsController < Admin::BaseController
-  def index
-    respond_with Room.all
+  def index()
+    if params[:limit] && params[:page]
+      respond_with Room.search(params[:limit], params[:page])
+    else
+      respond_with Room.all
+    end
   end
 
-  def show
-    respond_with Room.find(params[:id])
+  def model()
+    Room
   end
 
-  def create
-    respond_with Room.create(params[:room])
-  end
-
-  def update
-    respond_with Room.find(params[:id]).update_attributes(params[:room])
+  def group()
+    :room
   end
 
   def destroy
-    room = Room.find(params[:id])
+    room = model.find(params[:id])
     if cascade?
       room.machines.each { |machine| machine.delete }
     else
       room.machines.clear
     end
     respond_with room.delete
-  end
-
-  private
-  def cascade?
-    params[:cascade]=='true'
   end
 end

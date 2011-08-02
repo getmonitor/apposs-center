@@ -156,7 +156,6 @@ Ext.onReady(function() {
                             valueField:'id',
                             displayField:'name',
                             store:editCmdDefCmdGroupComboStore,
-//                            allowBlank: false,
                             editable:false
                         },
                         renderer:cmdGroupRender
@@ -286,6 +285,10 @@ Ext.onReady(function() {
                         }
                     }
                 ],
+                bbar: Ext.create('Ext.PagingToolbar', {
+                    store: cmdDefGridStore,
+                    displayInfo: true
+                }),
                 listeners: {
                     edit:function(editor, e) {
                         editor.record.commit();
@@ -378,6 +381,10 @@ Ext.onReady(function() {
                         ]
                     }
                 ],
+                bbar: Ext.create('Ext.PagingToolbar', {
+                    store: cmdGroupGridStore,
+                    displayInfo: true
+                }),
                 tbar: [
                     {
                         text: '增加命令组',
@@ -622,6 +629,10 @@ Ext.onReady(function() {
                         id:'cascadeMachine'
                     }
                 ],
+                bbar: Ext.create('Ext.PagingToolbar', {
+                    store: roomGridStore,
+                    displayInfo: true
+                }),
                 listeners: {
                     edit:function(editor, e) {
                         editor.record.commit();
@@ -834,6 +845,10 @@ Ext.onReady(function() {
                         }
                     }
                 ],
+                bbar: Ext.create('Ext.PagingToolbar', {
+                    store: machineGridStore,
+                    displayInfo: true
+                }),
                 listeners: {
                     edit:function(editor, e) {
                         editor.record.commit();

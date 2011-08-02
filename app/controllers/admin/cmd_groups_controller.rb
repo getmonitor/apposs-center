@@ -1,32 +1,28 @@
 class Admin::CmdGroupsController < Admin::BaseController
-  def index
-    respond_with CmdGroup.all
+
+  def index()
+    if params[:limit] && params[:page]
+      respond_with CmdGroup.search(params[:limit], params[:page])
+    else
+      respond_with CmdGroup.all
+    end
   end
 
-  def show
-    respond_with CmdGroup.find(params[:id])
+  def model()
+    CmdGroup
   end
 
-  def create
-    respond_with CmdGroup.create( params[:cmd_group] )
-  end
-
-  def update
-    respond_with CmdGroup.find( params[:id] ).update_attributes( params[:cmd_group] )
+  def group()
+    :cmd_group
   end
 
   def destroy
-    group = CmdGroup.find(params[:id])
+    group = model.find(params[:id])
     if cascade?
-      group.cmd_defs.each{|cmd_def| cmd_def.delete }
+      group.cmd_defs.each { |cmd_def| cmd_def.delete }
     else
       group.cmd_defs.clear
     end
     respond_with group.delete
   end
-
-  private
-    def cascade?
-      params[:cascade]=='true'
-    end
 end

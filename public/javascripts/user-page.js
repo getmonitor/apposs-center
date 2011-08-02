@@ -294,7 +294,7 @@ Ext.onReady(function() {
                     ]
                 });
 
-                //系统所有的命令组树
+                //增加命令包时系统所有的命令组树
 
                 var cmdGroupTreePanel = Ext.create('Ext.tree.Panel', {
                     title: '当前系统所有命令',
@@ -357,7 +357,7 @@ Ext.onReady(function() {
                     }
                 });
 
-                //增加命令到命令包
+                //增加命令包时点击增加时，增加命令到命令包
                 function addCmdSet() {
                     var expression = '';
                     //获取命令包表达式
@@ -368,7 +368,7 @@ Ext.onReady(function() {
                             expression += ',';
                         }
                     });
-                    //更新命令包
+                    //增加命令包完成后刷新用户界面中的命令包信息
                     Ext.Ajax.request({
                         url:'/apps/' + appId + '/cmd_set_defs',
                         method:'POST',
@@ -395,7 +395,7 @@ Ext.onReady(function() {
                     fields:['id','text','allowFailure']
                 });
 
-                //向命令包中增加命令组
+                //增加命令包时向命令包中增加命令组中的命令信息,此方法被多个操作共用
                 function addCmdGroupToCmdSet(parent, node, refNode) {
                     node.eachChild(function(child) {
                         var newChild = parent.createNode({
@@ -413,12 +413,11 @@ Ext.onReady(function() {
                     }, 10);
                 }
 
-                //命令包树
+                //增加命令包时的命令包树结构信息
                 var cmdSetTreePanel = Ext.create('Ext.tree.Panel', {
                     title:'命令包所有命令',
                     collapsible:true,
                     region:'center',
-//                    rootVisible:false,
                     viewConfig: {
                         plugins: {
                             ptype: 'treeviewdragdrop'
@@ -490,7 +489,7 @@ Ext.onReady(function() {
                     ]
                 });
 
-                //显示命令包树的信息
+                //增加命令包时显示命令包的信息面板，包括命令包名与树状信息
                 var cmdSetPanel = Ext.create('Ext.panel.Panel', {
                     title:'命令包',
                     region:'center',
@@ -524,6 +523,7 @@ Ext.onReady(function() {
                         cmdSetTreePanel
                     ]
                 });
+                //增加命令包的窗口
                 var addCmdSetWin = Ext.create('Ext.Window', {
                     title:'增加命令包',
                     layout: {
@@ -545,7 +545,7 @@ Ext.onReady(function() {
         });
     }
 
-    //构造iframe标签
+    //编辑命令包时的iframe标签
     function getIFrameForEditCmdSet(url, width, height) {
         return '<iframe src="' + url + ' " width="' + width + '" height="' + height + '"' +
             '></iframe>'
@@ -565,25 +565,6 @@ Ext.onReady(function() {
             for (var i = 0; i < obj.length; i++) {
                 //此处获取App的命令包列表，url为apps/:id/cmd_set_defs
                 loadCmdSetForApp(obj[i].id);
-                //此处获取App的机器列表，url为apps/:id/machines
-//                (function(id) {
-//                    Ext.Ajax.request({
-//                        url:'/apps/' + id + '/machines',
-//                        callback:function(options, success, response) {
-//                            var machinesStr = response.responseText;
-//                            var machines = Ext.decode(machinesStr);
-//                            var machinesListLabel = [];
-//                            for (var j = 0,len = machines.length; j < len; j++) {
-//                                machinesListLabel[machinesListLabel.length] = {
-//                                    xtype:'label',
-//                                    html:machines[j].name,
-//                                    columnWidth:1
-//                                }
-//                            }
-//                            Ext.getCmp('machines' + id).add(machinesListLabel);
-//                        }
-//                    });
-//                })(obj[i].id);
             }
         }
     });

@@ -3,7 +3,7 @@ class Command < ActiveRecord::Base
   belongs_to :cmd_def
   has_many :options
   has_many :operations
-  
+
   before_create do |command|
     self.name = cmd_def.name
   end
@@ -30,12 +30,12 @@ class Command < ActiveRecord::Base
     self
   end
   
-  state_machine :state, :initial => '已创建' do
-    event :invoke do transition '已创建' => '执行中' end
-    event :failure do transition '执行中' => '执行失败' end
-    event :acknowledge do transition '执行失败' => '结束' end
-    event :ack do transition '执行失败' => '结束' end
-    event :success do transition '执行中' => '结束' end
+  state_machine :state, :initial => :ready do
+    event :invoke do transition :ready => :running end
+    event :failure do transition :running => :fail end
+    event :acknowledge do transition :fail => :done end
+    event :ack do transition :fail => :done end
+    event :success do transition :running => :done end
   end
   
 end

@@ -5,6 +5,8 @@
  * Time: 上午10:54
  * To change this template use File | Settings | File Templates.
  */
+var nsMachineRoom = {}
+nsMachineRoom.PAGE_SIZE = 50;
 //机器Model
 Ext.define('Machine', {
     extend:'Ext.data.Model',
@@ -12,7 +14,11 @@ Ext.define('Machine', {
     proxy:{
         type:'ajax',
         url:'/admin/machines',
-        reader:'json',
+        reader:{
+            type:'json',
+            totalProperty:'totalCount',
+            root:'machines'
+        },
         extraParams: {
             authenticity_token:$('meta[name="csrf-token"]').attr('content')
         }
@@ -21,8 +27,8 @@ Ext.define('Machine', {
 
 //机器的GridPanel Store
 var machineGridStore = Ext.create('Ext.data.Store', {
-    model:Machine,
-    autoLoad:true
+    pageSize:nsMachineRoom.PAGE_SIZE,
+    model:Machine
 });
 
 //机房Model
@@ -32,7 +38,11 @@ Ext.define('Room', {
     proxy:{
         type:'ajax',
         url:'/admin/rooms',
-        reader:'json'
+        reader:{
+            type:'json',
+            totalProperty:'totalCount',
+            root:'rooms'
+        }
     }
 });
 //应用Model
@@ -74,8 +84,9 @@ var addMachineAppComboStore = Ext.create('Ext.data.Store', {
 //编辑机房中的数据store
 var roomGridStore = Ext.create('Ext.data.Store', {
     model:Room,
-    autoLoad:true
+    pageSize:nsMachineRoom.PAGE_SIZE
 });
+roomGridStore.loadPage(1);
 //机器中的机房renderer
 function roomRender(value) {
     var comboRecord = editMachineRoomComboStore.getById(value);
