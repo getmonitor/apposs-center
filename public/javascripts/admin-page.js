@@ -28,7 +28,8 @@ Ext.onReady(function() {
     addAdminMenu(2, '命令管理', true);
     addAdminMenu(3, '命令组管理', true);
     addAdminMenu(4, '应用管理', true);
-    addAdminMenu(5, '机器和机房管理', true);
+    addAdminMenu(5, '机房管理', true);
+    addAdminMenu(6, '机器管理', true);
 
     //管理菜单树
     var adminMenuTreeStore = Ext.create('Ext.data.TreeStore', {
@@ -48,6 +49,7 @@ Ext.onReady(function() {
         store:adminMenuTreeStore
     });
 
+
     //用户信息管理面板
     var userInfoPanel = {
         id:'0',
@@ -59,68 +61,6 @@ Ext.onReady(function() {
         title:'角色管理'
     };
 
-    //命令Model
-    Ext.define('CmdDef', {
-        extend:'Ext.data.Model',
-        fields:['id','name','alias','arg1','arg2','arg3','arg4','arg5','cmd_group_id'],
-        proxy:{
-            type:'ajax',
-            url:'/admin/cmd_defs',
-            reader:'json',
-            extraParams: {
-                authenticity_token:$('meta[name="csrf-token"]').attr('content')
-            }
-        }
-    });
-
-    //命令的GridPanel Store
-    var cmdDefGridStore = Ext.create('Ext.data.Store', {
-        model:CmdDef,
-        autoLoad:true
-    });
-
-    //命令组Model
-    Ext.define('CmdGroup', {
-        extend:'Ext.data.Model',
-        fields:['id','name'],
-        proxy:{
-            type:'ajax',
-            url:'/admin/cmd_groups',
-            reader:'json'
-        }
-    });
-
-    //编辑命令中的命令组Combo的Store
-    var editCmdDefCmdGroupComboStore = Ext.create('Ext.data.Store', {
-        model:CmdGroup,
-        autoLoad:true
-    });
-    editCmdDefCmdGroupComboStore.load();
-    //增加命令时对应的命令组
-    var addCmdDefCmdGroupComboStore = Ext.create('Ext.data.Store', {
-        model:CmdGroup,
-        autoLoad:true
-    });
-    //编辑命令组中的数据store
-    var cmdGroupGridStore = Ext.create('Ext.data.Store', {
-        model:CmdGroup,
-        autoLoad:true
-    });
-    //命令中的命令组renderer
-    function cmdGroupRender(value) {
-        var comboRecord = editCmdDefCmdGroupComboStore.getById(value);
-        if (comboRecord) {
-            return comboRecord.get('name');
-        }
-        return value;
-    }
-
-    var cmdDefPanelRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-        clicksToEdit: 1
-    });
-    var cmdGroupPanelRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-        clicksToEdit: 1
-    });
     //命令管理面板
     var cmdDefPanel = Ext.create('Ext.form.Panel', {
         frame:true,
@@ -540,10 +480,382 @@ Ext.onReady(function() {
         id:'4',
         title:'应用管理'
     };
-    //机器和机房管理面板
-    var roomMachinePanel = {
+    //机房管理面板
+    var roomPanel = {
         id:'5',
-        title:'机器和机房管理'
+        title:'机房管理',
+        frame:true,
+        bodyPadding:5,
+        layout:'border',
+        split:true,
+        fieldDefaults: {
+            labelAlign: 'left',
+            msgTarget: 'side'
+        },
+        items: [
+            {
+                region:'center',
+                xtype: 'gridpanel',
+                title:'当前系统所有机房',
+                store:roomGridStore,
+                split:true,
+                columnLines:true,
+                viewConfig: {
+                    stripeRows: true
+                },
+                selType: 'rowmodel',
+                plugins: [
+                    roomPanelRowEditing
+                ],
+                columns:[
+                    {
+                        text:'机房名',
+                        dataIndex:'name',
+                        flex:16,
+                        editor: {
+                            xtype: 'textfield',
+                            allowBlank: false
+                        }
+                    },
+                    {
+                        flex:1,
+                        xtype: 'actioncolumn',
+                        items: [
+                            {
+                                icon   : '/images/delete.gif',
+                                tooltip: '删除当前机房',
+                                handler: function(grid, rowIndex, colIndex) {
+                                    var r = roomGridStore.getAt(rowIndex);
+                                    var cascade = Ext.getCmp('cascadeMachine').checked;
+                                    Ext.Ajax.request({
+                                        url:'/admin/rooms/' + r.get('id'),
+                                        method:'DELETE',
+                                        params:{
+                                            authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                            cascade:cascade
+                                        },
+                                        callback:function (options, success, response) {
+
+                                        }
+                                    });
+                                    roomGridStore.remove(r);
+                                    roomGridStore.load();
+                                }
+                            }
+                        ]
+                    }
+                ],
+                tbar: [
+                    {
+                        text: '增加机房',
+                        iconCls:'add',
+                        handler : function() {
+                            var addRoomWin = Ext.create('Ext.Window', {
+                                title:'增加机房',
+                                layout:'border',
+                                width:300,
+                                height:150,
+                                items:[
+                                    Ext.create('Ext.form.Panel', {
+                                        region:'center',
+                                        frame:'true',
+                                        url:'/admin/rooms',
+                                        defaultType:'textfield',
+                                        defaults: {
+                                            labelWidth:90,
+                                            anchor:'95%'
+                                        },
+                                        items:[
+                                            {
+                                                xtype:'hidden',
+                                                name:'authenticity_token',
+                                                value:$('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            {
+                                                fieldLabel:'机房名',
+                                                name:'room[name]',
+                                                allowBlank:false,
+                                                blankText:'机房名不能为空'
+                                            }
+                                        ],
+                                        buttons:[
+                                            {
+                                                text:'保存',
+                                                handler:function() {
+                                                    var form = this.up('form').getForm();
+                                                    if (form.isValid()) {
+                                                        form.submit({
+                                                            success: function(form, action) {
+                                                                roomGridStore.load();
+                                                                editMachineRoomComboStore.load();
+                                                                addRoomWin.close();
+                                                            },
+                                                            failure: function(form, action) {
+                                                                roomGridStore.load();
+                                                                editMachineRoomComboStore.load();
+                                                                addRoomWin.close();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                text:'重设',
+                                                handler:function() {
+                                                    this.up('form').getForm().reset();
+                                                }
+                                            }
+                                        ]
+                                    })
+                                ]
+                            });
+                            addRoomWin.show();
+                        }
+                    },
+                    {
+                        iconCls:'delete',
+                        disabled:true
+                    },
+                    {
+                        boxLabel:'删除机房时同时删除其下的所有机器',
+                        xtype:'checkbox',
+                        id:'cascadeMachine'
+                    }
+                ],
+                listeners: {
+                    edit:function(editor, e) {
+                        editor.record.commit();
+                        var record = editor.record;
+                        Ext.Ajax.request({
+                            url:'/admin/rooms/' + record.get('id'),
+                            method:'PUT',
+                            params:{
+                                authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                'room[name]':record.get('name')
+                            },
+                            callback:function(options, success, response) {
+
+                            }
+                        });
+                    }
+                }
+            }
+        ]
+    };
+    //机器管理面板
+    var machinePanel = {
+        id: '6',
+        title:'机器管理',
+        frame:true,
+        bodyPadding:5,
+        layout:'border',
+        split:true,
+        fieldDefaults: {
+            labelAlign: 'left',
+            msgTarget: 'side'
+        },
+        items: [
+            {
+                region:'center',
+                xtype: 'gridpanel',
+                title:'当前系统所有机器',
+                store:machineGridStore,
+                split:true,
+                columnLines:true,
+                viewConfig: {
+                    stripeRows: true
+                },
+                selType: 'rowmodel',
+                plugins: [
+                    machinePanelRowEditing
+                ],
+                columns:[
+                    {
+                        text:'机器名',
+                        dataIndex:'name',
+                        flex:6,
+                        editor: {
+                            xtype: 'textfield',
+                            allowBlank: false
+                        }
+                    },
+                    {
+                        text:'主机名',
+                        dataIndex:'host',
+                        flex:6,
+                        editor: {
+                            xtype:'textfield'
+                        }
+                    },
+                    {
+                        text:'机房',
+                        dataIndex:'room_id',
+                        flex:4,
+                        editor: {
+                            xtype:'combo',
+                            name:'room_id',
+                            valueField:'id',
+                            displayField:'name',
+                            store:editMachineRoomComboStore,
+//                            allowBlank: false,
+                            editable:false
+                        },
+                        renderer:roomRender
+                    },
+                    {
+                        text:'应用',
+                        dataIndex:'app_id',
+                        flex:4,
+                        editor: {
+                            xtype:'combo',
+                            name:'app_id',
+                            valueField:'id',
+                            displayField:'name',
+                            store:editMachineAppComboStore,
+//                            allowBlank: false,
+                            editable:false
+                        },
+                        renderer:appRender
+                    },
+                    {
+                        flex:1,
+                        xtype: 'actioncolumn',
+                        items: [
+                            {
+                                icon   : '/images/delete.gif',
+                                tooltip: '删除当前机器',
+                                handler: function(grid, rowIndex, colIndex) {
+                                    var r = machineGridStore.getAt(rowIndex);
+                                    Ext.Ajax.request({
+                                        url:'/admin/machines/' + r.get('id'),
+                                        method:'DELETE',
+                                        params:{
+                                            authenticity_token:$('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        callback:function (options, success, response) {
+
+                                        }
+                                    });
+                                    machineGridStore.remove(r);
+                                    machineGridStore.reload();
+                                }
+                            }
+                        ]
+                    }
+                ],
+                tbar: [
+                    {
+                        text: '增加机器',
+                        iconCls:'add',
+                        handler : function() {
+                            var addMachineWin = Ext.create('Ext.Window', {
+                                title:'增加机器',
+                                layout:'border',
+                                width:500,
+                                items:[
+                                    Ext.create('Ext.form.Panel', {
+                                        region:'center',
+                                        frame:'true',
+                                        url:'/admin/machines',
+                                        defaultType:'textfield',
+                                        defaults: {
+                                            labelWidth:90,
+                                            anchor:'95%'
+                                        },
+                                        items:[
+                                            {
+                                                xtype:'hidden',
+                                                name:'authenticity_token',
+                                                value:$('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            {
+                                                fieldLabel:'机器名',
+                                                name:'machine[name]',
+                                                allowBlank:false,
+                                                blankText:'机器名不能为空'
+                                            },
+                                            {
+                                                fieldLabel:'主机名',
+                                                name:'machine[host]'
+                                            },
+                                            {
+                                                fieldLabel:'机房',
+                                                xtype:'combo',
+                                                name:'machine[room_id]',
+                                                valueField:'id',
+                                                displayField:'name',
+                                                store:addMachineRoomComboStore,
+                                                editable:false
+                                            },
+                                            {
+                                                fieldLabel:'应用',
+                                                xtype:'combo',
+                                                name:'machine[app_id]',
+                                                valueField:'id',
+                                                displayField:'name',
+                                                store:addMachineAppComboStore,
+                                                editable:false
+                                            }
+                                        ],
+                                        buttons:[
+                                            {
+                                                text:'保存',
+                                                handler:function() {
+                                                    var form = this.up('form').getForm();
+                                                    if (form.isValid()) {
+                                                        form.submit({
+                                                            success: function(form, action) {
+                                                                machineGridStore.load();
+                                                                addMachineRoomComboStore.load();
+                                                                addMachineAppComboStore.load();
+                                                                addMachineWin.close();
+                                                            },
+                                                            failure: function(form, action) {
+                                                                machineGridStore.load();
+                                                                addMachineRoomComboStore.load();
+                                                                addMachineAppComboStore.load();
+                                                                addMachineWin.close();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                text:'重设',
+                                                handler:function() {
+                                                    this.up('form').getForm().reset();
+                                                }
+                                            }
+                                        ]
+                                    })
+                                ]
+                            });
+                            addMachineWin.show();
+                        }
+                    }
+                ],
+                listeners: {
+                    edit:function(editor, e) {
+                        editor.record.commit();
+                        var record = editor.record;
+                        Ext.Ajax.request({
+                            url:'/admin/machines/' + record.get('id'),
+                            method:'PUT',
+                            params:{
+                                authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                'machine[name]':record.get('name'),
+                                'machine[host]':record.get('host'),
+                                'machine[room_id]':record.get('room_id'),
+                                'machine[app_id]':record.get('app_id')
+                            },
+                            callback:function(options, success, response) {
+
+                            }
+                        });
+                    }
+                }
+            }
+        ]
     };
 
     //管理操作区
@@ -558,7 +870,8 @@ Ext.onReady(function() {
             cmdDefPanel,
             cmdGroupDefPanel,
             appPanel,
-            roomMachinePanel
+            roomPanel,
+            machinePanel
         ]
     });
 
@@ -567,6 +880,11 @@ Ext.onReady(function() {
         if (record.get('id') == 2) {
             editCmdDefCmdGroupComboStore.load();
             cmdDefGridStore.load();
+        }
+        if (record.get('id') == 6) {
+            editMachineRoomComboStore.load();
+            editMachineAppComboStore.load();
+            machineGridStore.load();
         }
     });
 
