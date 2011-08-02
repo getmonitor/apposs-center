@@ -7,26 +7,6 @@
  */
 Ext.onReady(function() {
 
-    Ext.define('Ext.data.proxy.AnotherAjax', {
-        requires: ['Ext.util.MixedCollection', 'Ext.Ajax'],
-        extend: 'Ext.data.proxy.Ajax',
-        alias: 'proxy.another_ajax',
-
-
-        buildUrl: function(request) {
-            var me = this,
-                url = me.getUrl(request);
-            if (request.params.id != 'root') {
-                url += '/' + request.params.id;
-            }
-            if (me.noCache) {
-                url = Ext.urlAppend(url, Ext.String.format("{0}={1}", me.cacheString, Ext.Date.now()));
-            }
-            return url;
-        }
-
-    });
-
     //Application Panel array
     var appPanels = [];
     var csrf_token = $('meta[name="csrf-token"]').attr('content');
@@ -39,13 +19,26 @@ Ext.onReady(function() {
 
     //应用的中心命令执行状态面板
     //操作模型的定义
-    Ext.define('Command', {
-        extend:'Ext.data.Model',
-        fields:['id','name','state']
-    });
+    createModel('Command', ['id','name','state']);
 
+    //机器列表Model
+    createModel('AppMachine', ['name','host']);
     //Add Current User's Application to the appPanels array.
     function addAppTabPanel(name, id) {
+        //当前应用的机器列表Store
+        var machineStore = Ext.create('Ext.data.Store', {
+            pageSize: 25,
+            model:'AppMachine',
+            proxy:{
+                type:'ajax',
+                url:'/apps/' + id + '/machines',
+                reader:{
+                    type:'json',
+                    totalProperty:'totalCount',
+                    root:'machines'
+                }
+            }
+        });
         //应用的左侧面板
         var appLeftPanel = {
             layout:'vbox',
@@ -55,24 +48,45 @@ Ext.onReady(function() {
             region:'west',
             items:[
                 {
-                    title:'基本信息',
-                    width:400,
+                    title:'机器列表',
+                    width:450,
                     flex:1,
                     frame:true,
+                    layout:'border',
                     items:[
                         {
-                            title:'机器列表',
-                            frame:true,
-                            xtype:'fieldset',
-                            layout:'column',
-                            id:'machines' + id
+                            xtype:'gridpanel',
+                            id:'machines' + id,
+                            split:true,
+                            columnLines:true,
+                            region:'center',
+                            viewConfig: {
+                                stripeRows: true
+                            },
+                            store:machineStore,
+                            columns:[
+                                {
+                                    header:'机器名',
+                                    dataIndex:'name',
+                                    flex:1
+                                },
+                                {
+                                    header:'主机',
+                                    dataIndex:'host',
+                                    flex:1
+                                }
+                            ],
+                            bbar: Ext.create('Ext.PagingToolbar', {
+                                store: machineStore,
+                                displayInfo: true
+                            })
                         }
                     ]
                 },
                 {
-                    title:'命令集',
+                    title:'命令包',
                     flex:1,
-                    width:400,
+                    width:450,
                     id:'commands' + id,
                     layout:'anchor',
                     frame:true,
@@ -80,38 +94,27 @@ Ext.onReady(function() {
                 }
             ]
         };
+        machineStore.loadPage(1);
 
         //操作数据store的获取
         var commandStore = Ext.create('Ext.data.TreeStore', {
             model:Command,
             proxy:{
-                type:'another_ajax',
+                type:'ajax',
                 url:'/apps/' + id + '/cmd_sets',
                 reader:{
                     type:'json'
                 }
             },
-            nodeParam:'id',
+            nodeParam:'key',
             autoLoad:true,
             root:{
                 text:'命令',
                 id:'root',
                 expanded:true
-            },
-            listeners:{
-                beforeload:function(store, operation) {
-                },
-                load:function(store, model) {
-                    model.eachChild(function(child) {
-                        if (model.get('id') == 'root') {
-                            child.set('id', child.get('id') + '/commands');
-                        } else {
-                            child.set('id', model.get('id') + '/' + child.get('id') + '/operations');
-                        }
-                    });
-                }
             }
         });
+        //应用的命令执行状态树结构
         var appCenterPanel = Ext.create('Ext.tree.Panel', {
             store:commandStore,
             frame:true,
@@ -122,15 +125,17 @@ Ext.onReady(function() {
                 {
                     xtype:'treecolumn',
                     header:'命令名',
-                    dataIndex:'name'
+                    dataIndex:'name',
+                    flex:1
                 },
                 {
                     header:'命令执行状态',
-                    dataIndex:'state'
+                    dataIndex:'state',
+                    flex:2
                 }
             ]
         });
-        //应用的总面板
+        //一个应用的总面板
         var appPanel = {
             title:name,
             xtype:'panel',
@@ -145,7 +150,7 @@ Ext.onReady(function() {
         appPanels[appPanels.length] = appPanel;
     }
 
-    //为应用加载命令集
+    //为应用加载命令包
     function loadCmdSetForApp(appId) {
         Ext.Ajax.request({
             url:'/apps/' + appId + '/cmd_set_defs',
@@ -213,7 +218,7 @@ Ext.onReady(function() {
                         ]
                     }
                 }
-                //增加命令集面板
+                //增加命令包面板
                 cmdSetPanel[cmdSetPanel.length] = {
                     xtype:'panel',
                     layout:'column',
@@ -223,14 +228,14 @@ Ext.onReady(function() {
                     items:[
                         {
                             xtype:'label',
-                            columnWidth:0.7,
+                            columnWidth:0.75,
                             html:'&nbsp;'
                         },
                         {
                             xtype:'button',
                             text:'增加',
                             id:'appAddButton' + appId,
-                            columnWidth:0.3,
+                            columnWidth:0.25,
                             handler:function() {
                                 addCmdSetWindow(this.id.substring(this.id.length - 1));
                             }
@@ -242,7 +247,7 @@ Ext.onReady(function() {
         });
     }
 
-    //增加命令集
+    //增加命令包窗口
     function addCmdSetWindow(appId) {
         //请求获取命令组数据并解析
         var cmdGroupNodes = [];
@@ -352,10 +357,10 @@ Ext.onReady(function() {
                     }
                 });
 
-                //增加命令到命令集
+                //增加命令到命令包
                 function addCmdSet() {
                     var expression = '';
-                    //获取命令集表达式
+                    //获取命令包表达式
                     cmdSetTreePanel.getRootNode().eachChild(function(child) {
                         var data = child.data;
                         expression += data.id.substring(data.id.length - 1, data.id.length) + (data.allowFailure == true ? '|true' : '');
@@ -363,7 +368,7 @@ Ext.onReady(function() {
                             expression += ',';
                         }
                     });
-                    //更新命令集
+                    //更新命令包
                     Ext.Ajax.request({
                         url:'/apps/' + appId + '/cmd_set_defs',
                         method:'POST',
@@ -373,7 +378,7 @@ Ext.onReady(function() {
                             'cmd_set_def[expression]':expression
                         },
                         callback:function(options, success, response) {
-                            Ext.getCmp('savedStatus').setText('命令集增加成功');
+                            Ext.getCmp('savedStatus').setText('命令包增加成功');
                             var cmdSetPanel = Ext.getCmp('commands' + appId);
                             cmdSetPanel.removeAll();
                             loadCmdSetForApp(appId);
@@ -441,7 +446,7 @@ Ext.onReady(function() {
                             handler:function() {
                                 var name = Ext.getCmp('cmdSetName').value;
                                 if (!name || name.trim().length == 0) {
-                                    Ext.Msg.alert('提醒', '请输入命令集的名字！');
+                                    Ext.Msg.alert('提醒', '请输入命令包的名字！');
                                     return;
                                 }
                                 cmdSetTreePanel.getRootNode().commit();
@@ -520,7 +525,7 @@ Ext.onReady(function() {
                     ]
                 });
                 var addCmdSetWin = Ext.create('Ext.Window', {
-                    title:'增加命令集',
+                    title:'增加命令包',
                     layout: {
                         type: 'border',
                         padding: 5
@@ -558,27 +563,27 @@ Ext.onReady(function() {
             appTabPanel.add(appPanels);//Add to addTabPanel
 
             for (var i = 0; i < obj.length; i++) {
-                //此处获取App的机器列表，url为apps/:id/machines
-                (function(id) {
-                    Ext.Ajax.request({
-                        url:'/apps/' + id + '/machines',
-                        callback:function(options, success, response) {
-                            var machinesStr = response.responseText;
-                            var machines = Ext.decode(machinesStr);
-                            var machinesListLabel = [];
-                            for (var j = 0,len = machines.length; j < len; j++) {
-                                machinesListLabel[machinesListLabel.length] = {
-                                    xtype:'label',
-                                    html:machines[j].name,
-                                    columnWidth:1
-                                }
-                            }
-                            Ext.getCmp('machines' + id).add(machinesListLabel);
-                        }
-                    });
-                })(obj[i].id);
-                //此处获取App的命令集列表，url为apps/:id/cmd_set_defs
+                //此处获取App的命令包列表，url为apps/:id/cmd_set_defs
                 loadCmdSetForApp(obj[i].id);
+                //此处获取App的机器列表，url为apps/:id/machines
+//                (function(id) {
+//                    Ext.Ajax.request({
+//                        url:'/apps/' + id + '/machines',
+//                        callback:function(options, success, response) {
+//                            var machinesStr = response.responseText;
+//                            var machines = Ext.decode(machinesStr);
+//                            var machinesListLabel = [];
+//                            for (var j = 0,len = machines.length; j < len; j++) {
+//                                machinesListLabel[machinesListLabel.length] = {
+//                                    xtype:'label',
+//                                    html:machines[j].name,
+//                                    columnWidth:1
+//                                }
+//                            }
+//                            Ext.getCmp('machines' + id).add(machinesListLabel);
+//                        }
+//                    });
+//                })(obj[i].id);
             }
         }
     });
