@@ -6,7 +6,7 @@ class CmdSetsController < BaseController
         c.attributes.update(
           "id" => "#{cmd_set_id}|#{machine_id}|#{c.id}",
           "leaf" => "true",
-          "state" => o.human_state_name
+          "state" => c.human_state_name
         )
       }
       respond_with result
@@ -23,8 +23,8 @@ class CmdSetsController < BaseController
   end
 
   def create
-    cmd_set = current_app.cmd_set_defs.find(params[:cmd_set_def_id]).create_cmd_set(current_user)
-    render :text => "命令包已创建" #cmd_set.to_json
+    current_app.cmd_set_defs.find(params[:cmd_set_def_id]).create_cmd_set(current_user)
+    render :text => "命令包已创建"
   end
 
 end
