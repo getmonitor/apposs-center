@@ -2,8 +2,12 @@ class CmdSetsController < BaseController
   def index
     cmd_set_id, machine_id = params[:key].split /\|/ if params[:key] != 'root'
     if machine_id
-      result = Machine.find(machine_id).operations.where(:command_id => current_app.cmd_sets.find(cmd_set_id).commands).collect { |o|
-        o.attributes.update "id" => "#{cmd_set_id}|#{machine_id}|#{o.id}", "leaf" => "true", "name" => "#{o.command_name}", "state" => o.human_state_name
+      result = Machine.find(machine_id).commands.where(:cmd_set_id => cmd_set_id).collect { |c|
+        c.attributes.update(
+          "id" => "#{cmd_set_id}|#{machine_id}|#{c.id}",
+          "leaf" => "true",
+          "state" => o.human_state_name
+        )
       }
       respond_with result
     elsif cmd_set_id
