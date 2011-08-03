@@ -1,5 +1,18 @@
 zh-CN:
   activerecord:
+    state_machines:
+      states:
+        init: "已创建"
+        ready: "已就绪"
+        running: "执行中"
+        failure: "失败"
+        done: "完成"
+      events:
+        download: "下载"
+        invoke: "执行"
+        error: "失败"
+        ack: "确认"
+        ok: "成功"        
     models:
       user: '用户'
       app: '应用'

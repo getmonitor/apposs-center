@@ -9,9 +9,8 @@ class CmdSet < ActiveRecord::Base
 
   state_machine :state, :initial => :init do
     event :fire do transition :init => :running end
-    event :failure do transition :running => :fail end
-    event :acknowledge do transition :fail => :done end
-    event :ack do transition :fail => :done end
-    event :success do transition :running => :done end
+    event :error do transition :running => :failure end
+    event :ack do transition :failure => :done end
+    event :ok do transition :running => :done end
   end
 end

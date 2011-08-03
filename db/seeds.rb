@@ -28,7 +28,7 @@ app.cmd_set_defs << CmdSetDef.create(:name => "upgrade package", :expression => 
 admin_role = Role.create(:name => 'Admin')
 pe_role = Role.create(:name => 'PE')
 appops_role = Role.create(:name => 'AppOPS')
-u = User.create(:email => 'li.jianye@gmail.com', :password => 'hahaha')
+u = User.create(:email => 'lifu@taobao.com', :password => 'hahaha')
 Stakeholder.create :user => u, :app => app, :role => pe_role
 
 %w{cnz cm3 cm4}.each{|name| Room.create(:name => name)}
