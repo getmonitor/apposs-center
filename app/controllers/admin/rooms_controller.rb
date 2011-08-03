@@ -1,10 +1,8 @@
 class Admin::RoomsController < Admin::BaseController
   def index()
-    if params[:limit] && params[:page]
-      respond_with Room.search(params[:limit], params[:page])
-    else
-      respond_with Room.all
-    end
+    rooms = Room.all.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
+    total = rooms.count
+    respond_with (:totalCount => total, :rooms => rooms)
   end
 
   def model()

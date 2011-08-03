@@ -1,12 +1,8 @@
 class Admin::CmdDefsController < Admin::BaseController
   def index
-    cmd_defs = CmdDef.all
-    if params[:page] && params[:limit]
-      total = cmd_defs.count
-      respond_with CmdDef.search(params[:limit], params[:page], total)
-    else
-      respond_with cmd_defs
-    end
+    cmd_defs = CmdDef.all.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
+    total = cmd_defs.count
+    respond_with (:totalCount => total, :cmd_defs => cmd_defs)
   end
 
   def show

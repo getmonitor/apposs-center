@@ -1,11 +1,9 @@
 class Admin::CmdGroupsController < Admin::BaseController
 
   def index()
-    if params[:limit] && params[:page]
-      respond_with CmdGroup.search(params[:limit], params[:page])
-    else
-      respond_with CmdGroup.all
-    end
+    cmd_groups = CmdGroup.all.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
+    total = cmd_groups.count
+    respond_with (:totalCount => total, :cmd_groups => cmd_groups)
   end
 
   def model()

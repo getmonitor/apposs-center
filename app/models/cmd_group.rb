@@ -6,10 +6,10 @@ class CmdGroup < ActiveRecord::Base
 
   attr_accessor :cmd_def_ids
 
-  def self.search(per_page, page)
-    cmd_groups = paginate :per_page => per_page.to_i, :page => page.to_i
-    '{"totalCount":"'+CmdGroup.all.count.to_s + '","cmd_groups":' + cmd_groups.to_json + '}'
-  end
+  #def self.search(per_page, page)
+  #  cmd_groups = paginate :per_page => per_page.to_i, :page => page.to_i
+  #  '{"totalCount":"'+CmdGroup.all.count.to_s + '","cmd_groups":' + cmd_groups.to_json + '}'
+  #end
 
   def to_s
     name
