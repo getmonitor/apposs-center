@@ -99,6 +99,7 @@ Ext.onReady(function() {
         //操作数据store的获取
         var commandStore = Ext.create('Ext.data.TreeStore', {
             model:Command,
+            storeId:'commandStore',
             proxy:{
                 type:'ajax',
                 url:'/apps/' + id + '/cmd_sets',
@@ -121,6 +122,7 @@ Ext.onReady(function() {
             region:'center',
             title:'当前应用的命令执行状态',
             rootVisible:false,
+            autoScroll:true,
             columns: [
                 {
                     xtype:'treecolumn',
@@ -131,7 +133,23 @@ Ext.onReady(function() {
                 {
                     header:'命令执行状态',
                     dataIndex:'state',
-                    flex:2
+                    flex:1
+                }
+            ],
+            dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    items: [
+                        {
+                            xtype: 'button',
+                            text: '<span style="font-size: 14px;">刷新</span>',
+                            iconCls:'refresh',
+                            handler:function() {
+                                Ext.data.StoreManager.lookup('commandStore').load();
+                            }
+                        }
+                    ]
                 }
             ]
         });
@@ -199,6 +217,11 @@ Ext.onReady(function() {
                                                             ]
                                                         });
                                                         multiWin.show();
+                                                    }
+                                                    else if (type == 'delete') {
+                                                        var cmdSetPanel = Ext.getCmp('commands' + appId);
+                                                        cmdSetPanel.removeAll();
+                                                        loadCmdSetForApp(appId);
                                                     }
                                                 }
                                             })(type)

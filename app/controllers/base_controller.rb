@@ -1,7 +1,7 @@
 class BaseController < ApplicationController
 
   before_filter :authenticate_user!
-  
+
   respond_to :json
 
   def current_app

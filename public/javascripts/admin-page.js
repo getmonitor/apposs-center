@@ -347,7 +347,7 @@ Ext.onReady(function() {
                     {
                         text:'命令组名',
                         dataIndex:'name',
-                        flex:16,
+                        flex:1,
                         editor: {
                             xtype: 'textfield',
                             allowBlank: false
@@ -518,7 +518,7 @@ Ext.onReady(function() {
                     {
                         text:'机房名',
                         dataIndex:'name',
-                        flex:16,
+                        flex:1,
                         editor: {
                             xtype: 'textfield',
                             allowBlank: false

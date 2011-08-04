@@ -9,14 +9,14 @@ class CmdSetDef < ActiveRecord::Base
   end
 
   def cmd_defs
-    expression.split(',').inject([]){|result, item|
+    expression.split(',').inject([]) { |result, item|
       pair = item.squish.split('|')
       cmd_def = CmdDef.find(pair[0].to_i) rescue nil
       if cmd_def
         if block_given?
           yield cmd_def, (pair[1]=="true")
         end
-        result << cmd_def
+        result << "#{item}-#{cmd_def.name}"
       else
         result
       end
