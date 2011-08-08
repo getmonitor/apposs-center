@@ -58,7 +58,163 @@ Ext.onReady(function() {
     //角色管理面板
     var rolePanel = {
         id:'1',
-        title:'角色管理'
+        frame:true,
+        title:'角色管理',
+        layout:'border',
+        split:true,
+        bodyPadding:5,
+        fieldDefaults: {
+            labelAlign: 'left',
+            msgTarget: 'side'
+        },
+        items: [
+            {
+                xtype:'gridpanel',
+                title:'当前系统所有角色',
+                store:roleGridStore,
+                region:'center',
+                columnLines:true,
+                viewConfig: {
+                    stripeRows: true
+                },
+                selType: 'rowmodel',
+                plugins: [
+                    rolePanelRowEditing
+                ],
+                columns:[
+                    {
+                        text:'角色名',
+                        dataIndex:'name',
+                        flex:1,
+                        editor: {
+                            xtype: 'textfield',
+                            allowBlank: false
+                        }
+                    },
+                    {
+                        flex:1,
+                        xtype: 'actioncolumn',
+                        items: [
+                            {
+                                icon   : '/images/delete.gif',
+                                tooltip: '删除当前角色',
+                                handler: function(grid, rowIndex, colIndex) {
+                                    var r = roleGridStore.getAt(rowIndex);
+                                    Ext.Ajax.request({
+                                        url:'/admin/roles/' + r.get('id'),
+                                        method:'DELETE',
+                                        params:{
+                                            authenticity_token:$('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        callback:function (options, success, response) {
+
+                                        }
+                                    });
+                                    roleGridStore.remove(r);
+                                    roleGridStore.load();
+                                }
+                            }
+                        ]
+                    }
+                ],
+                tbar: [
+                    {
+                        text: '增加角色',
+                        iconCls:'add',
+                        handler : function() {
+                            var addRoleWin = Ext.create('Ext.Window', {
+                                title:'增加角色',
+                                layout:'border',
+                                width:300,
+                                height:150,
+                                items:[
+                                    Ext.create('Ext.form.Panel', {
+                                        region:'center',
+                                        frame:'true',
+                                        url:'/admin/roles',
+                                        defaultType:'textfield',
+                                        defaults: {
+                                            labelWidth:90,
+                                            anchor:'95%'
+                                        },
+                                        items:[
+                                            {
+                                                xtype:'hidden',
+                                                name:'authenticity_token',
+                                                value:$('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            {
+                                                fieldLabel:'角色名',
+                                                name:'role[name]',
+                                                allowBlank:false,
+                                                blankText:'角色名不能为空'
+                                            }
+                                        ],
+                                        buttons:[
+                                            {
+                                                text:'保存',
+                                                handler:function() {
+                                                    var form = this.up('form').getForm();
+                                                    if (form.isValid()) {
+                                                        form.submit({
+                                                            success: function(form, action) {
+                                                                roleGridStore.load();
+                                                                addRoleWin.close();
+                                                            },
+                                                            failure: function(form, action) {
+                                                                roleGridStore.load();
+                                                                addRoleWin.close();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                text:'重设',
+                                                handler:function() {
+                                                    this.up('form').getForm().reset();
+                                                }
+                                            }
+                                        ]
+                                    })
+                                ]
+                            });
+                            addRoleWin.show();
+                        }
+                    }
+//                    {
+//                        iconCls:'delete',
+//                        disabled:true
+//                    },
+//                    {
+//                        boxLabel:'删除机房时同时删除其下的所有机器',
+//                        xtype:'checkbox',
+//                        id:'cascadeMachine'
+//                    }
+                ],
+                bbar: Ext.create('Ext.PagingToolbar', {
+                    store: roleGridStore,
+                    displayInfo: true
+                }),
+                listeners: {
+                    edit:function(editor, e) {
+                        editor.record.commit();
+                        var record = editor.record;
+                        Ext.Ajax.request({
+                            url:'/admin/roles/' + record.get('id'),
+                            method:'PUT',
+                            params:{
+                                authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                'role[name]':record.get('name')
+                            },
+                            callback:function(options, success, response) {
+
+                            }
+                        });
+                    }
+                }
+            }
+        ]
     };
 
     //命令管理面板

@@ -241,7 +241,6 @@ Ext.onReady(function() {
                         dataIndex: 'allowFailure',
                         listeners:{
                             checkchange:function(column, number, checked) {
-//                                updateCmdSet();
                                 var root = this.up('treepanel').getRootNode();
                                 var node = root.getChildAt(number - 1);
                                 if (number == 0) {

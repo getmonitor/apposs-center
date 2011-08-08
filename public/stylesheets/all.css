@@ -23,6 +23,18 @@ ul#welcome_info {
     background: url("/images/refresh.gif")
 }
 
+.execute {
+    background: url(/images/icons.png) no-repeat -3px -245px !important;
+}
+
+.clear {
+    background: url("/images/clear_all.png");
+}
+
+.view {
+    background: url("/images/view.png");
+}
+
 .admin_nav_menu table {
     margin-top: -55px;
 }

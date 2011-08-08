@@ -3,10 +3,10 @@ class CmdSetDefsController < BaseController
     app_id = params[:app_id]
     respond_with current_app.cmd_set_defs.collect { |obj|
       obj.serializable_hash.update("actions" => [
-          {:name=>"执行", :url=> app_cmd_sets_path(app_id), :type => 'simple', :method => 'POST'},
-          {:name=>"修改", :url=> edit_app_cmd_set_def_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
-          {:name=>"删除", :url=> app_cmd_set_def_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
-      ])
+          {:name=>"准备执行", :flex => 1.7, :url=> app_cmd_sets_path(app_id), :type => 'simple', :method => 'POST'},
+          {:name=>"修改", :flex => 1, :url=> edit_app_cmd_set_def_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
+          {:name=>"删除", :flex => 1, :url=> app_cmd_set_def_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
+      ],"flex" => 8)
     }
   end
 

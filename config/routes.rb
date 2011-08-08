@@ -70,6 +70,9 @@ Apposs::Application.routes.draw do
 
   resources :apps do
     resources :machines
+    resources :machines do
+      get :command_state, :on => :member
+    end
     resources :cmd_set_defs
     resources :cmd_sets do
       resources :commands do
