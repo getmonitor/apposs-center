@@ -18,7 +18,7 @@
 <div id="north">
   <span id="notice"><%= flash[:notice] %></span>
   <ul id="welcome_info">
-    <li><%= current_user.email %>，欢迎使用淘宝运维系统！<%= link_to "退出", '/users/sign_out' %></li>
+    <li><%= current_user.email %>，欢迎使用淘宝运维系统！<%= link_to "退出", destroy_user_session_path %></li>
   </ul>
 </div>
 <%= yield %>
