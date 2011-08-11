@@ -1,14 +1,8 @@
 class Admin::MachinesController < Admin::BaseController
   def index
-    machines = Machine.all.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
+    machines = Machine.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
     total = Machine.all.count
     respond_with :totalCount => total, :machines => machines
-    #if (params[:page] && params[:limit])
-    #  total = machines.count
-    #  respond_with Machine.search(params[:limit], params[:page], total, machines)
-    #else
-    #  respond_with machines
-    #end
   end
 
   def show

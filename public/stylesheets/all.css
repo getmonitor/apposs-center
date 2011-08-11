@@ -12,27 +12,27 @@ ul#welcome_info {
 }
 
 .add {
-    background: url("/images/add.png");
+    background: url("images/add.png");
 }
 
 .delete {
-    background: url("/images/delete.gif");
+    background: url("images/delete.gif");
 }
 
 .refresh {
-    background: url("/images/refresh.gif")
+    background: url("images/refresh.gif");
 }
 
 .execute {
-    background: url(/images/icons.png) no-repeat -3px -245px !important;
+    background: url(images/icons.png) no-repeat -3px -245px !important;
 }
 
 .clear {
-    background: url("/images/clear_all.png");
+    background: url("images/clear_all.png");
 }
 
 .view {
-    background: url("/images/view.png");
+    background: url("images/view.png");
 }
 
 .admin_nav_menu table {

@@ -1,7 +1,7 @@
 class Admin::CmdGroupsController < Admin::BaseController
 
   def index()
-    cmd_groups = CmdGroup.all.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
+    cmd_groups = CmdGroup.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
     total = cmd_groups.count
     respond_with :totalCount => total, :cmd_groups => cmd_groups
   end
