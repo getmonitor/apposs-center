@@ -885,6 +885,24 @@
                             renderer:appRender
                         },
                         {
+                            text:'用户名',
+                            dataIndex:'user',
+                            flex:4,
+                            editor: {
+                                xtype: 'textfield'
+                            }
+                        },
+                        {
+                            text:'密码',
+                            dataIndex:'password',
+                            flex:4,
+                            editor: {
+                                xtype: 'textfield',
+                                inputType:'password'
+                            },
+                            renderer:passwordRender
+                        },
+                        {
                             flex:1,
                             xtype: 'actioncolumn',
                             items: [
@@ -1017,7 +1035,9 @@
                                     'machine[name]':record.get('name'),
                                     'machine[host]':record.get('host'),
                                     'machine[room_id]':record.get('room_id'),
-                                    'machine[app_id]':record.get('app_id')
+                                    'machine[app_id]':record.get('app_id'),
+                                    'machine[user]':record.get('user'),
+                                    'machine[password]':record.get('password')
                                 },
                                 callback:function(options, success, response) {
 

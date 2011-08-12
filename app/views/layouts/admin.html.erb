@@ -132,7 +132,7 @@ The following is machine_room_model
     //机器Model
     Ext.define('Machine', {
         extend:'Ext.data.Model',
-        fields:['id','name','host','room_id','app_id'],
+        fields:['id','name','host','room_id','app_id','user','password'],
         proxy:{
             type:'ajax',
             url:"<%= admin_machines_path %>",
@@ -225,6 +225,14 @@ The following is machine_room_model
             return comboRecord.get('name');
         }
         return value;
+    }
+
+    //机器中的密码renderer
+    function passwordRender(value) {
+        if (!value || value.trim().length == 0) {
+            return value;
+        }
+        return '<input type="password" style="border: none;" value="' + value + '" />';
     }
 
     var machinePanelRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
