@@ -20,6 +20,10 @@ class Admin::BaseController < ApplicationController
     respond_with model.find(params[:id]).update_attributes(params[group])
   end
 
+  def destroy
+    respond_with model.find(params[:id]).delete
+  end
+
   private
   def cascade?
     params[:cascade]=='true'

@@ -50,11 +50,202 @@
             store:adminMenuTreeStore
         });
 
-
         //用户信息管理面板
         var userInfoPanel = {
             id:'0',
-            title:'用户信息管理'
+            title:'用户信息管理',
+            frame:true,
+            bodyPadding:5,
+            layout:'border',
+            split:true,
+            fieldDefaults: {
+                labelAlign: 'left',
+                msgTarget: 'side'
+            },
+            items: [
+                {
+                    region:'center',
+                    xtype: 'gridpanel',
+                    title:'当前系统所有用户',
+                    store:userGridStore,
+                    split:true,
+                    columnLines:true,
+                    viewConfig: {
+                        stripeRows: true
+                    },
+                    selType: 'rowmodel',
+                    plugins: [
+                        userPanelRowEditing
+                    ],
+                    columns:[
+                        {
+                            text:'用户名',
+                            dataIndex:'email',
+                            flex:1,
+                            editor: {
+                                xtype: 'textfield',
+                                allowBlank: false
+                            }
+                        },
+                        {
+                            flex:1,
+                            text:'本次登录时间',
+                            dataIndex:'current_sign_in_at',
+                            renderer:Ext.util.Format.dateRenderer('Y-m-d H:i:s')
+                        },
+                        {
+                            flex:1,
+                            text:'上次登录时间',
+                            dataIndex:'last_sign_in_at',
+                            renderer:Ext.util.Format.dateRenderer('Y-m-d H:i:s')
+                        },
+                        {
+                            flex:1,
+                            text:'本次登录IP',
+                            dataIndex:'current_sign_in_ip'
+                        },
+                        {
+                            flex:1,
+                            text:'上次登录IP',
+                            dataIndex:'last_sign_in_ip'
+                        },
+                        {
+                            flex:1,
+                            xtype: 'actioncolumn',
+                            items: [
+                                {
+                                    icon   :"<%= root_path %>" + 'stylesheets/images/delete.gif',
+                                    tooltip: '删除当前用户',
+                                    handler: function(grid, rowIndex, colIndex) {
+                                        var r = userGridStore.getAt(rowIndex);
+                                        Ext.Ajax.request({
+                                            url:"<%=admin_users_path %>/" + r.get('id'),
+                                            method:'DELETE',
+                                            params:{
+                                                authenticity_token:$('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            callback:function (options, success, response) {
+
+                                            }
+                                        });
+                                        userGridStore.remove(r);
+                                        userGridStore.load();
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    bbar: Ext.create('Ext.PagingToolbar', {
+                        store: userGridStore,
+                        displayInfo: true
+                    }),
+                    tbar: [
+                        {
+                            text: '增加用户',
+                            iconCls:'add',
+                            handler : function() {
+                                var addUserWin = Ext.create('Ext.Window', {
+                                    title:'增加用户',
+                                    layout:'border',
+                                    width:300,
+                                    height:170,
+                                    items:[
+                                        Ext.create('Ext.form.Panel', {
+                                            region:'center',
+                                            frame:'true',
+                                            url:"<%=admin_users_path %>/",
+                                            defaultType:'textfield',
+                                            defaults: {
+                                                labelWidth:90,
+                                                anchor:'95%'
+                                            },
+                                            items:[
+                                                {
+                                                    xtype:'hidden',
+                                                    name:'authenticity_token',
+                                                    value:Ext.select('meta[name="csrf-token"]').elements[0].getAttribute('content')
+                                                },
+                                                {
+                                                    fieldLabel:'用户名',
+                                                    name:'user[email]',
+                                                    allowBlank:false,
+                                                    blankText:'用户名不能为空'
+                                                },
+                                                {
+                                                    fieldLabel:'密码',
+                                                    name:'user[password]',
+                                                    id:'user_pwd',
+                                                    inputType:'password',
+                                                    allowBlank:false,
+                                                    blankText:'密码不能为空'
+                                                },
+                                                {
+                                                    fieldLabel:'重复密码',
+                                                    name:'user[password_confirmation]',
+                                                    inputType:'password',
+                                                    id:'repeat_pwd',
+                                                    allowBlank:false,
+                                                    blankText:'密码不能为空'
+                                                }
+                                            ],
+                                            buttons:[
+                                                {
+                                                    text:'保存',
+                                                    handler:function() {
+                                                        var form = this.up('form').getForm();
+                                                        if (form.isValid()) {
+                                                            var pwd = Ext.getCmp('user_pwd').value;
+                                                            var repeat_pwd = Ext.getCmp('repeat_pwd').value;
+                                                            if (pwd !== repeat_pwd) {
+                                                                Ext.Msg.alert('错误','两次输入密码不一致，请重新输入');
+                                                                return;
+                                                            }
+                                                            form.submit({
+                                                                success: function(form, action) {
+                                                                    userGridStore.load();
+                                                                    addUserWin.close();
+                                                                },
+                                                                failure: function(form, action) {
+                                                                    userGridStore.load();
+                                                                    addUserWin.close();
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    text:'重设',
+                                                    handler:function() {
+                                                        this.up('form').getForm().reset();
+                                                    }
+                                                }
+                                            ]
+                                        })
+                                    ]
+                                });
+                                addUserWin.show();
+                            }
+                        }
+                    ],
+                    listeners: {
+                        edit:function(editor, e) {
+                            editor.record.commit();
+                            var record = editor.record;
+                            Ext.Ajax.request({
+                                url:"<%=admin_users_path %>/" + record.get('id'),
+                                method:'PUT',
+                                params:{
+                                    authenticity_token:Ext.select('meta[name="csrf-token"]').elements[0].getAttribute('content'),
+                                    'user[name]':record.get('name')
+                                },
+                                callback:function(options, success, response) {
+
+                                }
+                            });
+                        }
+                    }
+                }
+            ]
         };
         //角色管理面板
         var rolePanel = {
@@ -642,7 +833,154 @@
         //应用管理面板
         var appPanel = {
             id:'4',
-            title:'应用管理'
+            title:'应用管理',
+            frame:true,
+            bodyPadding:5,
+            layout:'border',
+            split:true,
+            fieldDefaults: {
+                labelAlign: 'left',
+                msgTarget: 'side'
+            },
+            items:[
+                {
+                    region:'center',
+                    xtype:'gridpanel',
+                    title:'当前系统所有应用',
+                    store:appGridStore,
+                    split:true,
+                    columnLines:true,
+                    viewConfig: {
+                        stripeRows: true
+                    },
+                    selType: 'rowmodel',
+                    plugins: [
+                        appPanelRowEditing
+                    ],
+                    columns:[
+                        {
+                            text:'应用名',
+                            dataIndex:'name',
+                            flex:1,
+                            editor: {
+                                xtype: 'textfield',
+                                allowBlank: false
+                            }
+                        },
+                        {
+                            flex:1,
+                            xtype: 'actioncolumn',
+                            items: [
+                                {
+                                    icon   : "<%= root_path %>" + 'stylesheets/images/delete.gif',
+                                    tooltip: '删除当前应用',
+                                    handler: function(grid, rowIndex, colIndex) {
+                                        var r = appGridStore.getAt(rowIndex);
+                                        Ext.Ajax.request({
+                                            url:"<%= admin_apps_path %>/" + r.get('id'),
+                                            method:'DELETE',
+                                            params:{
+                                                authenticity_token:$('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            callback:function (options, success, response) {
+
+                                            }
+                                        });
+                                        appGridStore.remove(r);
+                                        appGridStore.load();
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    tbar: [
+                        {
+                            text: '增加应用',
+                            iconCls:'add',
+                            handler : function() {
+                                var addAppWin = Ext.create('Ext.Window', {
+                                    title:'增加应用',
+                                    layout:'border',
+                                    width:300,
+                                    height:150,
+                                    items:[
+                                        Ext.create('Ext.form.Panel', {
+                                            region:'center',
+                                            frame:'true',
+                                            url:"<%= admin_apps_path %>",
+                                            defaultType:'textfield',
+                                            defaults: {
+                                                labelWidth:90,
+                                                anchor:'95%'
+                                            },
+                                            items:[
+                                                {
+                                                    xtype:'hidden',
+                                                    name:'authenticity_token',
+                                                    value:$('meta[name="csrf-token"]').attr('content')
+                                                },
+                                                {
+                                                    fieldLabel:'应用名',
+                                                    name:'app[name]',
+                                                    allowBlank:false,
+                                                    blankText:'应用名不能为空'
+                                                }
+                                            ],
+                                            buttons:[
+                                                {
+                                                    text:'保存',
+                                                    handler:function() {
+                                                        var form = this.up('form').getForm();
+                                                        if (form.isValid()) {
+                                                            form.submit({
+                                                                success: function(form, action) {
+                                                                    appGridStore.load();
+                                                                    addAppWin.close();
+                                                                },
+                                                                failure: function(form, action) {
+                                                                    appGridStore.load();
+                                                                    addAppWin.close();
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    text:'重设',
+                                                    handler:function() {
+                                                        this.up('form').getForm().reset();
+                                                    }
+                                                }
+                                            ]
+                                        })
+                                    ]
+                                });
+                                addAppWin.show();
+                            }
+                        }
+                    ],
+                    bbar: Ext.create('Ext.PagingToolbar', {
+                        store: appGridStore,
+                        displayInfo: true
+                    }),
+                    listeners: {
+                        edit:function(editor, e) {
+                            editor.record.commit();
+                            var record = editor.record;
+                            Ext.Ajax.request({
+                                url:"<%= admin_apps_path %>/" + record.get('id'),
+                                method:'PUT',
+                                params:{
+                                    authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                    'app[name]':record.get('name')
+                                },
+                                callback:function(options, success, response) {
+                                }
+                            });
+                        }
+                    }
+                }
+            ]
         };
         //机房管理面板
         var roomPanel = {

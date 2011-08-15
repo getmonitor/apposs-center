@@ -244,11 +244,36 @@ The following is machine_room_model
 
 </script>
 <!--
-The following is role_model
+The following is user_role_model
 -->
 <script type="text/javascript">
-    var nsRoles = {};
-    nsRoles.PAGE_SIZE = 50;
+    var nsRoleUser = {};
+    nsRoleUser.PAGE_SIZE = 50;
+
+    Ext.define('AdminUser', {
+        extend:'Ext.data.Model',
+        fields:[
+            'id',
+            'email',
+            {name:'current_sign_in_at',type:'date'},
+            {name:'last_sign_in_at',type:'date'},
+            'current_sign_in_ip',
+            'last_sign_in_ip'
+        ],
+        proxy:{
+            type:'ajax',
+            url:"<%= admin_users_path %>",
+            reader:{
+                type:'json',
+                totalProperty:'totalCount',
+                root:'users'
+            },
+            extraParams: {
+                authenticity_token:Ext.select('meta[name="csrf-token"]').elements[0].getAttribute('content')
+            },
+            limitParam:'per_page'
+        }
+    });
 
     Ext.define('Role', {
         extend:'Ext.data.Model',
@@ -269,13 +294,62 @@ The following is role_model
 
     //角色的GridPanel Store
     var roleGridStore = Ext.create('Ext.data.Store', {
-        pageSize:nsRoles.PAGE_SIZE,
+        pageSize:nsRoleUser.PAGE_SIZE,
         model:Role
     });
 
-    roleGridStore.loadPage(1)
+    //用户的GridPanel Store
+    var userGridStore = Ext.create('Ext.data.Store', {
+        pageSize:nsRoleUser.PAGE_SIZE,
+        model:AdminUser
+    });
+
+    roleGridStore.loadPage(1);
+    userGridStore.loadPage(1);
 
     var rolePanelRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+        clicksToEdit: 1
+    });
+    var userPanelRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+        clicksToEdit: 1
+    });
+</script>
+
+<!--
+   The following is app_model
+-->
+<script type="text/javascript">
+    var nsApp = {};
+    nsApp.PAGE_SIZE = 50;
+    Ext.define('AdminApp', {
+        extend:'Ext.data.Model',
+        fields:[
+            'id',
+            'name'
+        ],
+        proxy:{
+            type:'ajax',
+            url:"<%= admin_apps_path %>",
+            reader:{
+                type:'json',
+                totalProperty:'totalCount',
+                root:'apps'
+            },
+            extraParams: {
+                authenticity_token:$('meta[name="csrf-token"]').attr('content')
+            },
+            limitParam:'per_page'
+        }
+    });
+        //应用的GridPanel Store
+    var appGridStore = Ext.create('Ext.data.Store', {
+        pageSize:nsApp.PAGE_SIZE,
+        model:AdminApp
+    });
+
+    appGridStore.loadPage(1);
+
+    var appPanelRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
         clicksToEdit: 1
     });
 </script>

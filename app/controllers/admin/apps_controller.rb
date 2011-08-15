@@ -6,4 +6,12 @@ class Admin::AppsController < Admin::BaseController
     object.update_attributes(attributes)
   end
 
+  def model
+    App
+  end
+
+  def group
+    :app
+  end
+
 end

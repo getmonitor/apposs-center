@@ -1,5 +1,23 @@
 class Admin::UsersController < Admin::BaseController
-  def attributes
-  	[:email, :last_sign_in_ip, :last_sign_in_at]
+  def index
+    users = User.paginate(:per_page => params[:per_page], :page => params[:page])
+    users = users.inject([]) do |user_infos, u|
+      user_infos << u.attributes
+    end
+    total = users.count
+    respond_with :totalCount => total, :users => users
+  end
+
+  def create
+    u = User.create(params[:user])
+    render :text => u.attributes.to_json
+  end
+
+  def model
+    User
+  end
+
+  def group
+    :user
   end
 end
