@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apposs</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <%= stylesheet_link_tag :all %>
+  <%= stylesheet_link_tag "resources/css/ext-all.css" %>
+  <%= javascript_include_tag "jquery.min" %>
+  <%= javascript_include_tag "ext-all-debug" %>
+  <%= javascript_include_tag "ext-lang-zh_CN" %>
+  <%= javascript_include_tag "utils" %>
+  <%= javascript_include_tag "CheckColumn" %>
+  <%= javascript_include_tag "GridCheckColumn" %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+<div id="north">
+  <span id="notice"><%= flash[:notice] %></span>
+  <ul id="welcome_info">
+    <li><%= current_user.email %>，欢迎使用淘宝运维系统！<%= link_to "退出", destroy_user_session_path %></li>
+  </ul>
+</div>
+<%= yield %>
+</body>
+</html>
