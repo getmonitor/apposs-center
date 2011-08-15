@@ -1,7 +1,7 @@
 class Operation < ActiveRecord::Base
   belongs_to :machine
-  belongs_to :command
-  
+  belongs_to :cmd_set
+  belongs_to :cmd_set
   default_scope order("id")
 
   scope :inits, where(:state => :init)

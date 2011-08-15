@@ -3,6 +3,8 @@ class CmdDef < ActiveRecord::Base
 
   has_many :cmd_def_binds
   has_many :cmd_set_defs, :through => :cmd_def_binds
+  has_many :operations
+  has_many :machines, :through => :operations
 
   #def self.search(per_page, page, total)
   #  cmd_defs = paginate :per_page => per_page.to_i, :page => page.to_i

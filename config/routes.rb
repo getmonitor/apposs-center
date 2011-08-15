@@ -74,11 +74,7 @@ Apposs::Application.routes.draw do
       get :command_state, :on => :member
     end
     resources :cmd_set_defs
-    resources :cmd_sets do
-      resources :commands do
-        resources :operations
-      end
-    end
+    resources :cmd_sets
   end
 
   # You can have the root of your site routed with "root"

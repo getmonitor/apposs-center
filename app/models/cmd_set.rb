@@ -1,10 +1,11 @@
 class CmdSet < ActiveRecord::Base
   belongs_to :cmd_set_def
-  
-  has_many :commands
+
+  has_many :operations
+  has_many :machines, :through => :operations
 
   belongs_to :operator, :class_name => 'User'
-  
+
   belongs_to :app
 
   state_machine :state, :initial => :init do

@@ -1,8 +1,9 @@
 class CreateOperations < ActiveRecord::Migration
   def self.up
     create_table :operations do |t|
-      t.integer :command_id
+      t.integer :cmd_set_id
       t.integer :machine_id
+      t.integer :cmd_def_id
       t.boolean :next_when_fail
       t.string :state
       t.boolean :isok, :default => false

@@ -2,19 +2,20 @@ class CmdSetsController < BaseController
   def index
     cmd_set_id, machine_id = params[:key].split /\|/ if params[:key] != 'root'
     if machine_id
-      result = Machine.find(machine_id).commands.where(:cmd_set_id => cmd_set_id).collect { |c|
-        c.attributes.update(
-            "id" => "#{cmd_set_id}|#{machine_id}|#{c.id}",
+      result = Machine.find(machine_id).operations.where(:cmd_set_id => cmd_set_id).collect { |o|
+        o.attributes.update(
+            "id" => "#{cmd_set_id}|#{machine_id}|#{o.id}",
             "leaf" => "true",
-            "state" => c.human_state_name
+            "state" => o.human_state_name,
+            "name" => o.command_name
         )
       }
       respond_with result
     elsif cmd_set_id
-      result = current_app.machines.select { |m|
-        m.commands.where(:cmd_set_id => cmd_set_id).length > 0
-      }.collect { |m|
-        m.attributes.update "id" => "#{cmd_set_id}|#{m.id}"
+      result = current_app.cmd_sets.find(cmd_set_id).machines.uniq.collect { |m|
+        m.attributes.update(
+            "id" => "#{cmd_set_id}|#{m.id}"
+        )
       }
       respond_with result
     else
@@ -25,7 +26,8 @@ class CmdSetsController < BaseController
   end
 
   def create
-    current_app.cmd_set_defs.find(params[:cmd_set_def_id]).create_cmd_set(current_user, params[:choosedMachines])
+    choosedMachineIds = params[:choosedMachines].split(',') if params[:choosedMachines]
+    current_app.cmd_set_defs.find(params[:cmd_set_def_id]).create_cmd_set(current_user, choosedMachineIds)
     render :text => "命令包已创建"
   end
 
