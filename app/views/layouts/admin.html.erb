@@ -325,7 +325,8 @@ The following is user_role_model
         extend:'Ext.data.Model',
         fields:[
             'id',
-            'name'
+            'name',
+            {name:'created_at',type:'date'}
         ],
         proxy:{
             type:'ajax',
@@ -341,10 +342,11 @@ The following is user_role_model
             limitParam:'per_page'
         }
     });
-        //应用的GridPanel Store
+    //应用的GridPanel Store
     var appGridStore = Ext.create('Ext.data.Store', {
         pageSize:nsApp.PAGE_SIZE,
-        model:AdminApp
+        sorters: ['id'],
+        model:'AdminApp'
     });
 
     appGridStore.loadPage(1);

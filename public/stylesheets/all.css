@@ -27,12 +27,20 @@ ul#welcome_info {
     background: url(images/icons.png) no-repeat -3px -245px !important;
 }
 
+.set_app_for_user {
+    background: url(images/icons.png) no-repeat -3px -137px !important;
+}
+
 .clear {
     background: url("images/clear_all.png");
 }
 
 .view {
     background: url("images/view.png");
+}
+
+.edit {
+    background: url("images/edit.png");
 }
 
 .admin_nav_menu table {

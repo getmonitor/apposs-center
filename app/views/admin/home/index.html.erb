@@ -197,7 +197,7 @@
                                                             var pwd = Ext.getCmp('user_pwd').value;
                                                             var repeat_pwd = Ext.getCmp('repeat_pwd').value;
                                                             if (pwd !== repeat_pwd) {
-                                                                Ext.Msg.alert('错误','两次输入密码不一致，请重新输入');
+                                                                Ext.Msg.alert('错误', '两次输入密码不一致，请重新输入');
                                                                 return;
                                                             }
                                                             form.submit({
@@ -830,6 +830,45 @@
                 }
             ]
         };
+
+//        //为应用分配用户时的App Store
+//        var dispatchAppForUserAppStore = Ext.create('Ext.data.Store', {
+//            fields:['id','name'],
+//            proxy:{
+//                type:'ajax',
+//                url:'<%= admin_apps_path %>',
+//                reader:'json',
+//                extraParams:{
+//                    dispatch_to_user:true
+//                }
+//            }
+//        });
+//        //为应用分配用户时的User Store
+//        var dispatchAppForUserUserStore = Ext.create('Ext.data.Store', {
+//            fields:['id','email'],
+//            proxy:{
+//                type:'ajax',
+//                url:'<%= admin_users_path %>',
+//                reader:{
+//                    type:'json',
+//                    totalProperty:'totalCount',
+//                    root:'users'
+//                }
+//            }
+//        });
+//        //为应用分配用户时的Role Store
+//        var dispatchAppForUserRoleStore = Ext.create('Ext.data.Store', {
+//            fields:['id','name'],
+//            proxy:{
+//                type:'ajax',
+//                url:'<%= admin_roles_path %>',
+//                reader:{
+//                    type:'json',
+//                    totalProperty:'totalCount',
+//                    root:'roles'
+//                }
+//            }
+//        });
         //应用管理面板
         var appPanel = {
             id:'4',
@@ -853,19 +892,17 @@
                     viewConfig: {
                         stripeRows: true
                     },
-                    selType: 'rowmodel',
-                    plugins: [
-                        appPanelRowEditing
-                    ],
                     columns:[
                         {
                             text:'应用名',
                             dataIndex:'name',
+                            flex:1
+                        },
+                        {
+                            text:'创建日期',
+                            dataIndex:'created_at',
                             flex:1,
-                            editor: {
-                                xtype: 'textfield',
-                                allowBlank: false
-                            }
+                            renderer:Ext.util.Format.dateRenderer('Y-m-d H:i:s')
                         },
                         {
                             flex:1,
@@ -888,6 +925,173 @@
                                         });
                                         appGridStore.remove(r);
                                         appGridStore.load();
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            flex:1,
+                            xtype: 'actioncolumn',
+                            items: [
+                                {
+                                    icon   : "<%= root_path %>" + 'stylesheets/images/edit.png',
+                                    tooltip: '编辑',
+                                    handler: function(grid, rowIndex, colIndex) {
+                                        var record = grid.getStore().getAt(rowIndex);
+                                        var editAppWin = Ext.create('Ext.Window', {
+                                            title:'编辑应用',
+                                            width:500,
+                                            height:400,
+                                            layout:'border',
+                                            modal:true,
+                                            items:[
+                                                {
+                                                    xtype:'panel',
+                                                    region:'north',
+                                                    layout:'column',
+                                                    defaults:{
+                                                        margin:'0 0 0 5'
+                                                    },
+                                                    frame:true,
+                                                    items:[
+                                                        {
+                                                            xtype:'textfield',
+                                                            fieldLabel:'应用名',
+                                                            name:'app[name]',
+                                                            value:record.get('name'),
+                                                            columnWidth:0.9
+                                                        },
+                                                        {
+                                                            xtype:'button',
+                                                            text:'保存',
+                                                            columnWidth:0.1,
+                                                            handler:function() {
+                                                                Ext.Ajax.request({
+                                                                    url:"<%= admin_apps_path %>/" + record.get('id'),
+                                                                    method:'PUT',
+                                                                    params:{
+                                                                        authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                                                        'app[name]':this.previousSibling('textfield').value
+                                                                    },
+                                                                    callback:function() {
+                                                                        appGridStore.load();
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    xtype:'gridpanel',
+                                                    title:'当前应用关联的所有的用户与角色',
+                                                    region:'center',
+                                                    split:true,
+                                                    columnLines:true,
+                                                    viewConfig: {
+                                                        stripeRows: true
+                                                    },
+                                                    selType: 'rowmodel',
+                                                    plugins: [
+                                                        appPanelRowEditing
+                                                    ],
+                                                    store:Ext.create('Ext.data.Store', {
+                                                        fields:['id','app_id','user_id','role_id','user','role'],
+                                                        proxy:{
+                                                            url:"<%= admin_apps_path %>/" + record.get('id'),
+                                                            type:'ajax',
+                                                            reader:{
+                                                                type:'json'
+                                                            }
+                                                        },
+                                                        autoLoad:true
+                                                    }),
+                                                    columns:[
+                                                        {
+                                                            text:'用户',
+                                                            dataIndex:'user_id',
+                                                            flex:1,
+                                                            editor: {
+                                                                xtype:'combo',
+                                                                valueField:'id',
+                                                                displayField:'email',
+                                                                store:Ext.create('Ext.data.Store', {
+                                                                    fields:['id','email'],
+                                                                    proxy:{
+                                                                        url:"<%= admin_users_path %>",
+                                                                        type:'ajax',
+                                                                        reader:{
+                                                                            type:'json',
+                                                                            totalProperty:'totalCount',
+                                                                            root:'users'
+                                                                        }
+                                                                    },
+                                                                    autoLoad:true
+                                                                }),
+                                                                editable:false
+                                                            },
+                                                            renderer:function(value, metadata, record) {
+                                                                return record.get('user');
+                                                            }
+                                                        },
+                                                        {
+                                                            text:'角色',
+                                                            dataIndex:'role_id',
+                                                            flex:1,
+                                                            editor: {
+                                                                xtype:'combo',
+                                                                valueField:'id',
+                                                                displayField:'name',
+                                                                store:Ext.create('Ext.data.Store', {
+                                                                    fields:['id','name'],
+                                                                    proxy:{
+                                                                        url:"<%= admin_roles_path %>",
+                                                                        type:'ajax',
+                                                                        reader:{
+                                                                            type:'json',
+                                                                            totalProperty:'totalCount',
+                                                                            root:'roles'
+                                                                        }
+                                                                    },
+                                                                    autoLoad:true
+                                                                }),
+                                                                editable:false
+                                                            },
+                                                            renderer:function(value, metadata, record) {
+                                                                return record.get('role');
+                                                            }
+                                                        },
+                                                        {
+                                                            flex:1,
+                                                            xtype: 'actioncolumn',
+                                                            items: [
+                                                                {
+                                                                    icon   : "<%= root_path %>" + 'stylesheets/images/delete.gif',
+                                                                    handler: function(grid, rowIndex, colIndex) {
+                                                                        var stateholderStore = grid.getStore();
+                                                                        var r = stateholderStore.getAt(rowIndex);
+                                                                        Ext.Ajax.request({
+                                                                            url:"<%= admin_apps_path %>/" + r.get('app_id'),
+                                                                            method:'DELETE',
+                                                                            params:{
+                                                                                authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                                                                user_id:r.get('user_id'),
+                                                                                role_id:r.get('role_id')
+                                                                            },
+                                                                            callback:function (options, success, response) {
+
+                                                                            }
+                                                                        });
+                                                                        stateholderStore.remove(r);
+                                                                        stateholderStore.load();
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        });
+                                        editAppWin.show();
                                     }
                                 }
                             ]
@@ -956,6 +1160,133 @@
                                     ]
                                 });
                                 addAppWin.show();
+                            }
+                        },
+                        {
+                            text: '为应用分配用户',
+                            iconCls:'set_app_for_user',
+                            handler:function() {
+                                var editAppForUserWin = Ext.create('Ext.Window', {
+                                    title:'为应用分配用户',
+                                    layout:'border',
+                                    width:300,
+                                    height:180,
+                                    modal:true,
+                                    items:[
+                                        Ext.create('Ext.form.Panel', {
+                                            region:'center',
+                                            frame:'true',
+                                            url:"<%= admin_apps_path %>",
+                                            defaultType:'combo',
+                                            defaults: {
+                                                labelWidth:90,
+                                                anchor:'95%'
+                                            },
+                                            layout:'column',
+                                            items:[
+                                                {
+                                                    xtype:'hidden',
+                                                    name:'authenticity_token',
+                                                    value:$('meta[name="csrf-token"]').attr('content')
+                                                },
+                                                {
+                                                    xtype:'hidden',
+                                                    name:'dispatch_to_user',
+                                                    value:true
+                                                },
+                                                {
+                                                    fieldLabel:'选择应用',
+                                                    displayField:'name',
+                                                    valueField:'id',
+                                                    name:'app_id',
+                                                    store:Ext.create('Ext.data.Store', {
+                                                        fields:['id','name'],
+                                                        proxy:{
+                                                            type:'ajax',
+                                                            url:'<%= admin_apps_path %>',
+                                                            reader:'json',
+                                                            extraParams:{
+                                                                dispatch_to_user:true
+                                                            }
+                                                        }
+                                                    }),
+                                                    allowBlank:false,
+                                                    blankText:'应用不能为空',
+                                                    editable:false
+                                                },
+                                                {
+                                                    fieldLabel:'选择用户',
+                                                    displayField:'email',
+                                                    store:Ext.create('Ext.data.Store', {
+                                                        fields:['id','email'],
+                                                        proxy:{
+                                                            type:'ajax',
+                                                            url:'<%= admin_users_path %>',
+                                                            reader:{
+                                                                type:'json',
+                                                                totalProperty:'totalCount',
+                                                                root:'users'
+                                                            }
+                                                        }
+                                                    }),
+                                                    valueField:'id',
+                                                    name:'user_id',
+                                                    allowBlank:false,
+                                                    blankText:'用户不能为空',
+                                                    editable:false
+                                                },
+                                                {
+                                                    fieldLabel:'选择角色',
+                                                    displayField:'name',
+                                                    valueField:'id',
+                                                    store:Ext.create('Ext.data.Store', {
+                                                        fields:['id','name'],
+                                                        proxy:{
+                                                            type:'ajax',
+                                                            url:'<%= admin_roles_path %>',
+                                                            reader:{
+                                                                type:'json',
+                                                                totalProperty:'totalCount',
+                                                                root:'roles'
+                                                            }
+                                                        }
+                                                    }),
+                                                    name:'role_id',
+                                                    allowBlank:false,
+                                                    blankText:'角色不能为空',
+                                                    editable:false
+                                                }
+                                            ],
+                                            buttons:[
+                                                {
+                                                    text:'保存',
+                                                    handler:function() {
+                                                        var form = this.up('form').getForm();
+                                                        if (form.isValid()) {
+                                                            form.submit({
+                                                                success: function(form, action) {
+                                                                    appGridStore.load();
+                                                                    editAppForUserWin.close();
+                                                                },
+                                                                failure: function(form, action) {
+                                                                    appGridStore.load();
+                                                                    editAppForUserWin.close();
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    text:'重设',
+                                                    handler:function() {
+                                                        this.up('form').getForm().reset();
+                                                    }
+                                                }
+                                            ]
+                                        })
+                                    ]
+                                });
+                                editAppForUserWin.show();
                             }
                         }
                     ],

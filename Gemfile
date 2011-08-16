@@ -52,4 +52,5 @@ gem "jruby-openssl"
 gem "state_machine"
 gem "ruby-graphviz", :group => ["development"]
 gem "will_paginate", "~> 3.0.pre4"
+gem "mongrel"
 # gem "mvn:org.springframework:spring"
