@@ -3,7 +3,12 @@ class ApiController < ApplicationController
   	room = Room.where(:name => params[:room_name]).first
   	# 查询参数包括机房的 name 和 id，是考虑到 room 表的name字段发生变动，
   	# 此时应该谨慎处理，不下发相应的命令
-  	render :text => Operation.where(:state => :init, :room_id => room.id, :room_name => room.name).collect{|o|
+    if params[:reload]
+      operQuery = Operation.with_state(:init,:ready,:running)
+    else
+      operQuery = Operation.with_state(:init)
+    end
+  	render :text => operQuery.where(:room_id => room.id, :room_name => room.name).collect{|o|
   		o.download
   		"#{o.machine_host}:#{o.command_name}:#{o.id}"
   	}.join("\n")
@@ -24,10 +29,10 @@ class ApiController < ApplicationController
   end
   
   def load_hosts
-    hosts = params[:hosts].split(",")[0,9] #考虑到性能，仅取前10个，其余下次再获取
+    hosts = params[:hosts].split("|")[0,9] #考虑到性能，仅取前10个，其余下次再获取
     render :text => Machine.where(:host => hosts).collect{|m|
-      "host=#{m.host},port=22,user=john,password=moxicai"
-    }.join(",")
+      "host=#{m.host},port=22,user=#{m.user},password=#{m.password}"
+    }.join("\n")
   end
   
   def packages
