@@ -831,44 +831,6 @@
             ]
         };
 
-//        //为应用分配用户时的App Store
-//        var dispatchAppForUserAppStore = Ext.create('Ext.data.Store', {
-//            fields:['id','name'],
-//            proxy:{
-//                type:'ajax',
-//                url:'<%= admin_apps_path %>',
-//                reader:'json',
-//                extraParams:{
-//                    dispatch_to_user:true
-//                }
-//            }
-//        });
-//        //为应用分配用户时的User Store
-//        var dispatchAppForUserUserStore = Ext.create('Ext.data.Store', {
-//            fields:['id','email'],
-//            proxy:{
-//                type:'ajax',
-//                url:'<%= admin_users_path %>',
-//                reader:{
-//                    type:'json',
-//                    totalProperty:'totalCount',
-//                    root:'users'
-//                }
-//            }
-//        });
-//        //为应用分配用户时的Role Store
-//        var dispatchAppForUserRoleStore = Ext.create('Ext.data.Store', {
-//            fields:['id','name'],
-//            proxy:{
-//                type:'ajax',
-//                url:'<%= admin_roles_path %>',
-//                reader:{
-//                    type:'json',
-//                    totalProperty:'totalCount',
-//                    root:'roles'
-//                }
-//            }
-//        });
         //应用管理面板
         var appPanel = {
             id:'4',

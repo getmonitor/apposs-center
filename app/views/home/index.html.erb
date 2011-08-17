@@ -616,29 +616,31 @@
                             ]
                         }
                     }
-                    //增加命令包面板
-                    cmdSetPanel[cmdSetPanel.length] = {
-                        xtype:'panel',
-                        layout:'hbox',
-                        border:false,
-                        anchor:'100%',
-                        frame:true,
-                        items:[
-                            {
-                                xtype:'label',
-                                flex:10,
-                                html:'&nbsp;'
-                            },
-                            {
-                                xtype:'button',
-                                text:'增加',
-                                id:'appAddButton' + appId,
-                                flex:1,
-                                handler:function() {
-                                    addCmdSetWindow(this.id.substring(this.id.length - 1));
+                    if (cmdSet.length > 0 && cmdSet[0].add === true) {
+                        //增加命令包面板
+                        cmdSetPanel[cmdSetPanel.length] = {
+                            xtype:'panel',
+                            layout:'hbox',
+                            border:false,
+                            anchor:'100%',
+                            frame:true,
+                            items:[
+                                {
+                                    xtype:'label',
+                                    flex:10,
+                                    html:'&nbsp;'
+                                },
+                                {
+                                    xtype:'button',
+                                    text:'增加',
+                                    id:'appAddButton' + appId,
+                                    flex:1,
+                                    handler:function() {
+                                        addCmdSetWindow(this.id.substring(this.id.length - 1));
+                                    }
                                 }
-                            }
-                        ]
+                            ]
+                        };
                     }
                     Ext.getCmp('commands' + appId).add(cmdSetPanel);
                 }

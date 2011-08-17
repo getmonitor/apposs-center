@@ -9,27 +9,6 @@ class Admin::AppsController < Admin::BaseController
   def index
     apps = App.all
     respond_with apps
-    #if params[:dispatch_to_user]
-    #  respond_with apps
-    #else
-    #  records = []
-    #  apps.collect do |app|
-    #    if app.stakeholders.length > 0
-    #      app.stakeholders.collect do |record|
-    #        records << record.attributes.update(
-    #            "name" => app.name,
-    #            "user" => User.find(record.user_id).email,
-    #            "role" => Role.find(record.role_id).name
-    #        )
-    #      end
-    #    else
-    #      records << app.attributes.update(
-    #          "app_id" => app.id
-    #      )
-    #    end
-    #  end
-    #  respond_with records
-    #end
   end
 
   def show
