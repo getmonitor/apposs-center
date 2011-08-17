@@ -17,7 +17,7 @@ cmd_group.cmd_defs << CmdDef.create(:name => 'echo redeploy')
 cmd_group2.cmd_defs << CmdDef.create( :name => 'echo start_nodejs')
 cmd_group2.cmd_defs << CmdDef.create( :name => 'echo stop_nodejs')
 
-app = App.create(:name => 'sample-app')
+app = App.create(:name => 'sample-app',:online => true)
 app.machines << Machine.create(:name => 'tanx1.cnz',:host => 'localhost')
 app.machines << Machine.create(:name => 'tanx2.cnz',:host => 'test')
 Machine.create(:name => 'tanx3.cnz',:host => 'test')

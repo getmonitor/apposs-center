@@ -867,6 +867,17 @@
                             renderer:Ext.util.Format.dateRenderer('Y-m-d H:i:s')
                         },
                         {
+                            text:'线上运行',
+                            dataIndex:'online',
+                            flex:1,
+                            renderer:function(value) {
+                                if (value === true) {
+                                    return '是';
+                                }
+                                return '<span style="color: red;">否</span>';
+                            }
+                        },
+                        {
                             flex:1,
                             xtype: 'actioncolumn',
                             items: [
@@ -921,7 +932,17 @@
                                                             fieldLabel:'应用名',
                                                             name:'app[name]',
                                                             value:record.get('name'),
-                                                            columnWidth:0.9
+                                                            labelWidth:60,
+                                                            columnWidth:0.65
+                                                        },
+                                                        {
+                                                            xtype:'checkbox',
+                                                            fieldLabel:'线上运行',
+                                                            name:'app[online]',
+                                                            checked:record.get('online'),
+                                                            columnWidth:0.25,
+                                                            margin:'0 0 0 20',
+                                                            labelWidth:60
                                                         },
                                                         {
                                                             xtype:'button',
@@ -933,7 +954,8 @@
                                                                     method:'PUT',
                                                                     params:{
                                                                         authenticity_token:$('meta[name="csrf-token"]').attr('content'),
-                                                                        'app[name]':this.previousSibling('textfield').value
+                                                                        'app[name]':this.previousSibling('textfield').value,
+                                                                        'app[online]':this.previousSibling('checkboxfield').checked
                                                                     },
                                                                     callback:function() {
                                                                         appGridStore.load();
@@ -1090,6 +1112,11 @@
                                                     name:'app[name]',
                                                     allowBlank:false,
                                                     blankText:'应用名不能为空'
+                                                },
+                                                {
+                                                    xtype:'hidden',
+                                                    name:'app[online]',
+                                                    value:true
                                                 }
                                             ],
                                             buttons:[

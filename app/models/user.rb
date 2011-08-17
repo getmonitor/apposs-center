@@ -6,11 +6,17 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
-  
+
   has_many :stakeholders
   has_many :apps, :through => :stakeholders, :class_name => 'App'
 
   has_many :cmd_sets, :foreign_key => "owner_id"
+
+  def is_admin
+    stakeholders.select do |record|
+      record.role_id == Role::Admin
+    end.length > 0
+  end
 end
 
 
