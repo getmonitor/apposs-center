@@ -22,4 +22,30 @@ class ApiController < ApplicationController
     )
   	render :text => 'ok'
   end
+  
+  def load_hosts
+    hosts = params[:hosts].split(",")[0,9] #考虑到性能，仅取前10个，其余下次再获取
+    render :text => Machine.where(:host => hosts).collect{|m|
+      "host=#{m.host},port=22,user=john,password=moxicai"
+    }.join(",")
+  end
+  
+  def packages
+    name,version,branch = params[:name], params[:version], params[:branch]
+    app = App.find_by_name name
+    if app
+      if request.post?
+        app.packages.create :version => version, :branch => branch
+        render :text => "ok"
+      else
+        if pack = app.packages.with_state(:using).first
+          render :text => pack.version
+        else
+          render :text => ""
+        end
+      end
+    else
+      render :text => "no_app"
+    end
+  end
 end

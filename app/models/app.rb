@@ -3,6 +3,8 @@ class App < ActiveRecord::Base
   has_many :stakeholders
   has_many :operators, :through => :stakeholders, :class_name => 'User'
   
+  has_many :packages
+  
   # Machine
   has_many :machines
 
