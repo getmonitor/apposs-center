@@ -30,6 +30,7 @@ pe_role = Role.create(:name => 'PE')
 appops_role = Role.create(:name => 'AppOPS')
 u = User.create(:email => 'lifu@taobao.com', :password => 'hahaha')
 Stakeholder.create :user => u, :app => app, :role => pe_role
+Stakeholder.create :user => u, :role => admin_role
 
 %w{cnz cm3 cm4}.each{|name| Room.create(:name => name)}
 
