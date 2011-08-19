@@ -15,19 +15,13 @@ class Admin::MachinesController < Admin::BaseController
   def create
     #machine = Machine.create(params[:machine])
     m = Machine.create(params[:machine])
-    m = m.attributes.update(
-        "errors" => m.errors
-    )
-    render :text => m.to_json
+    render :text => {"errors" => m.errors}.to_json
   end
 
   def update
     m = Machine.find(params[:id])
     m.update_attributes(params[:machine])
-    m = m.attributes.update(
-        "errors" => m.errors
-    )
-    render :text => m.to_json
+    render :text => {"errors" => m.errors}.to_json
   end
 
   def destroy
