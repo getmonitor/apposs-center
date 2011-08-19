@@ -175,7 +175,7 @@
                         //获取命令集表达式
                         cmdSetTreePanel.getRootNode().eachChild(function(child) {
                             var id = child.get('_id');
-                            expression += id.substring(id.length - 1, id.length) + (child.get('allowFailure') == true ? '|true' : '');
+                            expression += id.substring('cmd_def'.length) + (child.get('allowFailure') == true ? '|true' : '');
                             if (!child.isLast()) {
                                 expression += ',';
                             }
