@@ -9,15 +9,11 @@ class User < ActiveRecord::Base
 
   has_many :stakeholders
   has_many :apps, :through => :stakeholders, :class_name => 'App'
+  has_many :roles, :through => :stakeholders, :class_name => 'Role'
 
   has_many :cmd_sets, :foreign_key => "owner_id"
 
   def is_admin
-    stakeholders.select do |record|
-      record.role_id == Role::Admin
-    end.length > 0
+    roles.where(:name => Role::Admin).count > 0
   end
 end
-
-
-

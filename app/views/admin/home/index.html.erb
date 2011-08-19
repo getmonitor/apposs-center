@@ -1468,6 +1468,11 @@
             ]
         };
         //机器管理面板
+        var adapterData = [
+            {
+                name:'ssh'
+            }
+        ];
         var machinePanel = {
             id: '6',
             title:'机器管理',
@@ -1513,16 +1518,37 @@
                             }
                         },
                         {
+                            text:'端口号',
+                            dataIndex:'port',
+                            flex:6,
+                            editor: {
+                                xtype:'numberfield'
+                            }
+                        },
+                        {
+                            text:'连接方式',
+                            dataIndex:'adapter',
+                            flex:6,
+                            editor: {
+                                xtype:'combo',
+                                valueField:'name',
+                                displayField:'name',
+                                store:Ext.create('Ext.data.Store', {
+                                    fields:['name'],
+                                    data:adapterData
+                                }),
+                                editable:false
+                            }
+                        },
+                        {
                             text:'机房',
                             dataIndex:'room_id',
                             flex:4,
                             editor: {
                                 xtype:'combo',
-                                name:'room_id',
                                 valueField:'id',
                                 displayField:'name',
                                 store:editMachineRoomComboStore,
-//                            allowBlank: false,
                                 editable:false
                             },
                             renderer:roomRender
@@ -1533,11 +1559,9 @@
                             flex:4,
                             editor: {
                                 xtype:'combo',
-                                name:'app_id',
                                 valueField:'id',
                                 displayField:'name',
                                 store:editMachineAppComboStore,
-//                            allowBlank: false,
                                 editable:false
                             },
                             renderer:appRender
@@ -1622,6 +1646,23 @@
                                                     name:'machine[host]'
                                                 },
                                                 {
+                                                    fieldLabel:'端口号',
+                                                    xtype:'numberfield',
+                                                    name:'machine[port]'
+                                                },
+                                                {
+                                                    fieldLabel:'连接方式',
+                                                    xtype:'combo',
+                                                    name:'machine[adapter]',
+                                                    valueField:'name',
+                                                    displayField:'name',
+                                                    store:Ext.create('Ext.data.Store', {
+                                                        fields:['name'],
+                                                        data:adapterData
+                                                    }),
+                                                    editable:false
+                                                },
+                                                {
                                                     fieldLabel:'机房',
                                                     xtype:'combo',
                                                     name:'machine[room_id]',
@@ -1654,6 +1695,10 @@
                                                                     addMachineWin.close();
                                                                 },
                                                                 failure: function(form, action) {
+                                                                    if (action.result.errors.port) {
+                                                                        Ext.Msg.alert('提醒', action.result.errors.port[0]);
+                                                                        return;
+                                                                    }
                                                                     machineGridStore.load();
                                                                     addMachineRoomComboStore.load();
                                                                     addMachineAppComboStore.load();
@@ -1683,22 +1728,33 @@
                     }),
                     listeners: {
                         edit:function(editor, e) {
-                            editor.record.commit();
                             var record = editor.record;
+                            var params = {
+                                authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                'machine[name]':record.get('name'),
+                                'machine[host]':record.get('host'),
+                                'machine[room_id]':record.get('room_id'),
+                                'machine[app_id]':record.get('app_id'),
+                                'machine[user]':record.get('user'),
+                                'machine[port]':record.get('port'),
+                                'machine[adapter]':record.get('adapter')
+                            };
+                            if (!!record.get('password')) {
+                                params['machine[password]'] = record.get('password');
+                                record.set('password', '');
+                            }
                             Ext.Ajax.request({
                                 url:"<%= admin_machines_path %>/" + record.get('id'),
                                 method:'PUT',
-                                params:{
-                                    authenticity_token:$('meta[name="csrf-token"]').attr('content'),
-                                    'machine[name]':record.get('name'),
-                                    'machine[host]':record.get('host'),
-                                    'machine[room_id]':record.get('room_id'),
-                                    'machine[app_id]':record.get('app_id'),
-                                    'machine[user]':record.get('user'),
-                                    'machine[password]':record.get('password')
-                                },
+                                params:params,
                                 callback:function(options, success, response) {
-
+                                    var result = Ext.decode(response.responseText);
+                                    if (result.errors.port) {
+                                        Ext.Msg.alert('提醒', result.errors.port[0]);
+                                        record.reject();
+                                        return;
+                                    }
+                                    record.commit();
                                 }
                             });
                         }

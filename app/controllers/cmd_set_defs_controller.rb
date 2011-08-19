@@ -1,7 +1,8 @@
 class CmdSetDefsController < BaseController
   def index
     app_id = params[:app_id]
-    role = Stakeholder.where(:app_id => app_id, :user_id => current_user.id).first.role_id
+    role_id = Stakeholder.where(:app_id => app_id, :user_id => current_user.id).first.role_id
+    role = Role.find(role_id).name
     if role == Role::Admin || role == Role::PE
       respond_with current_app.cmd_set_defs.collect { |obj|
         obj.serializable_hash.update("actions" => [

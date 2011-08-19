@@ -5,7 +5,7 @@ class CreateMachines < ActiveRecord::Migration
       t.string  :host
       t.integer :room_id
       t.integer :app_id
-      t.string  :port
+      t.integer  :port
       t.string  :adapter, :default => :ssh
       t.string  :user
       t.string  :password
