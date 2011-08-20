@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Package do
+describe ReleasePack do
   fixtures :apps,:packages
   it "package can switch its version" do
     app = App.first

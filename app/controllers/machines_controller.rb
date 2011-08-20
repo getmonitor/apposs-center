@@ -8,8 +8,7 @@ class MachinesController < BaseController
   end
 
   def command_state
-    machine_id = params[:id]
-    operations = Machine.find(machine_id).operations_on_current_app.collect do |o|
+    operations = Machine.find(params[:id]).operations.collect do |o|
       o.attributes.update(
           "leaf" => true,
           "state" => o.human_state_name,

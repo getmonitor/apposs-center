@@ -1,4 +1,4 @@
-class Package < ActiveRecord::Base
+class ReleasePack < ActiveRecord::Base
   belongs_to :app
   
   def vnumber

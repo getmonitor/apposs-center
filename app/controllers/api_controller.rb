@@ -40,10 +40,10 @@ class ApiController < ApplicationController
     app = App.find_by_name name
     if app
       if request.post?
-        app.packages.create :version => version, :branch => branch
+        app.release_packs.create :version => version, :branch => branch
         render :text => "ok"
       else
-        if pack = app.packages.with_state(:using).first
+        if pack = app.release_packs.with_state(:using).first
           render :text => pack.version
         else
           render :text => ""

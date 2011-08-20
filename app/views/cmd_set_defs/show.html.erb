@@ -16,8 +16,8 @@
 
 <input type="hidden" id="cmd_set_def_name" value="<%= @cmd_set_def.name %>"/>
 <select id="cmd_set_def_expression" style="display: none;">
-  <% @cmd_set_def.cmd_defs.each do |cmd_def| %>
-      <option value="<%= cmd_def.split('-')[0] %>"><%= cmd_def.split('-')[1] %></option>
+  <% @cmd_set_def.cmd_defs do |cmd_def, next_when_fail| %>
+      <option value="<%= "#{cmd_def.id}|#{next_when_fail}" %>"><%= cmd_def.name %></option>
   <% end %>
 </select>
 <script type="text/javascript">
