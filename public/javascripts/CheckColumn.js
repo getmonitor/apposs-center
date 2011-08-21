@@ -7,7 +7,7 @@
  */
 Ext.define('Ext.ux.CheckColumn', {
     extend: 'Ext.grid.column.Column',
-    alias: 'widget.checkcolumn',
+    alias: 'widget.treecheckcolumn',
 
     constructor: function() {
         this.addEvents(
