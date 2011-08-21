@@ -3,14 +3,19 @@ class CmdSetDefsController < BaseController
     app_id = params[:app_id]
     role_id = Stakeholder.where(:app_id => app_id, :user_id => current_user.id).first.role_id
     role = Role.find(role_id).name
+    cmd_set_defs = current_app.cmd_set_defs
     if role == Role::Admin || role == Role::PE
-      respond_with current_app.cmd_set_defs.collect { |obj|
-        obj.serializable_hash.update("actions" => [
-            {:name=>"准备执行", :flex => 1.7, :url=> app_cmd_sets_path(app_id), :type => 'simple', :method => 'POST'},
-            {:name=>"修改", :flex => 1, :url=> edit_app_cmd_set_def_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
-            {:name=>"删除", :flex => 1, :url=> app_cmd_set_def_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
-        ], "flex" => 8, "add" => true)
-      }
+      if cmd_set_defs.length == 0
+        respond_with [{"add" => true}]
+      else
+        respond_with cmd_set_defs.collect { |obj|
+          obj.serializable_hash.update("actions" => [
+              {:name=>"准备执行", :flex => 1.7, :url=> app_cmd_sets_path(app_id), :type => 'simple', :method => 'POST'},
+              {:name=>"修改", :flex => 1, :url=> edit_app_cmd_set_def_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
+              {:name=>"删除", :flex => 1, :url=> app_cmd_set_def_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
+          ], "flex" => 8, "add" => true)
+        }
+      end
     else
       respond_with current_app.cmd_set_defs.collect { |obj|
         obj.serializable_hash.update("actions" => [

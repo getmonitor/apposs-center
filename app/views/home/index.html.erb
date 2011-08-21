@@ -472,6 +472,10 @@
                     var cmdSet = Ext.decode(cmdSetStr);
                     var cmdSetPanel = [];
                     for (var j = 0,len = cmdSet.length; j < len; j++) {
+                        var actions = cmdSet[j].actions;
+                        if (!actions) {
+                            continue;
+                        }
                         var columnCount = cmdSet[j].actions.length + 1;
                         var cmdSetPanelCmps = [];
                         cmdSetPanelCmps[cmdSetPanelCmps.length] = {
