@@ -10,7 +10,7 @@
 
         //准备执行命令包时，选择要执行命令的机器，发送到后台的appId与cmdSetDefId参数
         var chooseMachineToExecuteAppId = 1;
-        var chooseMachineToExecuteCmdSetDefId = 1;
+        var chooseMachineToExecuteOperationTemplateId = 1;
         //机器名
         var machineName;
         //Application Panel array
@@ -389,7 +389,7 @@
                                 method:'POST',
                                 params:{
                                     authenticity_token:csrf_token,
-                                    cmd_set_def_id:chooseMachineToExecuteCmdSetDefId,
+                                    operation_template_id:chooseMachineToExecuteOperationTemplateId,
                                     choosedMachines:choosedMachines.join(',')
                                 },
                                 callback:function(options, success, response) {
@@ -466,7 +466,7 @@
         //为应用加载命令包
         function loadCmdSetForApp(appId) {
             Ext.Ajax.request({
-                url:"<%= apps_path %>/" + appId + '/cmd_set_defs',
+                url:"<%= apps_path %>/" + appId + '/operation_templates',
                 callback:function(options, success, response) {
                     var cmdSetStr = response.responseText;
                     var cmdSet = Ext.decode(cmdSetStr);
@@ -493,7 +493,7 @@
                                             return function() {
                                                 if (type.toLowerCase() == 'simple') {
                                                     chooseMachineToExecuteAppId = appId;
-                                                    chooseMachineToExecuteCmdSetDefId = cmdSetDefId;
+                                                    chooseMachineToExecuteOperationTemplateId = cmdSetDefId;
                                                     var executeCommandWin = Ext.create('Ext.Window', {
                                                         title:'选择执行方式',
                                                         width:300,
@@ -575,7 +575,7 @@
                                                     method:method,
                                                     params:{
                                                         authenticity_token:csrf_token,
-                                                        cmd_set_def_id:cmdSetDefId
+                                                        operation_template_id:cmdSetDefId
                                                     },
                                                     callback:(function(type) {
                                                         return function(options, success, response) {
@@ -775,12 +775,12 @@
                         });
                         //增加命令包完成后刷新用户界面中的命令包信息
                         Ext.Ajax.request({
-                            url:"<%= apps_path %>/" + appId + '/cmd_set_defs',
+                            url:"<%= apps_path %>/" + appId + '/operation_templates',
                             method:'POST',
                             params:{
                                 authenticity_token:csrf_token,
-                                'cmd_set_def[name]':Ext.getCmp('cmdSetName').value,
-                                'cmd_set_def[expression]':expression
+                                'operation_template[name]':Ext.getCmp('cmdSetName').value,
+                                'operation_template[expression]':expression
                             },
                             callback:function(options, success, response) {
                                 Ext.getCmp('savedStatus').setText('命令包增加成功');
@@ -968,7 +968,7 @@
                 appTabPanel.add(appPanels);//Add to addTabPanel
 
                 for (var i = 0; i < obj.length; i++) {
-                    //此处获取App的命令包列表，url为apps/:id/cmd_set_defs
+                    //此处获取App的命令包列表，url为apps/:id/operation_templates
                     loadCmdSetForApp(obj[i].id);
                 }
             }

@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title><%= @cmd_set_def.app %></title>
+  <title><%= @operation_template.app %></title>
   <%= stylesheet_link_tag 'resources/css/ext-all' %>
   <%= stylesheet_link_tag 'CheckHeader' %>
   <%= javascript_include_tag "jquery.min" %>
@@ -10,13 +10,13 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-<input type="hidden" id="app_id" value="<%= @cmd_set_def.app.id %>"/>
-<input type="hidden" id="app_name" value="<%= @cmd_set_def.app.name %>"/>
-<input type="hidden" id="cmd_set_def_id" value="<%= @cmd_set_def.id %>"/>
+<input type="hidden" id="app_id" value="<%= @operation_template.app.id %>"/>
+<input type="hidden" id="app_name" value="<%= @operation_template.app.name %>"/>
+<input type="hidden" id="operation_template_id" value="<%= @operation_template.id %>"/>
 
-<input type="hidden" id="cmd_set_def_name" value="<%= @cmd_set_def.name %>"/>
-<select id="cmd_set_def_expression" style="display: none;">
-  <% @cmd_set_def.directive_templates do |directive_template, next_when_fail| %>
+<input type="hidden" id="operation_template_name" value="<%= @operation_template.name %>"/>
+<select id="operation_template_expression" style="display: none;">
+  <% @operation_template.directive_templates do |directive_template, next_when_fail| %>
       <option value="<%= "#{directive_template.id}|#{next_when_fail}" %>"><%= directive_template.name %></option>
   <% end %>
 </select>
@@ -184,12 +184,12 @@
                         //更新命令集
 
                         Ext.Ajax.request({
-                            url:"<%= apps_path %>/" + appId + '/cmd_set_defs/' + cmdSetDefId,
+                            url:"<%= apps_path %>/" + appId + '/operation_templates/' + cmdSetDefId,
                             method:'PUT',
                             params:{
                                 authenticity_token:csrf_token,
-                                'cmd_set_def[name]':Ext.getCmp('cmdSetName').value,
-                                'cmd_set_def[expression]':expression
+                                'operation_template[name]':Ext.getCmp('cmdSetName').value,
+                                'operation_template[expression]':expression
                             },
                             callback:function(options, success, response) {
                             }
@@ -200,9 +200,9 @@
                 //获取命令包的相关信息
                 var appId = $('app_id').value;
                 var appName = $('app_name').value;
-                var cmdSetDefId = $('cmd_set_def_id').value;
-                var cmdSetDefName = $('cmd_set_def_name').value;
-                var cmdSetDefExpression = $('cmd_set_def_expression').options;
+                var cmdSetDefId = $('operation_template_id').value;
+                var cmdSetDefName = $('operation_template_name').value;
+                var cmdSetDefExpression = $('operation_template_expression').options;
 
                 var cmdDefList = [];
                 for (var i = 0, len = cmdSetDefExpression.length; i < len; i++) {

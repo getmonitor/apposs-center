@@ -1,5 +1,5 @@
 class CmdSet < ActiveRecord::Base
-  belongs_to :cmd_set_def
+  belongs_to :operation_template
 
   has_many :directives
   has_many :machines, :through => :directives

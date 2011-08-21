@@ -1,6 +1,6 @@
-class CreateCmdSetDefs < ActiveRecord::Migration
+class CreateOperationTemplates < ActiveRecord::Migration
   def self.up
-    create_table :cmd_set_defs do |t|
+    create_table :operation_templates do |t|
       t.string :name
       t.integer :app_id
       t.string :expression
@@ -11,6 +11,6 @@ class CreateCmdSetDefs < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :cmd_set_defs
+    drop_table :operation_templates
   end
 end

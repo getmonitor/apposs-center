@@ -73,7 +73,7 @@ Apposs::Application.routes.draw do
     resources :machines do
       get :command_state, :on => :member
     end
-    resources :cmd_set_defs
+    resources :operation_templates
     resources :cmd_sets
   end
 

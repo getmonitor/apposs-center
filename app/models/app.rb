@@ -8,7 +8,7 @@ class App < ActiveRecord::Base
   # Machine
   has_many :machines
 
-  has_many :cmd_set_defs
+  has_many :operation_templates
   
   has_many :cmd_sets
   

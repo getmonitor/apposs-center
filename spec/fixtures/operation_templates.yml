@@ -1,4 +1,4 @@
-cmd_set_def1:
+operation_template1:
   id: 1
   app_id: 1
   name: upgrade package

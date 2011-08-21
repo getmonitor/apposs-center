@@ -1,4 +1,4 @@
-class CmdSetDef < ActiveRecord::Base
+class OperationTemplate < ActiveRecord::Base
   belongs_to :app
   has_many :cmd_sets
 

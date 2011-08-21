@@ -30,7 +30,7 @@ class CmdSetsController < BaseController
     if params[:choosedMachines]
       choosedMachineIds = params[:choosedMachines].split(',').collect{|s| s.to_i}.uniq
     end
-    current_app.cmd_set_defs.find(params[:cmd_set_def_id]).create_cmd_set(current_user, choosedMachineIds)
+    current_app.operation_templates.find(params[:operation_template_id]).create_cmd_set(current_user, choosedMachineIds)
     render :text => "命令包已创建"
   end
 
