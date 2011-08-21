@@ -503,7 +503,7 @@
                                 name:'cmd_group_id',
                                 valueField:'id',
                                 displayField:'name',
-                                store:editCmdDefCmdGroupComboStore,
+                                store:editDirectiveTemplateCmdGroupComboStore,
                                 editable:false
                             },
                             renderer:cmdGroupRender
@@ -518,7 +518,7 @@
                                     handler: function(grid, rowIndex, colIndex) {
                                         var r = cmdDefGridStore.getAt(rowIndex);
                                         Ext.Ajax.request({
-                                            url:"<%=admin_cmd_defs_path %>/" + r.get('id'),
+                                            url:"<%=admin_directive_templates_path %>/" + r.get('id'),
                                             method:'DELETE',
                                             params:{
                                                 authenticity_token:$('meta[name="csrf-token"]').attr('content')
@@ -539,7 +539,7 @@
                             text: '增加命令',
                             iconCls:'add',
                             handler : function() {
-                                var addCmdDefWin = Ext.create('Ext.Window', {
+                                var addDirectiveTemplateWin = Ext.create('Ext.Window', {
                                     title:'增加命令',
                                     layout:'border',
                                     width:500,
@@ -547,7 +547,7 @@
                                         Ext.create('Ext.form.Panel', {
                                             region:'center',
                                             frame:'true',
-                                            url:"<%=admin_cmd_defs_path %>/",
+                                            url:"<%=admin_directive_templates_path %>/",
                                             defaultType:'textfield',
                                             defaults: {
                                                 labelWidth:90,
@@ -561,41 +561,41 @@
                                                 },
                                                 {
                                                     fieldLabel:'命令名',
-                                                    name:'cmd_def[name]',
+                                                    name:'directive_template[name]',
                                                     allowBlank:false,
                                                     blankText:'命令名不能为空'
                                                 },
                                                 {
                                                     fieldLabel:'别名',
-                                                    name:'cmd_def[alias]'
+                                                    name:'directive_template[alias]'
                                                 },
                                                 {
                                                     fieldLabel:'参数1',
-                                                    name:'cmd_def[arg1]'
+                                                    name:'directive_template[arg1]'
                                                 },
                                                 {
                                                     fieldLabel:'参数2',
-                                                    name:'cmd_def[arg2]'
+                                                    name:'directive_template[arg2]'
                                                 },
                                                 {
                                                     fieldLabel:'参数3',
-                                                    name:'cmd_def[arg3]'
+                                                    name:'directive_template[arg3]'
                                                 },
                                                 {
                                                     fieldLabel:'参数4',
-                                                    name:'cmd_def[arg4]'
+                                                    name:'directive_template[arg4]'
                                                 },
                                                 {
                                                     fieldLabel:'参数5',
-                                                    name:'cmd_def[arg5]'
+                                                    name:'directive_template[arg5]'
                                                 },
                                                 {
                                                     fieldLabel:'命令组',
                                                     xtype:'combo',
-                                                    name:'cmd_def[cmd_group_id]',
+                                                    name:'directive_template[cmd_group_id]',
                                                     valueField:'id',
                                                     displayField:'name',
-                                                    store:addCmdDefCmdGroupComboStore,
+                                                    store:addDirectiveTemplateCmdGroupComboStore,
                                                     editable:false
                                                 }
                                             ],
@@ -608,12 +608,12 @@
                                                             form.submit({
                                                                 success: function(form, action) {
                                                                     cmdDefGridStore.load();
-                                                                    addCmdDefWin.close();
+                                                                    addDirectiveTemplateWin.close();
                                                                 },
                                                                 failure: function(form, action) {
                                                                     cmdDefGridStore.load();
-                                                                    addCmdDefCmdGroupComboStore.load();
-                                                                    addCmdDefWin.close();
+                                                                    addDirectiveTemplateCmdGroupComboStore.load();
+                                                                    addDirectiveTemplateWin.close();
                                                                 }
                                                             });
                                                         }
@@ -629,7 +629,7 @@
                                         })
                                     ]
                                 });
-                                addCmdDefWin.show();
+                                addDirectiveTemplateWin.show();
                             }
                         }
                     ],
@@ -642,18 +642,18 @@
                             editor.record.commit();
                             var record = editor.record;
                             Ext.Ajax.request({
-                                url:"<%=admin_cmd_defs_path %>/" + record.get('id'),
+                                url:"<%=admin_directive_templates_path %>/" + record.get('id'),
                                 method:'PUT',
                                 params:{
                                     authenticity_token:$('meta[name="csrf-token"]').attr('content'),
-                                    'cmd_def[name]':record.get('name'),
-                                    'cmd_def[alias]':record.get('alias'),
-                                    'cmd_def[arg1]':record.get('arg1'),
-                                    'cmd_def[arg2]':record.get('arg2'),
-                                    'cmd_def[arg3]':record.get('arg3'),
-                                    'cmd_def[arg4]':record.get('arg4'),
-                                    'cmd_def[arg5]':record.get('arg5'),
-                                    'cmd_def[cmd_group_id]':record.get('cmd_group_id')
+                                    'directive_template[name]':record.get('name'),
+                                    'directive_template[alias]':record.get('alias'),
+                                    'directive_template[arg1]':record.get('arg1'),
+                                    'directive_template[arg2]':record.get('arg2'),
+                                    'directive_template[arg3]':record.get('arg3'),
+                                    'directive_template[arg4]':record.get('arg4'),
+                                    'directive_template[arg5]':record.get('arg5'),
+                                    'directive_template[cmd_group_id]':record.get('cmd_group_id')
                                 },
                                 callback:function(options, success, response) {
 
@@ -775,12 +775,12 @@
                                                             form.submit({
                                                                 success: function(form, action) {
                                                                     cmdGroupGridStore.load();
-                                                                    editCmdDefCmdGroupComboStore.load();
+                                                                    editDirectiveTemplateCmdGroupComboStore.load();
                                                                     addCmdGroupWin.close();
                                                                 },
                                                                 failure: function(form, action) {
                                                                     cmdGroupGridStore.load();
-                                                                    editCmdDefCmdGroupComboStore.load();
+                                                                    editDirectiveTemplateCmdGroupComboStore.load();
                                                                     addCmdGroupWin.close();
                                                                 }
                                                             });
@@ -1783,7 +1783,7 @@
         adminMenuTreePanel.getSelectionModel().on('select', function(selModel, record) {
             adminDirectivePanel.layout.setActiveItem(record.get('id'));
             if (record.get('id') == 2) {
-                editCmdDefCmdGroupComboStore.load();
+                editDirectiveTemplateCmdGroupComboStore.load();
                 cmdDefGridStore.load();
             }
             if (record.get('id') == 6) {

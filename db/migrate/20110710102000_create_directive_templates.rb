@@ -1,6 +1,6 @@
-class CreateCmdDefs < ActiveRecord::Migration
+class CreateDirectiveTemplates < ActiveRecord::Migration
   def self.up
-    create_table :cmd_defs do |t|
+    create_table :directive_templates do |t|
       t.string :name
       t.string :alias
       t.string :arg1
@@ -16,6 +16,6 @@ class CreateCmdDefs < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :cmd_defs
+    drop_table :directive_templates
   end
 end

@@ -42,5 +42,5 @@ zh-CN:
         name: '名称'
       cmd_group:
         name: '名称'
-        cmd_def: '预定义命令'
+        directive_template: '预定义命令'
 

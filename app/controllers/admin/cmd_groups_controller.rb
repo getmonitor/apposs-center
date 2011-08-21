@@ -17,9 +17,9 @@ class Admin::CmdGroupsController < Admin::BaseController
   def destroy
     group = model.find(params[:id])
     if cascade?
-      group.cmd_defs.each { |cmd_def| cmd_def.delete }
+      group.directive_templates.each { |directive_template| directive_template.delete }
     else
-      group.cmd_defs.clear
+      group.directive_templates.clear
     end
     respond_with group.delete
   end

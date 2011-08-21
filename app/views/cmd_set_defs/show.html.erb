@@ -16,8 +16,8 @@
 
 <input type="hidden" id="cmd_set_def_name" value="<%= @cmd_set_def.name %>"/>
 <select id="cmd_set_def_expression" style="display: none;">
-  <% @cmd_set_def.cmd_defs do |cmd_def, next_when_fail| %>
-      <option value="<%= "#{cmd_def.id}|#{next_when_fail}" %>"><%= cmd_def.name %></option>
+  <% @cmd_set_def.directive_templates do |directive_template, next_when_fail| %>
+      <option value="<%= "#{directive_template.id}|#{next_when_fail}" %>"><%= directive_template.name %></option>
   <% end %>
 </select>
 <script type="text/javascript">
@@ -44,14 +44,14 @@
                     cmdGroupNode.text = cmdGroup.name;
 
                     //为命令组增加命令
-                    var cmdDefs = cmdGroup.cmd_defs;
+                    var cmdDefs = cmdGroup.directive_templates;
                     if (cmdDefs.length == 0) {
                         cmdGroupNode.leaf = true;
                     } else {
                         var children = [];
                         for (var j = 0; j < cmdDefs.length; j++) {
                             var cmdDef = {};
-                            cmdDef.id = 'cmd_def' + cmdDefs[j].id;
+                            cmdDef.id = 'directive_template' + cmdDefs[j].id;
                             cmdDef.text = cmdDefs[j].name;
                             cmdDef.leaf = true;
 
@@ -175,7 +175,7 @@
                         //获取命令集表达式
                         cmdSetTreePanel.getRootNode().eachChild(function(child) {
                             var id = child.get('_id');
-                            expression += id.substring('cmd_def'.length) + (child.get('allowFailure') == true ? '|true' : '');
+                            expression += id.substring('directive_template'.length) + (child.get('allowFailure') == true ? '|true' : '');
                             if (!child.isLast()) {
                                 expression += ',';
                             }

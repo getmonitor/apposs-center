@@ -55,7 +55,7 @@ Apposs::Application.routes.draw do
 
   namespace :admin, :module => "admin" do
     root :to => 'home#index'
-    resources :cmd_defs
+    resources :directive_templates
     resources :cmd_groups
     resources :apps
     resources :users

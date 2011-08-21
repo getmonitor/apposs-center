@@ -34,9 +34,9 @@
      * To change this template use File | Settings | File Templates.
      */
 //命令Model
-//createModel('CmdDef', ['id','name','alias','arg1','arg2','arg3','arg4','arg5','cmd_group_id'], {
+//createModel('DirectiveTemplate', ['id','name','alias','arg1','arg2','arg3','arg4','arg5','cmd_group_id'], {
 //    type:'ajax',
-//    url:'/admin/cmd_defs',
+//    url:'/admin/directive_templates',
 //    reader:'json',
 //    extraParams: {
 //        authenticity_token:$('meta[name="csrf-token"]').attr('content')
@@ -44,16 +44,16 @@
 //});
     var nsCmdCmdSet = {};
     nsCmdCmdSet.PAGE_SIZE = 50;
-    Ext.define('CmdDef', {
+    Ext.define('DirectiveTemplate', {
         extend:'Ext.data.Model',
         fields:['id','name','alias','arg1','arg2','arg3','arg4','arg5','cmd_group_id'],
         proxy:{
             type:'ajax',
-            url:"<%= admin_cmd_defs_path %>",
+            url:"<%= admin_directive_templates_path %>",
             reader:{
                 type:'json',
                 totalProperty:'totalCount',
-                root:'cmd_defs'
+                root:'directive_templates'
             },
             extraParams: {
                 authenticity_token:$('meta[name="csrf-token"]').attr('content')
@@ -63,7 +63,7 @@
 
     //命令的GridPanel Store
     var cmdDefGridStore = Ext.create('Ext.data.Store', {
-        model:CmdDef,
+        model:DirectiveTemplate,
         pageSize:nsCmdCmdSet.PAGE_SIZE
     });
 
@@ -83,13 +83,13 @@
     });
 
     //编辑命令中的命令组Combo的Store
-    var editCmdDefCmdGroupComboStore = Ext.create('Ext.data.Store', {
+    var editDirectiveTemplateCmdGroupComboStore = Ext.create('Ext.data.Store', {
         model:CmdGroup,
         autoLoad:true
     });
-    editCmdDefCmdGroupComboStore.load();
+    editDirectiveTemplateCmdGroupComboStore.load();
     //增加命令时对应的命令组
-    var addCmdDefCmdGroupComboStore = Ext.create('Ext.data.Store', {
+    var addDirectiveTemplateCmdGroupComboStore = Ext.create('Ext.data.Store', {
         model:CmdGroup,
         autoLoad:true
     });
@@ -101,7 +101,7 @@
     cmdGroupGridStore.loadPage(1)
     //命令中的命令组renderer
     function cmdGroupRender(value) {
-        var comboRecord = editCmdDefCmdGroupComboStore.getById(value);
+        var comboRecord = editDirectiveTemplateCmdGroupComboStore.getById(value);
         if (comboRecord) {
             return comboRecord.get('name');
         }

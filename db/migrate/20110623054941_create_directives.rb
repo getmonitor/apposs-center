@@ -3,7 +3,7 @@ class CreateDirectives < ActiveRecord::Migration
     create_table :directives do |t|
       t.integer :cmd_set_id
       t.integer :machine_id
-      t.integer :cmd_def_id
+      t.integer :directive_template_id
       t.boolean :next_when_fail
       t.string :state
       t.boolean :isok, :default => false

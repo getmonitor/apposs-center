@@ -666,14 +666,14 @@
                         cmdGroupNode.text = cmdGroup.name;
 
                         //为命令组增加命令
-                        var cmdDefs = cmdGroup.cmd_defs;
+                        var cmdDefs = cmdGroup.directive_templates;
                         if (cmdDefs.length == 0) {
                             cmdGroupNode.leaf = true;
                         } else {
                             var children = [];
                             for (var j = 0; j < cmdDefs.length; j++) {
                                 var cmdDef = {};
-                                cmdDef.id = 'cmd_def' + cmdDefs[j].id;
+                                cmdDef.id = 'directive_template' + cmdDefs[j].id;
                                 cmdDef.text = cmdDefs[j].name;
                                 cmdDef.leaf = true;
 

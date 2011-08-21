@@ -1,5 +1,5 @@
 class CmdGroup < ActiveRecord::Base
-  has_many :cmd_defs, :dependent => :nullify
+  has_many :directive_templates, :dependent => :nullify
 
   def to_s
     name

@@ -10,12 +10,12 @@
 
 #cmd_group2 = CmdGroup.create :name => 'nodejs'
 
-#cmd_group.cmd_defs << CmdDef.create(:name => 'echo start')
-#cmd_group.cmd_defs << CmdDef.create(:name => 'echo stop')
-#cmd_group.cmd_defs << CmdDef.create(:name => 'echo redeploy')
+#cmd_group.directive_templates << DirectiveTemplate.create(:name => 'echo start')
+#cmd_group.directive_templates << DirectiveTemplate.create(:name => 'echo stop')
+#cmd_group.directive_templates << DirectiveTemplate.create(:name => 'echo redeploy')
 
-#cmd_group2.cmd_defs << CmdDef.create( :name => 'echo start_nodejs')
-#cmd_group2.cmd_defs << CmdDef.create( :name => 'echo stop_nodejs')
+#cmd_group2.directive_templates << DirectiveTemplate.create( :name => 'echo start_nodejs')
+#cmd_group2.directive_templates << DirectiveTemplate.create( :name => 'echo stop_nodejs')
 
 #app = App.create(:name => 'sample-app',:online => true)
 #app.machines << Machine.create(:name => 'tanx1.cnz',:host => 'localhost',:port => 22)

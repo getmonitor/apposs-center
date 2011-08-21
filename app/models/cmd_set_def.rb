@@ -20,13 +20,13 @@ class CmdSetDef < ActiveRecord::Base
         where(:id => machines.collect { |m| m.room_id }.uniq).
         inject({}) { |map, room| map.update(room.id => room.name) }
 
-    cmd_defs do |cmd_def, next_when_fail|
+    directive_templates do |directive_template, next_when_fail|
       # 循环创建 directive 对象
       machines.collect { |m|
-        command_name = cmd_def.name
-        cmd_def_id = cmd_def.id
+        command_name = directive_template.name
+        directive_template_id = directive_template.id
         m.directives.create(
-            :cmd_def_id => cmd_def_id,
+            :directive_template_id => directive_template_id,
             :cmd_set_id => cmd_set_id,
             :room_id => m.room_id,
             :machine_host => m.host,
@@ -38,14 +38,14 @@ class CmdSetDef < ActiveRecord::Base
     end
   end
 
-  def cmd_defs
+  def directive_templates
     expression.split(',').collect { |item|
       pair = item.squish.split('|')
-      cmd_def = CmdDef.find(pair[0].to_i) rescue nil
-      if cmd_def and block_given?
-        yield cmd_def, (pair[1]=="true")
+      directive_template = DirectiveTemplate.find(pair[0].to_i) rescue nil
+      if directive_template and block_given?
+        yield directive_template, (pair[1]=="true")
       end
-      cmd_def
+      directive_template
     }
   end
 
