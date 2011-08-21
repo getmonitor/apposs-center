@@ -4,9 +4,9 @@ class ApiController < ApplicationController
   	# 查询参数包括机房的 name 和 id，是考虑到 room 表的name字段发生变动，
   	# 此时应该谨慎处理，不下发相应的命令
     if params[:reload]
-      operQuery = Operation.with_state(:init,:ready,:running)
+      operQuery = Directive.with_state(:init,:ready,:running)
     else
-      operQuery = Operation.with_state(:init)
+      operQuery = Directive.with_state(:init)
     end
   	render :text => operQuery.where(:room_id => room.id, :room_name => room.name).collect{|o|
   		o.download
@@ -14,15 +14,15 @@ class ApiController < ApplicationController
   	}.join("\n")
   end
   
-  #{host,Host},{oid,OperationId}
+  #{host,Host},{oid,DirectiveId}
   def run
-    Operation.find(params[:oid]).invoke
+    Directive.find(params[:oid]).invoke
     render :text => 'ok'
   end
   
-  # {isok,atom_to_list(IsOk)},{host,Host},{oid,OperationId},{body,Body}
+  # {isok,atom_to_list(IsOk)},{host,Host},{oid,DirectiveId},{body,Body}
   def callback
-    Operation.find(params[:oid]).callback(
+    Directive.find(params[:oid]).callback(
         "true"==params[:isok], params[:body]
     )
   	render :text => 'ok'

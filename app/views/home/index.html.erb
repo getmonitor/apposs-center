@@ -35,8 +35,8 @@
         //Add Current User's Application to the appPanels array.
         function addAppTabPanel(name, id) {
             //请求加载机器上的操作执行状态的队列
-            var requestMachineOperationStateQueue = [];
-            var requestMachineOperationInProcess = false;
+            var requestMachineDirectiveStateQueue = [];
+            var requestMachineDirectiveInProcess = false;
             //当前应用的机器列表Store
             var machineStore = Ext.create('Ext.data.Store', {
                 pageSize: 200,
@@ -119,9 +119,9 @@
                                         if (Ext.getCmp('centerCardPanel' + id).layout.getActiveItem() == appMachineCommandStateTreePanel) {
                                             var machine = selections[0];
                                             if (machine) {
-                                                requestMachineOperationStateQueue.push(machine);
-                                                if (!requestMachineOperationInProcess) {
-                                                    requestMachineOperationInProcess = true;
+                                                requestMachineDirectiveStateQueue.push(machine);
+                                                if (!requestMachineDirectiveInProcess) {
+                                                    requestMachineDirectiveInProcess = true;
                                                     appMachineCommandStateTreePanel.setTitle("当前应用的" + machine.get('name') + "机器上的命令执行状态");
                                                     machineCommandStore.proxy.url = "<%= apps_path %>/" + id + '/machines/' + machine.get('id') + '/command_state'
                                                     machineCommandStore.load();
@@ -204,14 +204,14 @@
                 }
             });
             machineCommandProxy.afterRequest = function() {
-                requestMachineOperationStateQueue.shift();
-                if (requestMachineOperationStateQueue.length > 0) {
-                    var machine = requestMachineOperationStateQueue.shift();
+                requestMachineDirectiveStateQueue.shift();
+                if (requestMachineDirectiveStateQueue.length > 0) {
+                    var machine = requestMachineDirectiveStateQueue.shift();
                     appMachineCommandStateTreePanel.setTitle("当前应用的" + machine.get('name') + "机器上的命令执行状态");
                     machineCommandStore.proxy.url = "<%= apps_path %>/" + id + '/machines/' + machine.get('id') + '/command_state'
                     machineCommandStore.load();
                 } else {
-                    requestMachineOperationInProcess = false;
+                    requestMachineDirectiveInProcess = false;
                 }
             };
 

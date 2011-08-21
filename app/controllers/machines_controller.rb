@@ -8,14 +8,14 @@ class MachinesController < BaseController
   end
 
   def command_state
-    operations = Machine.find(params[:id]).operations.collect do |o|
+    directives = Machine.find(params[:id]).directives.collect do |o|
       o.attributes.update(
           "leaf" => true,
           "state" => o.human_state_name,
           "name" => o.command_name
       )
     end
-    respond_with operations
+    respond_with directives
   end
 
 end

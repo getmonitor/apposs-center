@@ -1,8 +1,8 @@
 class CmdSet < ActiveRecord::Base
   belongs_to :cmd_set_def
 
-  has_many :operations
-  has_many :machines, :through => :operations
+  has_many :directives
+  has_many :machines, :through => :directives
 
   belongs_to :operator, :class_name => 'User'
 

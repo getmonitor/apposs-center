@@ -1,4 +1,4 @@
-class Operation < ActiveRecord::Base
+class Directive < ActiveRecord::Base
   belongs_to :machine
   belongs_to :cmd_set
   belongs_to :cmd_set

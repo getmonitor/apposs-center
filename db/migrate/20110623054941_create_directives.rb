@@ -1,6 +1,6 @@
-class CreateOperations < ActiveRecord::Migration
+class CreateDirectives < ActiveRecord::Migration
   def self.up
-    create_table :operations do |t|
+    create_table :directives do |t|
       t.integer :cmd_set_id
       t.integer :machine_id
       t.integer :cmd_def_id
@@ -18,15 +18,15 @@ class CreateOperations < ActiveRecord::Migration
       # 时间戳
       t.timestamps
     end
-    add_index :operations, ["machine_id"], :name => "index_operations_on_machine_id"
-    add_index :operations, ["state"], :name => "index_operations_on_state"
+    add_index :directives, ["machine_id"], :name => "index_directives_on_machine_id"
+    add_index :directives, ["state"], :name => "index_directives_on_state"
   end
 
   def self.down
-    change_table(:operations) do |t|
-      t.remove_index :index_operations_on_machine_id
-      t.remove_index :index_operations_on_status
+    change_table(:directives) do |t|
+      t.remove_index :index_directives_on_machine_id
+      t.remove_index :index_directives_on_status
     end
-    drop_table :operations
+    drop_table :directives
   end
 end

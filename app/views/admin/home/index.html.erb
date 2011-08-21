@@ -1764,7 +1764,7 @@
         };
 
         //管理操作区
-        var adminOperationPanel = Ext.create('Ext.panel.Panel', {
+        var adminDirectivePanel = Ext.create('Ext.panel.Panel', {
             region: 'center',
             layout: 'card',
             activeItem: 0,
@@ -1781,7 +1781,7 @@
         });
 
         adminMenuTreePanel.getSelectionModel().on('select', function(selModel, record) {
-            adminOperationPanel.layout.setActiveItem(record.get('id'));
+            adminDirectivePanel.layout.setActiveItem(record.get('id'));
             if (record.get('id') == 2) {
                 editCmdDefCmdGroupComboStore.load();
                 cmdDefGridStore.load();
@@ -1804,7 +1804,7 @@
             items: [
                 welcomePanel,
                 adminMenuTreePanel,
-                adminOperationPanel
+                adminDirectivePanel
             ]
         });
     });

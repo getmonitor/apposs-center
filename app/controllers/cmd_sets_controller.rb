@@ -2,7 +2,7 @@ class CmdSetsController < BaseController
   def index
     cmd_set_id, machine_id = params[:key].split /\|/ if params[:key] != 'root'
     if machine_id
-      result = Machine.find(machine_id).operations.where(:cmd_set_id => cmd_set_id).collect { |o|
+      result = Machine.find(machine_id).directives.where(:cmd_set_id => cmd_set_id).collect { |o|
         o.attributes.update(
             "id" => "#{cmd_set_id}|#{machine_id}|#{o.id}",
             "leaf" => "true",
