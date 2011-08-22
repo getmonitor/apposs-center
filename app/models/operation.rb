@@ -1,4 +1,4 @@
-class CmdSet < ActiveRecord::Base
+class Operation < ActiveRecord::Base
   belongs_to :operation_template
 
   has_many :directives

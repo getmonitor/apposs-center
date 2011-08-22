@@ -23,7 +23,7 @@
   </ul>
 </div>
 <!--
-  The following is cmd_cmd_set_model
+  The following is cmd_operation_model
 -->
 <script type="text/javascript">
     /**
@@ -34,7 +34,7 @@
      * To change this template use File | Settings | File Templates.
      */
 //命令Model
-//createModel('DirectiveTemplate', ['id','name','alias','arg1','arg2','arg3','arg4','arg5','cmd_group_id'], {
+//createModel('DirectiveTemplate', ['id','name','alias','arg1','arg2','arg3','arg4','arg5','directive_group_id'], {
 //    type:'ajax',
 //    url:'/admin/directive_templates',
 //    reader:'json',
@@ -42,11 +42,11 @@
 //        authenticity_token:$('meta[name="csrf-token"]').attr('content')
 //    }
 //});
-    var nsCmdCmdSet = {};
-    nsCmdCmdSet.PAGE_SIZE = 50;
+    var nsCmdOperation = {};
+    nsCmdOperation.PAGE_SIZE = 50;
     Ext.define('DirectiveTemplate', {
         extend:'Ext.data.Model',
-        fields:['id','name','alias','arg1','arg2','arg3','arg4','arg5','cmd_group_id'],
+        fields:['id','name','alias','arg1','arg2','arg3','arg4','arg5','directive_group_id'],
         proxy:{
             type:'ajax',
             url:"<%= admin_directive_templates_path %>",
@@ -64,44 +64,44 @@
     //命令的GridPanel Store
     var cmdDefGridStore = Ext.create('Ext.data.Store', {
         model:DirectiveTemplate,
-        pageSize:nsCmdCmdSet.PAGE_SIZE
+        pageSize:nsCmdOperation.PAGE_SIZE
     });
 
     //命令组Model
-    Ext.define('CmdGroup', {
+    Ext.define('DirectiveGroup', {
         extend:'Ext.data.Model',
         fields:['id','name'],
         proxy:{
             type:'ajax',
-            url:"<%= admin_cmd_groups_path %>",
+            url:"<%= admin_directive_groups_path %>",
             reader:{
                 type:'json',
                 totalProperty:'totalCount',
-                root:'cmd_groups'
+                root:'directive_groups'
             }
         }
     });
 
     //编辑命令中的命令组Combo的Store
-    var editDirectiveTemplateCmdGroupComboStore = Ext.create('Ext.data.Store', {
-        model:CmdGroup,
+    var editDirectiveTemplateDirectiveGroupComboStore = Ext.create('Ext.data.Store', {
+        model:DirectiveGroup,
         autoLoad:true
     });
-    editDirectiveTemplateCmdGroupComboStore.load();
+    editDirectiveTemplateDirectiveGroupComboStore.load();
     //增加命令时对应的命令组
-    var addDirectiveTemplateCmdGroupComboStore = Ext.create('Ext.data.Store', {
-        model:CmdGroup,
+    var addDirectiveTemplateDirectiveGroupComboStore = Ext.create('Ext.data.Store', {
+        model:DirectiveGroup,
         autoLoad:true
     });
     //编辑命令组中的数据store
     var cmdGroupGridStore = Ext.create('Ext.data.Store', {
-        model:CmdGroup,
-        pageSize:nsCmdCmdSet.PAGE_SIZE
+        model:DirectiveGroup,
+        pageSize:nsCmdOperation.PAGE_SIZE
     });
     cmdGroupGridStore.loadPage(1)
     //命令中的命令组renderer
     function cmdGroupRender(value) {
-        var comboRecord = editDirectiveTemplateCmdGroupComboStore.getById(value);
+        var comboRecord = editDirectiveTemplateDirectiveGroupComboStore.getById(value);
         if (comboRecord) {
             return comboRecord.get('name');
         }

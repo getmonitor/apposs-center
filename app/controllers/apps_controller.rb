@@ -8,7 +8,7 @@ class AppsController < BaseController
     respond_with current_user.apps.find(params[:id])
   end
 
-  def cmd_sets
-    respond_with current_app.cmd_sets
+  def operations
+    respond_with current_app.operations
   end
 end

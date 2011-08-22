@@ -1,16 +1,16 @@
 class OperationTemplate < ActiveRecord::Base
   belongs_to :app
-  has_many :cmd_sets
+  has_many :operations
 
-  # cmd set def 定义了一个命令包，对于指定的一个cmd_set_id，可以为之创建命令包所对应的一组执行命令
-  def create_cmd_set user, choosedMachineIds
-    cmd_set = cmd_sets.create :operator => user, :name => name, :app => app
-    build_directives cmd_set.id, choosedMachineIds
+  # cmd set def 定义了一个命令包，对于指定的一个operation_id，可以为之创建命令包所对应的一组执行命令
+  def create_operation user, choosedMachineIds
+    operation = operations.create :operator => user, :name => name, :app => app
+    build_directives operation.id, choosedMachineIds
   end
 
   # 根据 cmd set id 生成 command 记录（同时command会自动生成 directive 记录)
   # choosedMachineIds 要求必须是一个integer数组
-  def build_directives cmd_set_id, choosedMachineIds
+  def build_directives operation_id, choosedMachineIds
     if choosedMachineIds
       machines = app.machines.where(:id => choosedMachineIds[0..10]).select([:id, :host, :room_id])
     else
@@ -27,7 +27,7 @@ class OperationTemplate < ActiveRecord::Base
         directive_template_id = directive_template.id
         m.directives.create(
             :directive_template_id => directive_template_id,
-            :cmd_set_id => cmd_set_id,
+            :operation_id => operation_id,
             :room_id => m.room_id,
             :machine_host => m.host,
             :command_name => command_name,

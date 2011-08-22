@@ -34,13 +34,13 @@
         var cmdGroupNodes = [];
         var csrf_token = $('meta[name="csrf-token"]').attr('content');
         Ext.Ajax.request({
-            url:"<%= cmd_groups_path %>",
+            url:"<%= directive_groups_path %>",
             callback:function(options, success, response) {
                 var cmdGroups = Ext.decode(response.responseText);
                 for (var i = 0; i < cmdGroups.length; i++) {
                     var cmdGroupNode = {};
                     var cmdGroup = cmdGroups[i];
-                    cmdGroupNode.id = 'cmd_group' + cmdGroup.id;
+                    cmdGroupNode.id = 'directive_group' + cmdGroup.id;
                     cmdGroupNode.text = cmdGroup.name;
 
                     //为命令组增加命令
@@ -144,7 +144,7 @@
                 }
 
                 //增加命令到命令集
-                function updateCmdSet(parent, node, refNode) {
+                function updateOperation(parent, node, refNode) {
                     if (node) {
                         if (!node.isLeaf()) {
                             node.eachChild(function(child) {
@@ -175,12 +175,16 @@
                         //获取命令集表达式
                         cmdSetTreePanel.getRootNode().eachChild(function(child) {
                             var id = child.get('_id');
-                            expression += id.substring('directive_template'.length) + (child.get('allowFailure') == true ? '|true' : '');
+                            if (id.indexOf('directive_template') > -1) {
+                                expression += id.substring('directive_template'.length) + (child.get('allowFailure') == true ? '|true' : '');
+                            } else {
+                                expression += id + (child.get('allowFailure') == true ? '|true' : '');
+                            }
                             if (!child.isLast()) {
                                 expression += ',';
                             }
                         });
-//                alert(expression)
+                        alert(expression)
                         //更新命令集
 
                         Ext.Ajax.request({
@@ -245,10 +249,10 @@
                     listeners:{
                         //向命令包中增加命令
                         iteminsert:function(parent, node, refNode) {
-                            updateCmdSet(parent, node, refNode);
+                            updateOperation(parent, node, refNode);
                         },
                         itemappend:function(parent, node, index) {
-                            updateCmdSet(parent, node);
+                            updateOperation(parent, node);
                         }
                     },
                     columns: [
@@ -279,7 +283,7 @@
                                         node = root;
                                     }
                                     node.commit();
-                                    updateCmdSet();
+                                    updateOperation();
                                 }
                             }
                         },
@@ -299,7 +303,7 @@
                                             nodeToDeleted.remove();
                                         }
 
-                                        updateCmdSet();
+                                        updateOperation();
                                     }
                                 }
                             ]
@@ -329,11 +333,11 @@
                                     listeners:{
                                         keyup:function(text, e) {
                                             if (e.getKey() == Ext.EventObject.ENTER) {
-                                                updateCmdSet();
+                                                updateOperation();
                                             }
                                         },
                                         blur:function() {
-                                            updateCmdSet();
+                                            updateOperation();
                                         }
                                     }
                                 }
@@ -343,7 +347,7 @@
                     ]
                 });
 
-                var editCmdSetMainViewport = Ext.create('Ext.Viewport', {
+                var editOperationMainViewport = Ext.create('Ext.Viewport', {
                     renderTo:document.body,
                     layout: {
                         type: 'border',

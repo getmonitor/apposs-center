@@ -19,7 +19,8 @@ zh-CN:
       machine: '机器'
       room: '机房'
       role: '角色'
-      cmd_group: '命令组'
+      directive: '原子指令'
+      directive_group: '指令组'
     attributes:
       user:
         email: '邮箱'
@@ -30,7 +31,6 @@ zh-CN:
         last_sign_in_at: '最近访问时间'
       app:
         name: '名称'
-        cmd_group: '应用类型'
       machine:
         name: '机器名称'
         host: '机器地址'
@@ -40,7 +40,7 @@ zh-CN:
       	name: '角色名'
       room:
         name: '名称'
-      cmd_group:
+      directive_group:
         name: '名称'
-        directive_template: '预定义命令'
+        directive_template: '原子指令'
 

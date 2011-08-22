@@ -1,4 +1,4 @@
 class DirectiveTemplate < ActiveRecord::Base
-  belongs_to :cmd_group
+  belongs_to :directive_group
 
 end

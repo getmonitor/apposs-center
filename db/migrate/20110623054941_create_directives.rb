@@ -1,7 +1,7 @@
 class CreateDirectives < ActiveRecord::Migration
   def self.up
     create_table :directives do |t|
-      t.integer :cmd_set_id
+      t.integer :operation_id
       t.integer :machine_id
       t.integer :directive_template_id
       t.boolean :next_when_fail

@@ -1,7 +1,6 @@
 class Directive < ActiveRecord::Base
   belongs_to :machine
-  belongs_to :cmd_set
-  belongs_to :cmd_set
+  belongs_to :operation
   default_scope order("id")
 
   scope :inits, where(:state => :init)

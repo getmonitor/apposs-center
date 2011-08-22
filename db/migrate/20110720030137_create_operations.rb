@@ -1,6 +1,6 @@
-class CreateCmdSets < ActiveRecord::Migration
+class CreateOperations < ActiveRecord::Migration
   def self.up
-    create_table :cmd_sets do |t|
+    create_table :operations do |t|
       t.integer :operation_template_id
       t.integer :operator_id
       t.integer :app_id
@@ -12,6 +12,6 @@ class CreateCmdSets < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :cmd_sets
+    drop_table :operations
   end
 end

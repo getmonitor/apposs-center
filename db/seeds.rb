@@ -6,16 +6,16 @@
 # cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 # Mayor.create(:name => 'Daley', :city => cities.first)
 
-#cmd_group = CmdGroup.create :name => 'jboss'
+#directive_group = DirectiveGroup.create :name => 'jboss'
 
-#cmd_group2 = CmdGroup.create :name => 'nodejs'
+#directive_group2 = DirectiveGroup.create :name => 'nodejs'
 
-#cmd_group.directive_templates << DirectiveTemplate.create(:name => 'echo start')
-#cmd_group.directive_templates << DirectiveTemplate.create(:name => 'echo stop')
-#cmd_group.directive_templates << DirectiveTemplate.create(:name => 'echo redeploy')
+#directive_group.directive_templates << DirectiveTemplate.create(:name => 'echo start')
+#directive_group.directive_templates << DirectiveTemplate.create(:name => 'echo stop')
+#directive_group.directive_templates << DirectiveTemplate.create(:name => 'echo redeploy')
 
-#cmd_group2.directive_templates << DirectiveTemplate.create( :name => 'echo start_nodejs')
-#cmd_group2.directive_templates << DirectiveTemplate.create( :name => 'echo stop_nodejs')
+#directive_group2.directive_templates << DirectiveTemplate.create( :name => 'echo start_nodejs')
+#directive_group2.directive_templates << DirectiveTemplate.create( :name => 'echo stop_nodejs')
 
 #app = App.create(:name => 'sample-app',:online => true)
 #app.machines << Machine.create(:name => 'tanx1.cnz',:host => 'localhost',:port => 22)
@@ -35,4 +35,4 @@ Stakeholder.create :user => u, :role => admin_role
 #%w{cnz cm3 cm4}.each{|name| Room.create(:name => name)}
 #Room.first.machines << Machine.all
 
-#App.first.operation_templates.first.create_cmd_set User.first
+#App.first.operation_templates.first.create_operation User.first

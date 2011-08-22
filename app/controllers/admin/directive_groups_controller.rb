@@ -1,17 +1,17 @@
-class Admin::CmdGroupsController < Admin::BaseController
+class Admin::DirectiveGroupsController < Admin::BaseController
 
   def index()
-    cmd_groups = CmdGroup.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
-    total = cmd_groups.count
-    respond_with :totalCount => total, :cmd_groups => cmd_groups
+    directive_groups = DirectiveGroup.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
+    total = directive_groups.count
+    respond_with :totalCount => total, :directive_groups => directive_groups
   end
 
   def model()
-    CmdGroup
+    DirectiveGroup
   end
 
   def group()
-    :cmd_group
+    :directive_group
   end
 
   def destroy

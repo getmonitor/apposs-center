@@ -496,14 +496,14 @@
                         },
                         {
                             text:'命令组',
-                            dataIndex:'cmd_group_id',
+                            dataIndex:'directive_group_id',
                             flex:4,
                             editor: {
                                 xtype:'combo',
-                                name:'cmd_group_id',
+                                name:'directive_group_id',
                                 valueField:'id',
                                 displayField:'name',
-                                store:editDirectiveTemplateCmdGroupComboStore,
+                                store:editDirectiveTemplateDirectiveGroupComboStore,
                                 editable:false
                             },
                             renderer:cmdGroupRender
@@ -592,10 +592,10 @@
                                                 {
                                                     fieldLabel:'命令组',
                                                     xtype:'combo',
-                                                    name:'directive_template[cmd_group_id]',
+                                                    name:'directive_template[directive_group_id]',
                                                     valueField:'id',
                                                     displayField:'name',
-                                                    store:addDirectiveTemplateCmdGroupComboStore,
+                                                    store:addDirectiveTemplateDirectiveGroupComboStore,
                                                     editable:false
                                                 }
                                             ],
@@ -612,7 +612,7 @@
                                                                 },
                                                                 failure: function(form, action) {
                                                                     cmdDefGridStore.load();
-                                                                    addDirectiveTemplateCmdGroupComboStore.load();
+                                                                    addDirectiveTemplateDirectiveGroupComboStore.load();
                                                                     addDirectiveTemplateWin.close();
                                                                 }
                                                             });
@@ -653,7 +653,7 @@
                                     'directive_template[arg3]':record.get('arg3'),
                                     'directive_template[arg4]':record.get('arg4'),
                                     'directive_template[arg5]':record.get('arg5'),
-                                    'directive_template[cmd_group_id]':record.get('cmd_group_id')
+                                    'directive_template[directive_group_id]':record.get('directive_group_id')
                                 },
                                 callback:function(options, success, response) {
 
@@ -712,7 +712,7 @@
                                         var r = cmdGroupGridStore.getAt(rowIndex);
                                         var cascade = Ext.getCmp('cascade').checked;
                                         Ext.Ajax.request({
-                                            url:"<%=admin_cmd_groups_path %>/" + r.get('id'),
+                                            url:"<%=admin_directive_groups_path %>/" + r.get('id'),
                                             method:'DELETE',
                                             params:{
                                                 authenticity_token:$('meta[name="csrf-token"]').attr('content'),
@@ -738,7 +738,7 @@
                             text: '增加命令组',
                             iconCls:'add',
                             handler : function() {
-                                var addCmdGroupWin = Ext.create('Ext.Window', {
+                                var addDirectiveGroupWin = Ext.create('Ext.Window', {
                                     title:'增加命令组',
                                     layout:'border',
                                     width:300,
@@ -747,7 +747,7 @@
                                         Ext.create('Ext.form.Panel', {
                                             region:'center',
                                             frame:'true',
-                                            url:"<%=admin_cmd_groups_path %>/",
+                                            url:"<%=admin_directive_groups_path %>/",
                                             defaultType:'textfield',
                                             defaults: {
                                                 labelWidth:90,
@@ -761,7 +761,7 @@
                                                 },
                                                 {
                                                     fieldLabel:'命令组名',
-                                                    name:'cmd_group[name]',
+                                                    name:'directive_group[name]',
                                                     allowBlank:false,
                                                     blankText:'命令组名不能为空'
                                                 }
@@ -775,13 +775,13 @@
                                                             form.submit({
                                                                 success: function(form, action) {
                                                                     cmdGroupGridStore.load();
-                                                                    editDirectiveTemplateCmdGroupComboStore.load();
-                                                                    addCmdGroupWin.close();
+                                                                    editDirectiveTemplateDirectiveGroupComboStore.load();
+                                                                    addDirectiveGroupWin.close();
                                                                 },
                                                                 failure: function(form, action) {
                                                                     cmdGroupGridStore.load();
-                                                                    editDirectiveTemplateCmdGroupComboStore.load();
-                                                                    addCmdGroupWin.close();
+                                                                    editDirectiveTemplateDirectiveGroupComboStore.load();
+                                                                    addDirectiveGroupWin.close();
                                                                 }
                                                             });
                                                         }
@@ -797,7 +797,7 @@
                                         })
                                     ]
                                 });
-                                addCmdGroupWin.show();
+                                addDirectiveGroupWin.show();
                             }
                         },
                         {
@@ -815,11 +815,11 @@
                             editor.record.commit();
                             var record = editor.record;
                             Ext.Ajax.request({
-                                url:"<%=admin_cmd_groups_path %>/" + record.get('id'),
+                                url:"<%=admin_directive_groups_path %>/" + record.get('id'),
                                 method:'PUT',
                                 params:{
                                     authenticity_token:$('meta[name="csrf-token"]').attr('content'),
-                                    'cmd_group[name]':record.get('name')
+                                    'directive_group[name]':record.get('name')
                                 },
                                 callback:function(options, success, response) {
 
@@ -1783,7 +1783,7 @@
         adminMenuTreePanel.getSelectionModel().on('select', function(selModel, record) {
             adminDirectivePanel.layout.setActiveItem(record.get('id'));
             if (record.get('id') == 2) {
-                editDirectiveTemplateCmdGroupComboStore.load();
+                editDirectiveTemplateDirectiveGroupComboStore.load();
                 cmdDefGridStore.load();
             }
             if (record.get('id') == 6) {

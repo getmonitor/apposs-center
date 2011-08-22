@@ -10,7 +10,7 @@ class OperationTemplatesController < BaseController
       else
         respond_with operation_templates.collect { |obj|
           obj.serializable_hash.update("actions" => [
-              {:name=>"准备执行", :flex => 1.7, :url=> app_cmd_sets_path(app_id), :type => 'simple', :method => 'POST'},
+              {:name=>"准备执行", :flex => 1.7, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
               {:name=>"修改", :flex => 1, :url=> edit_app_operation_template_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
               {:name=>"删除", :flex => 1, :url=> app_operation_template_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
           ], "flex" => 8, "add" => true)
@@ -19,7 +19,7 @@ class OperationTemplatesController < BaseController
     else
       respond_with current_app.operation_templates.collect { |obj|
         obj.serializable_hash.update("actions" => [
-            {:name=>"准备执行", :flex => 1, :url=> app_cmd_sets_path(app_id), :type => 'simple', :method => 'POST'}
+            {:name=>"准备执行", :flex => 1, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'}
         ], "flex" => 5, "add" => false)
       }
     end

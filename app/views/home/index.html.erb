@@ -149,7 +149,7 @@
                                 handler:function() {
                                     var cmdSetPanel = Ext.getCmp('commands' + id);
                                     cmdSetPanel.removeAll();
-                                    loadCmdSetForApp(id);
+                                    loadOperationForApp(id);
                                 }
                             }
                         ]
@@ -183,7 +183,7 @@
                 storeId:'commandStore' + id,
                 proxy:{
                     type:'ajax',
-                    url:"<%= apps_path %>/" + id + '/cmd_sets',
+                    url:"<%= apps_path %>/" + id + '/operations',
                     reader:{
                         type:'json'
                     }
@@ -385,7 +385,7 @@
                                 }
                             });
                             Ext.Ajax.request({
-                                url:"<%= apps_path %>/" + id + '/cmd_sets',
+                                url:"<%= apps_path %>/" + id + '/operations',
                                 method:'POST',
                                 params:{
                                     authenticity_token:csrf_token,
@@ -464,7 +464,7 @@
             ]
         });
         //为应用加载命令包
-        function loadCmdSetForApp(appId) {
+        function loadOperationForApp(appId) {
             Ext.Ajax.request({
                 url:"<%= apps_path %>/" + appId + '/operation_templates',
                 callback:function(options, success, response) {
@@ -590,7 +590,7 @@
                                                                     items:[
                                                                         {
                                                                             autoScroll:true,
-                                                                            html:getIFrameForEditCmdSet(respondUrl, 700, 500)
+                                                                            html:getIFrameForEditOperation(respondUrl, 700, 500)
                                                                         }
                                                                     ]
                                                                 });
@@ -599,7 +599,7 @@
                                                             else if (type == 'delete') {
                                                                 var cmdSetPanel = Ext.getCmp('commands' + appId);
                                                                 cmdSetPanel.removeAll();
-                                                                loadCmdSetForApp(appId);
+                                                                loadOperationForApp(appId);
                                                             }
                                                         }
                                                     })(type)
@@ -640,7 +640,7 @@
                                     id:'appAddButton' + appId,
                                     flex:1,
                                     handler:function() {
-                                        addCmdSetWindow(this.id.substring(this.id.length - 1));
+                                        addOperationWindow(this.id.substring(this.id.length - 1));
                                     }
                                 }
                             ]
@@ -652,17 +652,17 @@
         }
 
         //增加命令包窗口
-        function addCmdSetWindow(appId) {
+        function addOperationWindow(appId) {
             //请求获取命令组数据并解析
             var cmdGroupNodes = [];
             Ext.Ajax.request({
-                url:"<%= cmd_groups_path %>",
+                url:"<%= directive_groups_path %>",
                 callback:function(options, success, response) {
                     var cmdGroups = Ext.decode(response.responseText);
                     for (var i = 0; i < cmdGroups.length; i++) {
                         var cmdGroupNode = {};
                         var cmdGroup = cmdGroups[i];
-                        cmdGroupNode.id = 'cmd_group' + cmdGroup.id;
+                        cmdGroupNode.id = 'directive_group' + cmdGroup.id;
                         cmdGroupNode.text = cmdGroup.name;
 
                         //为命令组增加命令
@@ -763,12 +763,12 @@
                     });
 
                     //增加命令包时点击增加时，增加命令到命令包
-                    function addCmdSet() {
+                    function addOperation() {
                         var expression = '';
                         //获取命令包表达式
                         cmdSetTreePanel.getRootNode().eachChild(function(child) {
                             var data = child.data;
-                            expression += data.id.substring(data.id.length - 1, data.id.length) + (data.allowFailure == true ? '|true' : '');
+                            expression += data._id.substring('directive_template'.length) + (data.allowFailure == true ? '|true' : '');
                             if (!child.isLast()) {
                                 expression += ',';
                             }
@@ -786,8 +786,8 @@
                                 Ext.getCmp('savedStatus').setText('命令包增加成功');
                                 var cmdSetPanel = Ext.getCmp('commands' + appId);
                                 cmdSetPanel.removeAll();
-                                loadCmdSetForApp(appId);
-                                addCmdSetWin.close();
+                                loadOperationForApp(appId);
+                                addOperationWin.close();
                             }
                         });
                     }
@@ -797,14 +797,14 @@
                             text: '',
                             expanded: true
                         },
-                        fields:['id','text','allowFailure']
+                        fields:['_id','text','allowFailure']
                     });
 
                     //增加命令包时向命令包中增加命令组中的命令信息,此方法被多个操作共用
-                    function addCmdGroupToCmdSet(parent, node, refNode) {
+                    function addDirectiveGroupToOperation(parent, node, refNode) {
                         node.eachChild(function(child) {
                             var newChild = parent.createNode({
-                                id:child.data.id,
+                                _id:child.data.id,
                                 text:child.data.text,
                                 leaf:child.data.leaf
                             });
@@ -834,12 +834,12 @@
                             //向命令包中增加命令
                             iteminsert:function(parent, node, refNode) {
                                 if (!node.isLeaf()) {
-                                    addCmdGroupToCmdSet(parent, node, refNode);
+                                    addDirectiveGroupToOperation(parent, node, refNode);
                                 }
                             },
                             itemappend:function(parent, node, index) {
                                 if (!node.isLeaf()) {
-                                    addCmdGroupToCmdSet(parent, node);
+                                    addDirectiveGroupToOperation(parent, node);
                                 }
                             }
                         },
@@ -855,7 +855,7 @@
                                         return;
                                     }
                                     cmdSetTreePanel.getRootNode().commit();
-                                    addCmdSet();
+                                    addOperation();
                                     this.setDisabled(true);
                                 }
                             }
@@ -929,7 +929,7 @@
                         ]
                     });
                     //增加命令包的窗口
-                    var addCmdSetWin = Ext.create('Ext.Window', {
+                    var addOperationWin = Ext.create('Ext.Window', {
                         title:'增加命令包',
                         layout: {
                             type: 'border',
@@ -945,13 +945,13 @@
                         width:700,
                         height:500
                     });
-                    addCmdSetWin.show();
+                    addOperationWin.show();
                 }
             });
         }
 
         //编辑命令包时的iframe标签
-        function getIFrameForEditCmdSet(url, width, height) {
+        function getIFrameForEditOperation(url, width, height) {
             return '<iframe src="' + url + ' " width="' + width + '" height="' + height + '"' +
                     '></iframe>'
         }
@@ -969,7 +969,7 @@
 
                 for (var i = 0; i < obj.length; i++) {
                     //此处获取App的命令包列表，url为apps/:id/operation_templates
-                    loadCmdSetForApp(obj[i].id);
+                    loadOperationForApp(obj[i].id);
                 }
             }
         });

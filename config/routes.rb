@@ -56,7 +56,7 @@ Apposs::Application.routes.draw do
   namespace :admin, :module => "admin" do
     root :to => 'home#index'
     resources :directive_templates
-    resources :cmd_groups
+    resources :directive_groups
     resources :apps
     resources :users
     resources :roles
@@ -64,7 +64,7 @@ Apposs::Application.routes.draw do
     resources :rooms
   end
 
-  resources :cmd_groups
+  resources :directive_groups
 
   resources :rooms
 
@@ -74,7 +74,7 @@ Apposs::Application.routes.draw do
       get :command_state, :on => :member
     end
     resources :operation_templates
-    resources :cmd_sets
+    resources :operations
   end
 
   # You can have the root of your site routed with "root"

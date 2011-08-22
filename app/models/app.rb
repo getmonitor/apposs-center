@@ -10,7 +10,7 @@ class App < ActiveRecord::Base
 
   has_many :operation_templates
   
-  has_many :cmd_sets
+  has_many :operations
   
   def to_s
   	send :name

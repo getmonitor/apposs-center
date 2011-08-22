@@ -8,7 +8,7 @@ class CreateDirectiveTemplates < ActiveRecord::Migration
       t.string :arg3
       t.string :arg4
       t.string :arg5
-      t.integer :cmd_group_id
+      t.integer :directive_group_id
 
       t.timestamps
     end
