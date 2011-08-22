@@ -967,7 +967,7 @@
                 var result = response.responseText;
                 var obj = Ext.decode(result);
                 if (obj.length == 0) {
-                    var title = '<span style=\"display:block;font-size:15px;font-weight:bolder;width:' + 6 + 'px;margin: 0 auto;\">您没有应用</span>';
+                    var title = '<span style=\"display:block;font-size:15px;font-weight:bolder;width:' + 6 + 'px;margin: 0 auto;\">您没有要管理的应用</span>';
                     appTabPanel.setTitle(title);
                 }
                 for (var i = 0; i < obj.length; i++) {
