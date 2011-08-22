@@ -912,7 +912,7 @@
                                     handler: function(grid, rowIndex, colIndex) {
                                         var record = grid.getStore().getAt(rowIndex);
                                         var editAppWin = Ext.create('Ext.Window', {
-                                            title:'编辑应用',
+                                            title:'管理当前应用的用户角色',
                                             width:500,
                                             height:400,
                                             layout:'border',
@@ -1075,7 +1075,7 @@
                                                     ],
                                                     tbar:[
                                                         {
-                                                            text: '为应用分配用户',
+                                                            text: '增加新的用户角色',
                                                             iconCls:'set_app_for_user',
                                                             handler:function() {
                                                                 var editAppForUserWin = Ext.create('Ext.Window', {
