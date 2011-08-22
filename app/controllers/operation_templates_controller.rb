@@ -38,11 +38,14 @@ class OperationTemplatesController < BaseController
   end
 
   def create
-    respond_with current_app.operation_templates.create(params[:operation_template])
+    operation_template = current_app.operation_templates.create(params[:operation_template])
+    render :text => {"errors" => operation_template.errors}.to_json
   end
 
   def update
-    respond_with current_app.operation_templates.find(params[:id]).update_attributes params[:operation_template]
+    operation_template = current_app.operation_templates.find(params[:id])
+    operation_template.update_attributes params[:operation_template]
+    render :text => {"errors" => operation_template.errors}.to_json
   end
 
   def destroy

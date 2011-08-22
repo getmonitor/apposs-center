@@ -25,10 +25,7 @@ class Admin::AppsController < Admin::BaseController
   def create
     if params[:dispatch_to_user]
       s = Stakeholder.create(:app_id => params[:app_id], :user_id => params[:user_id], :role_id => params[:role_id])
-      s = s.attributes.update(
-          "errors" => s.errors
-      )
-      render :text => s.to_json
+      render :text => {"errors" => s.errors}.to_json
     else
       respond_with App.create(params[:app])
     end

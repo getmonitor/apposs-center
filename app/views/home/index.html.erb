@@ -224,13 +224,6 @@
                 //model:MachineCommand,
                 model:Command,
                 storeId:'machineCommandStore' + id,
-//                proxy:{
-//                    type:'ajax',
-//                    url:'',
-//                    reader:{
-//                        type:'json'
-//                    }
-//                },
                 proxy:machineCommandProxy,
                 nodeParam:'key',
                 root:{
@@ -388,6 +381,10 @@
                                     choosedMachines.push(record.get('id'));
                                 }
                             });
+                            if (choosedMachines.length == 0) {
+                                Ext.Msg.alert('提示', '请选择要执行指令的机器！');
+                                return;
+                            }
                             Ext.Ajax.request({
                                 url:"<%= apps_path %>/" + id + '/operations',
                                 method:'POST',
@@ -601,9 +598,13 @@
                                                                 multiWin.show();
                                                             }
                                                             else if (type == 'delete') {
-                                                                var cmdSetPanel = Ext.getCmp('commands' + appId);
-                                                                cmdSetPanel.removeAll();
-                                                                loadOperationForApp(appId);
+                                                                Ext.Msg.confirm('提示', '您确定要删除当前操作模板吗？', function(btn) {
+                                                                    if (btn === 'yes') {
+                                                                        var cmdSetPanel = Ext.getCmp('commands' + appId);
+                                                                        cmdSetPanel.removeAll();
+                                                                        loadOperationForApp(appId);
+                                                                    }
+                                                                });
                                                             }
                                                         }
                                                     })(type)
@@ -640,30 +641,6 @@
                                 }
                             }]);
                         }
-                        //增加操作模板面板
-//                        cmdSetPanel[cmdSetPanel.length] = {
-//                            xtype:'panel',
-//                            layout:'hbox',
-//                            border:false,
-//                            anchor:'100%',
-//                            frame:true,
-//                            items:[
-//                                {
-//                                    xtype:'label',
-//                                    flex:10,
-//                                    html:'&nbsp;'
-//                                },
-//                                {
-//                                    xtype:'button',
-//                                    text:'增加',
-//                                    id:'appAddButton' + appId,
-//                                    flex:1,
-//                                    handler:function() {
-//                                        addOperationWindow(this.id.substring(this.id.length - 1));
-//                                    }
-//                                }
-//                            ]
-//                        };
                     }
                     Ext.getCmp('commands' + appId).add(cmdSetPanel);
                 }
@@ -792,6 +769,10 @@
                                 expression += ',';
                             }
                         });
+                        if (!expression || expression.trim().length == 0) {
+                            Ext.Msg.alert('提示', '您没有为要创建的操作模板添加指令模板。');
+                            return;
+                        }
                         //增加操作模板完成后刷新用户界面中的操作模板信息
                         Ext.Ajax.request({
                             url:"<%= apps_path %>/" + appId + '/operation_templates',
@@ -802,6 +783,11 @@
                                 'operation_template[expression]':expression
                             },
                             callback:function(options, success, response) {
+                                var result = Ext.decode(response.responseText);
+                                if (result.errors.expression) {
+                                    Ext.Msg.alert('提示', result.errors.expression);
+                                    return;
+                                }
                                 Ext.getCmp('savedStatus').setText('操作模板增加成功');
                                 var cmdSetPanel = Ext.getCmp('commands' + appId);
                                 cmdSetPanel.removeAll();
@@ -875,7 +861,6 @@
                                     }
                                     cmdSetTreePanel.getRootNode().commit();
                                     addOperation();
-                                    this.setDisabled(true);
                                 }
                             }
                         ],

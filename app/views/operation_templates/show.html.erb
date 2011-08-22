@@ -3,10 +3,12 @@
   <title><%= @operation_template.app %></title>
   <%= stylesheet_link_tag 'resources/css/ext-all' %>
   <%= stylesheet_link_tag 'CheckHeader' %>
+  <%= stylesheet_link_tag 'msg' %>
   <%= javascript_include_tag "jquery.min" %>
   <%= javascript_include_tag "ext-all" %>
   <%= javascript_include_tag "ext-lang-zh_CN" %>
   <%= javascript_include_tag "CheckColumn" %>
+
   <%= csrf_meta_tag %>
 </head>
 <body>
@@ -30,9 +32,25 @@
      */
     Ext.QuickTips.init();
     Ext.onReady(function() {
-        //请求获取命令组数据并解析
+        //请求获取指令组数据并解析
         var cmdGroupNodes = [];
         var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        var msgCt;//向其中加入显示消息的元素。
+        function createBox(t, s) {
+            return '<div class="msg"><h3>' + t + '</h3><p>' + s + '</p></div>';
+        }
+
+        //显示瞬时消息
+        function msg(title, format) {
+            if (!msgCt) {
+                msgCt = Ext.core.DomHelper.insertFirst(document.body, {id:'msg-div'}, true);
+            }
+            var s = Ext.String.format.apply(String, Array.prototype.slice.call(arguments, 1));
+            var m = Ext.core.DomHelper.append(msgCt, createBox(title, s), true);
+            m.hide();
+            m.slideIn('t').ghost("t", { delay: 1000, remove: true});
+        }
+
         Ext.Ajax.request({
             url:"<%= directive_groups_path %>",
             callback:function(options, success, response) {
@@ -43,7 +61,7 @@
                     cmdGroupNode.id = 'directive_group' + cmdGroup.id;
                     cmdGroupNode.text = cmdGroup.name;
 
-                    //为命令组增加命令
+                    //为指令组增加命令
                     var cmdDefs = cmdGroup.directive_templates;
                     if (cmdDefs.length == 0) {
                         cmdGroupNode.leaf = true;
@@ -63,7 +81,7 @@
                 }
                 var cmdGroupStore = Ext.create('Ext.data.TreeStore', {
                     root: {
-                        text: '命令组列表',
+                        text: '指令组列表',
                         expanded: true,
                         children:cmdGroupNodes
                     },
@@ -76,7 +94,7 @@
                     ]
                 });
 
-                //系统所有的命令组树
+                //系统所有的指令组树
                 var cmdGroupTreePanel = Ext.create('Ext.tree.Panel', {
                     title: '当前系统所有命令',
                     region:'west',
@@ -143,8 +161,7 @@
                     return document.getElementById(id);
                 }
 
-                //增加命令到命令集
-                function updateOperation(parent, node, refNode) {
+                function addDirectiveTemplateToOperationTemplate(parent, node, refNode) {
                     if (node) {
                         if (!node.isLeaf()) {
                             node.eachChild(function(child) {
@@ -170,6 +187,10 @@
                             node.data.allowFailure = false;
                         }
                     }
+                }
+
+                //增加命令到命令集
+                function updateOperation() {
                     setTimeout(function() {
                         var expression = '';
                         //获取命令集表达式
@@ -184,6 +205,10 @@
                                 expression += ',';
                             }
                         });
+                        if (!expression || expression.trim().length == 0) {
+                            Ext.Msg.alert('提示', '操作模板中的指令模板不能为空');
+                            return;
+                        }
 //                        alert(expression)
                         //更新命令集
 
@@ -196,12 +221,18 @@
                                 'operation_template[expression]':expression
                             },
                             callback:function(options, success, response) {
+                                var result = Ext.decode(response.responseText);
+                                if (result.errors.expression) {
+                                    Ext.Msg.alert('提示', result.errors.expression[0]);
+                                    return;
+                                }
+                                msg('提示', '指令模板更新成功');
                             }
                         });
                     }, 500);
                 }
 
-                //获取命令包的相关信息
+                //获取操作模板的相关信息
                 var appId = $('app_id').value;
                 var appName = $('app_name').value;
                 var cmdSetDefId = $('operation_template_id').value;
@@ -233,9 +264,9 @@
                     fields:['_id','text','allowFailure']
                 });
 
-                //命令包树
+                //操作模板树
                 var cmdSetTreePanel = Ext.create('Ext.tree.Panel', {
-                    title:'命令包所有命令',
+                    title:'操作模板所有命令',
                     collapsible:true,
                     region:'center',
 //                rootVisible:false,
@@ -247,12 +278,12 @@
                     },
                     store:cmdSetTreeStore,
                     listeners:{
-                        //向命令包中增加命令
+                        //向操作模板中增加命令
                         iteminsert:function(parent, node, refNode) {
-                            updateOperation(parent, node, refNode);
+                            addDirectiveTemplateToOperationTemplate(parent, node, refNode);
                         },
                         itemappend:function(parent, node, index) {
-                            updateOperation(parent, node);
+                            addDirectiveTemplateToOperationTemplate(parent, node);
                         }
                     },
                     columns: [
@@ -283,7 +314,7 @@
                                         node = root;
                                     }
                                     node.commit();
-                                    updateOperation();
+//                                    updateOperation();
                                 }
                             }
                         },
@@ -303,7 +334,7 @@
                                             nodeToDeleted.remove();
                                         }
 
-                                        updateOperation();
+//                                        updateOperation();
                                     }
                                 }
                             ]
@@ -311,34 +342,43 @@
                     ]
                 });
 
-                //显示命令包树的信息
+                //显示操作模板树的信息
                 var cmdSetPanel = Ext.create('Ext.panel.Panel', {
-                    title:'命令包',
+                    title:'操作模板',
                     region:'center',
                     collapsible:true,
                     layout:'border',
                     items:[
                         {
-                            layout:'anchor',
+                            layout:'hbox',
                             frame:true,
                             region:'north',
                             items:[
                                 {
                                     xtype:'textfield',
-                                    fieldLabel:'命令包名',
+                                    fieldLabel:'操作模板名',
                                     id:'cmdSetName',
                                     value:cmdSetDefName,
-                                    anchor:'50%',
+                                    flex:3,
                                     enableKeyEvents:true,
                                     listeners:{
                                         keyup:function(text, e) {
                                             if (e.getKey() == Ext.EventObject.ENTER) {
-                                                updateOperation();
+//                                                updateOperation();
                                             }
                                         },
                                         blur:function() {
-                                            updateOperation();
+//                                            updateOperation();
                                         }
+                                    }
+                                },
+                                {
+                                    xtype:'button',
+                                    flex:1,
+                                    text:'保存',
+                                    margin:'0 10 0 10',
+                                    handler:function() {
+                                        updateOperation();
                                     }
                                 }
                             ]
