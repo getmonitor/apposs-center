@@ -53,7 +53,7 @@
                     }
                 }
             });
-            //命令包执行前要选择执行命令包的机器Store
+            //操作模板执行前要选择执行操作模板的机器Store
             var chooseMachineToExecuteStore = Ext.create('Ext.data.Store', {
                 pageSize: 200,
                 model:'AppMachine',
@@ -134,25 +134,29 @@
                         ]
                     },
                     {
-                        title:'命令包',
+                        title:'操作模板',
                         flex:1,
                         width:450,
                         id:'commands' + id,
                         layout:'anchor',
                         frame:true,
                         autoScroll:true,
-                        tbar:[
-                            {
-                                xtype:'button',
-                                text:'刷新',
-                                iconCls:'refresh',
-                                handler:function() {
-                                    var cmdSetPanel = Ext.getCmp('commands' + id);
-                                    cmdSetPanel.removeAll();
-                                    loadOperationForApp(id);
+                        dockedItems:{
+                            itemId:'operation_template_toolbar' + id,
+                            xtype:'toolbar',
+                            items:[
+                                {
+                                    xtype:'button',
+                                    text:'刷新',
+                                    iconCls:'refresh',
+                                    handler:function() {
+                                        var cmdSetPanel = Ext.getCmp('commands' + id);
+                                        cmdSetPanel.removeAll();
+                                        loadOperationForApp(id);
+                                    }
                                 }
-                            }
-                        ]
+                            ]
+                        }
                     }
                 ],
                 tbar:[
@@ -336,9 +340,9 @@
                 ]
             });
 
-            //执行命令包前选择将要执行该命令包的机器Panel
+            //执行操作模板前选择将要执行该操作模板的机器Panel
             var chooseMachinesToExecutePanel = Ext.create('Ext.grid.Panel', {
-                title:'选择执行命令包的机器',
+                title:'选择执行操作模板的机器',
                 split:true,
                 columnLines:true,
                 disableSelection: true,
@@ -463,7 +467,7 @@
                 }
             ]
         });
-        //为应用加载命令包
+        //为应用加载操作模板
         function loadOperationForApp(appId) {
             Ext.Ajax.request({
                 url:"<%= apps_path %>/" + appId + '/operation_templates',
@@ -621,37 +625,52 @@
                         }
                     }
                     if (cmdSet.length > 0 && cmdSet[0].add === true) {
-                        //增加命令包面板
-                        cmdSetPanel[cmdSetPanel.length] = {
-                            xtype:'panel',
-                            layout:'hbox',
-                            border:false,
-                            anchor:'100%',
-                            frame:true,
-                            items:[
-                                {
-                                    xtype:'label',
-                                    flex:10,
-                                    html:'&nbsp;'
-                                },
-                                {
-                                    xtype:'button',
-                                    text:'增加',
-                                    id:'appAddButton' + appId,
-                                    flex:1,
-                                    handler:function() {
-                                        addOperationWindow(this.id.substring(this.id.length - 1));
-                                    }
+                        var toolbar = Ext.getCmp('commands' + appId)
+                                .getDockedComponent('operation_template_toolbar' + appId);
+                        if (toolbar.items.getCount() == 1) {
+                            Ext.getCmp('commands' + appId)
+                                    .getDockedComponent('operation_template_toolbar' + appId)
+                                    .add(['-',{
+                                xtype:'button',
+                                text:'增加',
+                                iconCls:'add',
+                                id:'appAddButton' + appId,
+                                handler:function() {
+                                    addOperationWindow(this.id.substring(this.id.length - 1));
                                 }
-                            ]
-                        };
+                            }]);
+                        }
+                        //增加操作模板面板
+//                        cmdSetPanel[cmdSetPanel.length] = {
+//                            xtype:'panel',
+//                            layout:'hbox',
+//                            border:false,
+//                            anchor:'100%',
+//                            frame:true,
+//                            items:[
+//                                {
+//                                    xtype:'label',
+//                                    flex:10,
+//                                    html:'&nbsp;'
+//                                },
+//                                {
+//                                    xtype:'button',
+//                                    text:'增加',
+//                                    id:'appAddButton' + appId,
+//                                    flex:1,
+//                                    handler:function() {
+//                                        addOperationWindow(this.id.substring(this.id.length - 1));
+//                                    }
+//                                }
+//                            ]
+//                        };
                     }
                     Ext.getCmp('commands' + appId).add(cmdSetPanel);
                 }
             });
         }
 
-        //增加命令包窗口
+        //增加操作模板窗口
         function addOperationWindow(appId) {
             //请求获取命令组数据并解析
             var cmdGroupNodes = [];
@@ -698,7 +717,7 @@
                         ]
                     });
 
-                    //增加命令包时系统所有的命令组树
+                    //增加操作模板时系统所有的命令组树
 
                     var cmdGroupTreePanel = Ext.create('Ext.tree.Panel', {
                         title: '当前系统所有命令',
@@ -762,10 +781,10 @@
                         }
                     });
 
-                    //增加命令包时点击增加时，增加命令到命令包
+                    //增加操作模板时点击增加时，增加命令到操作模板
                     function addOperation() {
                         var expression = '';
-                        //获取命令包表达式
+                        //获取操作模板表达式
                         cmdSetTreePanel.getRootNode().eachChild(function(child) {
                             var data = child.data;
                             expression += data._id.substring('directive_template'.length) + (data.allowFailure == true ? '|true' : '');
@@ -773,7 +792,7 @@
                                 expression += ',';
                             }
                         });
-                        //增加命令包完成后刷新用户界面中的命令包信息
+                        //增加操作模板完成后刷新用户界面中的操作模板信息
                         Ext.Ajax.request({
                             url:"<%= apps_path %>/" + appId + '/operation_templates',
                             method:'POST',
@@ -783,7 +802,7 @@
                                 'operation_template[expression]':expression
                             },
                             callback:function(options, success, response) {
-                                Ext.getCmp('savedStatus').setText('命令包增加成功');
+                                Ext.getCmp('savedStatus').setText('操作模板增加成功');
                                 var cmdSetPanel = Ext.getCmp('commands' + appId);
                                 cmdSetPanel.removeAll();
                                 loadOperationForApp(appId);
@@ -800,7 +819,7 @@
                         fields:['_id','text','allowFailure']
                     });
 
-                    //增加命令包时向命令包中增加命令组中的命令信息,此方法被多个操作共用
+                    //增加操作模板时向操作模板中增加命令组中的命令信息,此方法被多个操作共用
                     function addDirectiveGroupToOperation(parent, node, refNode) {
                         node.eachChild(function(child) {
                             var newChild = parent.createNode({
@@ -818,9 +837,9 @@
                         }, 10);
                     }
 
-                    //增加命令包时的命令包树结构信息
+                    //增加操作模板时的操作模板树结构信息
                     var cmdSetTreePanel = Ext.create('Ext.tree.Panel', {
-                        title:'命令包所有命令',
+                        title:'操作模板所有命令',
                         collapsible:true,
                         region:'center',
                         viewConfig: {
@@ -831,7 +850,7 @@
                         autoScroll:true,
                         loadMask:true,
                         listeners:{
-                            //向命令包中增加命令
+                            //向操作模板中增加命令
                             iteminsert:function(parent, node, refNode) {
                                 if (!node.isLeaf()) {
                                     addDirectiveGroupToOperation(parent, node, refNode);
@@ -851,7 +870,7 @@
                                 handler:function() {
                                     var name = Ext.getCmp('cmdSetName').value;
                                     if (!name || name.trim().length == 0) {
-                                        Ext.Msg.alert('提醒', '请输入命令包的名字！');
+                                        Ext.Msg.alert('提醒', '请输入操作模板的名字！');
                                         return;
                                     }
                                     cmdSetTreePanel.getRootNode().commit();
@@ -894,9 +913,9 @@
                         ]
                     });
 
-                    //增加命令包时显示命令包的信息面板，包括命令包名与树状信息
+                    //增加操作模板时显示操作模板的信息面板，包括操作模板名与树状信息
                     var cmdSetPanel = Ext.create('Ext.panel.Panel', {
-                        title:'命令包',
+                        title:'操作模板',
                         region:'center',
                         collapsible:true,
                         layout:'border',
@@ -908,7 +927,7 @@
                                 items:[
                                     {
                                         xtype:'textfield',
-                                        fieldLabel:'命令包名',
+                                        fieldLabel:'操作模板名',
                                         id:'cmdSetName',
                                         columnWidth:0.5,
                                         enableKeyEvents:true,
@@ -928,9 +947,9 @@
                             cmdSetTreePanel
                         ]
                     });
-                    //增加命令包的窗口
+                    //增加操作模板的窗口
                     var addOperationWin = Ext.create('Ext.Window', {
-                        title:'增加命令包',
+                        title:'增加操作模板',
                         layout: {
                             type: 'border',
                             padding: 5
@@ -950,7 +969,7 @@
             });
         }
 
-        //编辑命令包时的iframe标签
+        //编辑操作模板时的iframe标签
         function getIFrameForEditOperation(url, width, height) {
             return '<iframe src="' + url + ' " width="' + width + '" height="' + height + '"' +
                     '></iframe>'
@@ -962,13 +981,17 @@
             callback:function(options, success, response) {
                 var result = response.responseText;
                 var obj = Ext.decode(result);
+                if (obj.length == 0) {
+                    var title = '<span style=\"display:block;font-size:15px;font-weight:bolder;width:' + 6 + 'px;margin: 0 auto;\">您没有应用</span>';
+                    appTabPanel.setTitle(title);
+                }
                 for (var i = 0; i < obj.length; i++) {
                     addAppTabPanel(obj[i].name, obj[i].id);
                 }
                 appTabPanel.add(appPanels);//Add to addTabPanel
 
                 for (var i = 0; i < obj.length; i++) {
-                    //此处获取App的命令包列表，url为apps/:id/operation_templates
+                    //此处获取App的操作模板列表，url为apps/:id/operation_templates
                     loadOperationForApp(obj[i].id);
                 }
             }

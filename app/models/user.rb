@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   has_many :apps, :through => :stakeholders, :class_name => 'App'
   has_many :roles, :through => :stakeholders, :class_name => 'Role'
 
-  has_many :operations, :foreign_key => "owner_id"
+  has_many :operations, :foreign_key => "operator_id"
 
   def is_admin
     roles.where(:name => Role::Admin).count > 0

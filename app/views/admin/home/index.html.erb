@@ -26,8 +26,8 @@
 
         addAdminMenu(0, '用户信息管理', true);
         addAdminMenu(1, '角色管理', true);
-        addAdminMenu(2, '命令管理', true);
-        addAdminMenu(3, '命令组管理', true);
+        addAdminMenu(2, '指令管理', true);
+        addAdminMenu(3, '指令组管理', true);
         addAdminMenu(4, '应用管理', true);
         addAdminMenu(5, '机房管理', true);
         addAdminMenu(6, '机器管理', true);
@@ -214,7 +214,7 @@
                                                     }
                                                 },
                                                 {
-                                                    text:'重设',
+                                                    text:'取消',
                                                     handler:function() {
                                                         this.up('form').getForm().reset();
                                                     }
@@ -362,7 +362,7 @@
                                                     }
                                                 },
                                                 {
-                                                    text:'重设',
+                                                    text:'取消',
                                                     handler:function() {
                                                         this.up('form').getForm().reset();
                                                     }
@@ -409,11 +409,11 @@
             ]
         };
 
-        //命令管理面板
+        //指令管理面板
         var cmdDefPanel = Ext.create('Ext.form.Panel', {
             frame:true,
             id:'2',
-            title:'命令管理',
+            title:'指令管理',
             bodyPadding:5,
             layout:'border',
             split:true,
@@ -425,7 +425,7 @@
                 {
                     region:'center',
                     xtype: 'gridpanel',
-                    title:'当前系统所有命令',
+                    title:'当前系统所有指令',
                     store:cmdDefGridStore,
                     split:true,
                     columnLines:true,
@@ -438,7 +438,7 @@
                     ],
                     columns:[
                         {
-                            text:'命令名',
+                            text:'指令名',
                             dataIndex:'name',
                             flex:6,
                             editor: {
@@ -495,7 +495,7 @@
                             }
                         },
                         {
-                            text:'命令组',
+                            text:'指令组',
                             dataIndex:'directive_group_id',
                             flex:4,
                             editor: {
@@ -514,7 +514,7 @@
                             items: [
                                 {
                                     icon   :"<%= root_path %>" + 'stylesheets/images/delete.gif',
-                                    tooltip: '删除当前命令',
+                                    tooltip: '删除当前指令',
                                     handler: function(grid, rowIndex, colIndex) {
                                         var r = cmdDefGridStore.getAt(rowIndex);
                                         Ext.Ajax.request({
@@ -536,11 +536,11 @@
                     ],
                     tbar: [
                         {
-                            text: '增加命令',
+                            text: '增加指令',
                             iconCls:'add',
                             handler : function() {
                                 var addDirectiveTemplateWin = Ext.create('Ext.Window', {
-                                    title:'增加命令',
+                                    title:'增加指令',
                                     layout:'border',
                                     width:500,
                                     items:[
@@ -560,10 +560,10 @@
                                                     value:$('meta[name="csrf-token"]').attr('content')
                                                 },
                                                 {
-                                                    fieldLabel:'命令名',
+                                                    fieldLabel:'指令名',
                                                     name:'directive_template[name]',
                                                     allowBlank:false,
-                                                    blankText:'命令名不能为空'
+                                                    blankText:'指令名不能为空'
                                                 },
                                                 {
                                                     fieldLabel:'别名',
@@ -590,7 +590,7 @@
                                                     name:'directive_template[arg5]'
                                                 },
                                                 {
-                                                    fieldLabel:'命令组',
+                                                    fieldLabel:'指令组',
                                                     xtype:'combo',
                                                     name:'directive_template[directive_group_id]',
                                                     valueField:'id',
@@ -620,7 +620,7 @@
                                                     }
                                                 },
                                                 {
-                                                    text:'重设',
+                                                    text:'取消',
                                                     handler:function() {
                                                         this.up('form').getForm().reset();
                                                     }
@@ -664,11 +664,11 @@
                 }
             ]
         });
-        //命令组管理面板
+        //指令组管理面板
         var cmdGroupDefPanel = {
             frame:true,
             id:'3',
-            title:'命令组管理',
+            title:'指令组管理',
             bodyPadding:5,
             layout:'border',
             split:true,
@@ -680,7 +680,7 @@
                 {
                     region:'center',
                     xtype: 'gridpanel',
-                    title:'当前系统所有命令组',
+                    title:'当前系统所有指令组',
                     store:cmdGroupGridStore,
                     split:true,
                     columnLines:true,
@@ -693,7 +693,7 @@
                     ],
                     columns:[
                         {
-                            text:'命令组名',
+                            text:'指令组名',
                             dataIndex:'name',
                             flex:1,
                             editor: {
@@ -707,7 +707,7 @@
                             items: [
                                 {
                                     icon   : "<%= root_path %>" + 'stylesheets/images/delete.gif',
-                                    tooltip: '删除当前命令组',
+                                    tooltip: '删除当前指令组',
                                     handler: function(grid, rowIndex, colIndex) {
                                         var r = cmdGroupGridStore.getAt(rowIndex);
                                         var cascade = Ext.getCmp('cascade').checked;
@@ -735,11 +735,11 @@
                     }),
                     tbar: [
                         {
-                            text: '增加命令组',
+                            text: '增加指令组',
                             iconCls:'add',
                             handler : function() {
                                 var addDirectiveGroupWin = Ext.create('Ext.Window', {
-                                    title:'增加命令组',
+                                    title:'增加指令组',
                                     layout:'border',
                                     width:300,
                                     height:150,
@@ -760,10 +760,10 @@
                                                     value:$('meta[name="csrf-token"]').attr('content')
                                                 },
                                                 {
-                                                    fieldLabel:'命令组名',
+                                                    fieldLabel:'指令组名',
                                                     name:'directive_group[name]',
                                                     allowBlank:false,
-                                                    blankText:'命令组名不能为空'
+                                                    blankText:'指令组名不能为空'
                                                 }
                                             ],
                                             buttons:[
@@ -788,7 +788,7 @@
                                                     }
                                                 },
                                                 {
-                                                    text:'重设',
+                                                    text:'取消',
                                                     handler:function() {
                                                         this.up('form').getForm().reset();
                                                     }
@@ -805,7 +805,7 @@
                             disabled:true
                         },
                         {
-                            boxLabel:'删除命令组时同时删除其下的所有命令',
+                            boxLabel:'删除指令组时同时删除其下的所有指令',
                             xtype:'checkbox',
                             id:'cascade'
                         }
@@ -980,6 +980,7 @@
                                                     ],
                                                     store:Ext.create('Ext.data.Store', {
                                                         fields:['id','app_id','user_id','role_id','user','role'],
+                                                        storeId:'editAppStore' + record.get('id'),
                                                         proxy:{
                                                             url:"<%= admin_apps_path %>/" + record.get('id'),
                                                             type:'ajax',
@@ -1071,6 +1072,131 @@
                                                                 }
                                                             ]
                                                         }
+                                                    ],
+                                                    tbar:[
+                                                        {
+                                                            text: '为应用分配用户',
+                                                            iconCls:'set_app_for_user',
+                                                            handler:function() {
+                                                                var editAppForUserWin = Ext.create('Ext.Window', {
+                                                                    title:'为应用分配用户',
+                                                                    layout:'border',
+                                                                    width:300,
+                                                                    height:180,
+                                                                    modal:true,
+                                                                    items:[
+                                                                        Ext.create('Ext.form.Panel', {
+                                                                            region:'center',
+                                                                            frame:'true',
+                                                                            url:"<%= admin_apps_path %>",
+                                                                            defaultType:'combo',
+                                                                            defaults: {
+                                                                                labelWidth:90,
+                                                                                anchor:'95%'
+                                                                            },
+                                                                            layout:'column',
+                                                                            items:[
+                                                                                {
+                                                                                    xtype:'hidden',
+                                                                                    name:'authenticity_token',
+                                                                                    value:$('meta[name="csrf-token"]').attr('content')
+                                                                                },
+                                                                                {
+                                                                                    xtype:'hidden',
+                                                                                    name:'dispatch_to_user',
+                                                                                    value:true
+                                                                                },
+                                                                                {
+                                                                                    fieldLabel:'选择应用',
+                                                                                    xtype:'hidden',
+                                                                                    name:'app_id',
+                                                                                    value:record.get('id')
+                                                                                },
+                                                                                {
+                                                                                    fieldLabel:'选择用户',
+                                                                                    displayField:'email',
+                                                                                    store:Ext.create('Ext.data.Store', {
+                                                                                        fields:['id','email'],
+                                                                                        proxy:{
+                                                                                            type:'ajax',
+                                                                                            url:'<%= admin_users_path %>',
+                                                                                            reader:{
+                                                                                                type:'json',
+                                                                                                totalProperty:'totalCount',
+                                                                                                root:'users'
+                                                                                            }
+                                                                                        }
+                                                                                    }),
+                                                                                    valueField:'id',
+                                                                                    name:'user_id',
+                                                                                    allowBlank:false,
+                                                                                    blankText:'用户不能为空',
+                                                                                    editable:false
+                                                                                },
+                                                                                {
+                                                                                    fieldLabel:'选择角色',
+                                                                                    displayField:'name',
+                                                                                    valueField:'id',
+                                                                                    store:Ext.create('Ext.data.Store', {
+                                                                                        fields:['id','name'],
+                                                                                        proxy:{
+                                                                                            type:'ajax',
+                                                                                            url:'<%= admin_roles_path %>',
+                                                                                            reader:{
+                                                                                                type:'json',
+                                                                                                totalProperty:'totalCount',
+                                                                                                root:'roles'
+                                                                                            }
+                                                                                        }
+                                                                                    }),
+                                                                                    name:'role_id',
+                                                                                    allowBlank:false,
+                                                                                    blankText:'角色不能为空',
+                                                                                    editable:false
+                                                                                }
+                                                                            ],
+                                                                            buttons:[
+                                                                                {
+                                                                                    text:'保存',
+                                                                                    handler:function() {
+                                                                                        var form = this.up('form').getForm();
+                                                                                        if (form.isValid()) {
+                                                                                            form.submit({
+                                                                                                success: function(form, action) {
+                                                                                                    appGridStore.load();
+                                                                                                    editAppForUserWin.close();
+                                                                                                    if (action.result.errors.app_id) {
+                                                                                                        Ext.Msg.alert('提示', action.result.errors.app_id[0]);
+                                                                                                        return;
+                                                                                                    }
+                                                                                                    Ext.data.StoreManager.lookup('editAppStore' + record.get('id')).load();
+                                                                                                },
+                                                                                                failure: function(form, action) {
+                                                                                                    appGridStore.load();
+                                                                                                    editAppForUserWin.close();
+                                                                                                    if (action.result.errors.app_id) {
+                                                                                                        Ext.Msg.alert('提示', action.result.errors.app_id[0]);
+                                                                                                        return;
+                                                                                                    }
+                                                                                                    Ext.data.StoreManager.lookup('editAppStore' + record.get('id')).load();
+                                                                                                }
+                                                                                            });
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    text:'取消',
+                                                                                    handler:function() {
+                                                                                        this.up('form').getForm().reset();
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        })
+                                                                    ]
+                                                                });
+                                                                editAppForUserWin.show();
+                                                            }
+                                                        }
                                                     ]
                                                 }
                                             ]
@@ -1139,7 +1265,7 @@
                                                     }
                                                 },
                                                 {
-                                                    text:'重设',
+                                                    text:'取消',
                                                     handler:function() {
                                                         this.up('form').getForm().reset();
                                                     }
@@ -1149,133 +1275,6 @@
                                     ]
                                 });
                                 addAppWin.show();
-                            }
-                        },
-                        {
-                            text: '为应用分配用户',
-                            iconCls:'set_app_for_user',
-                            handler:function() {
-                                var editAppForUserWin = Ext.create('Ext.Window', {
-                                    title:'为应用分配用户',
-                                    layout:'border',
-                                    width:300,
-                                    height:180,
-                                    modal:true,
-                                    items:[
-                                        Ext.create('Ext.form.Panel', {
-                                            region:'center',
-                                            frame:'true',
-                                            url:"<%= admin_apps_path %>",
-                                            defaultType:'combo',
-                                            defaults: {
-                                                labelWidth:90,
-                                                anchor:'95%'
-                                            },
-                                            layout:'column',
-                                            items:[
-                                                {
-                                                    xtype:'hidden',
-                                                    name:'authenticity_token',
-                                                    value:$('meta[name="csrf-token"]').attr('content')
-                                                },
-                                                {
-                                                    xtype:'hidden',
-                                                    name:'dispatch_to_user',
-                                                    value:true
-                                                },
-                                                {
-                                                    fieldLabel:'选择应用',
-                                                    displayField:'name',
-                                                    valueField:'id',
-                                                    name:'app_id',
-                                                    store:Ext.create('Ext.data.Store', {
-                                                        fields:['id','name'],
-                                                        proxy:{
-                                                            type:'ajax',
-                                                            url:'<%= admin_apps_path %>',
-                                                            reader:'json',
-                                                            extraParams:{
-                                                                dispatch_to_user:true
-                                                            }
-                                                        }
-                                                    }),
-                                                    allowBlank:false,
-                                                    blankText:'应用不能为空',
-                                                    editable:false
-                                                },
-                                                {
-                                                    fieldLabel:'选择用户',
-                                                    displayField:'email',
-                                                    store:Ext.create('Ext.data.Store', {
-                                                        fields:['id','email'],
-                                                        proxy:{
-                                                            type:'ajax',
-                                                            url:'<%= admin_users_path %>',
-                                                            reader:{
-                                                                type:'json',
-                                                                totalProperty:'totalCount',
-                                                                root:'users'
-                                                            }
-                                                        }
-                                                    }),
-                                                    valueField:'id',
-                                                    name:'user_id',
-                                                    allowBlank:false,
-                                                    blankText:'用户不能为空',
-                                                    editable:false
-                                                },
-                                                {
-                                                    fieldLabel:'选择角色',
-                                                    displayField:'name',
-                                                    valueField:'id',
-                                                    store:Ext.create('Ext.data.Store', {
-                                                        fields:['id','name'],
-                                                        proxy:{
-                                                            type:'ajax',
-                                                            url:'<%= admin_roles_path %>',
-                                                            reader:{
-                                                                type:'json',
-                                                                totalProperty:'totalCount',
-                                                                root:'roles'
-                                                            }
-                                                        }
-                                                    }),
-                                                    name:'role_id',
-                                                    allowBlank:false,
-                                                    blankText:'角色不能为空',
-                                                    editable:false
-                                                }
-                                            ],
-                                            buttons:[
-                                                {
-                                                    text:'保存',
-                                                    handler:function() {
-                                                        var form = this.up('form').getForm();
-                                                        if (form.isValid()) {
-                                                            form.submit({
-                                                                success: function(form, action) {
-                                                                    appGridStore.load();
-                                                                    editAppForUserWin.close();
-                                                                },
-                                                                failure: function(form, action) {
-                                                                    appGridStore.load();
-                                                                    editAppForUserWin.close();
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    text:'重设',
-                                                    handler:function() {
-                                                        this.up('form').getForm().reset();
-                                                    }
-                                                }
-                                            ]
-                                        })
-                                    ]
-                                });
-                                editAppForUserWin.show();
                             }
                         }
                     ],
@@ -1422,7 +1421,7 @@
                                                     }
                                                 },
                                                 {
-                                                    text:'重设',
+                                                    text:'取消',
                                                     handler:function() {
                                                         this.up('form').getForm().reset();
                                                     }
@@ -1709,7 +1708,7 @@
                                                     }
                                                 },
                                                 {
-                                                    text:'重设',
+                                                    text:'取消',
                                                     handler:function() {
                                                         this.up('form').getForm().reset();
                                                     }

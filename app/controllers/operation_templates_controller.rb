@@ -1,8 +1,10 @@
 class OperationTemplatesController < BaseController
   def index
     app_id = params[:app_id]
-    role_id = Stakeholder.where(:app_id => app_id, :user_id => current_user.id).first.role_id
-    role = Role.find(role_id).name
+    roles = Stakeholder.where(:app_id => app_id, :user_id => current_user.id).inject([]) do |roles, stakeholder|
+      roles << Role.find(stakeholder.role_id).name
+    end
+    role = roles.index(Role::Admin) ? Role::Admin : (roles.index(Role::PE) ? Role::PE : Role::APPOPS)
     operation_templates = current_app.operation_templates
     if role == Role::Admin || role == Role::PE
       if operation_templates.length == 0

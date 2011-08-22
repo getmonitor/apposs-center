@@ -9,6 +9,8 @@ class Directive < ActiveRecord::Base
     self.isok = isok
     self.response = body
     isok ? ok : error
+    #TODO 更新 operation state
+    operation.done
   end
 
   state_machine :state, :initial => :init do
