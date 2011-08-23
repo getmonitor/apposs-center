@@ -587,6 +587,7 @@
                                                                 var multiWin = Ext.create('Ext.Window', {
                                                                     width:720,
                                                                     height:544,
+                                                                    title:'修改操作模板',
                                                                     autoScroll:true,
                                                                     items:[
                                                                         {
@@ -807,20 +808,28 @@
 
                     //增加操作模板时向操作模板中增加命令组中的命令信息,此方法被多个操作共用
                     function addDirectiveGroupToOperation(parent, node, refNode) {
-                        node.eachChild(function(child) {
-                            var newChild = parent.createNode({
-                                _id:child.data.id,
-                                text:child.data.text,
-                                leaf:child.data.leaf
+                        if (!node.isLeaf()) {
+                            node.eachChild(function(child) {
+                                var newChild = parent.createNode({
+                                    _id:child.data.id,
+                                    text:child.data.text,
+                                    leaf:child.data.leaf,
+                                    allowFailure:false
+                                });
+                                setTimeout(function() {
+                                    parent.insertBefore(newChild, refNode);
+                                }, 10);
                             });
                             setTimeout(function() {
-                                parent.insertBefore(newChild, refNode);
+                                node.removeAll();
+                                node.remove();
                             }, 10);
-                        });
-                        setTimeout(function() {
-                            node.removeAll();
-                            node.remove();
-                        }, 10);
+                        } else if (node.data.allowFailure !== true) {
+                            if (!node.data._id) {//当增加文件夹中的所有命令时需要注意的地方。
+                                node.data._id = node.data.id;
+                            }
+                            node.data.allowFailure = false;
+                        }
                     }
 
                     //增加操作模板时的操作模板树结构信息
@@ -838,14 +847,10 @@
                         listeners:{
                             //向操作模板中增加命令
                             iteminsert:function(parent, node, refNode) {
-                                if (!node.isLeaf()) {
-                                    addDirectiveGroupToOperation(parent, node, refNode);
-                                }
+                                addDirectiveGroupToOperation(parent, node, refNode);
                             },
                             itemappend:function(parent, node, index) {
-                                if (!node.isLeaf()) {
-                                    addDirectiveGroupToOperation(parent, node);
-                                }
+                                addDirectiveGroupToOperation(parent, node);
                             }
                         },
                         tbar: [
