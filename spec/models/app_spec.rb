@@ -1,10 +1,8 @@
 require 'spec_helper'
 
 describe App do
-  fixtures :users
-  it "should has its directives" do
-    App.all.each{|app|
-      app.directives.should be_empty
-    }
+  fixtures :users,:apps
+  it "should exist" do
+    App.count.should  == 1
   end
 end

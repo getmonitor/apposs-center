@@ -15,8 +15,7 @@ class ReleasePack < ActiveRecord::Base
   end
   
   def offline_others
-    id = self.id
-    app.packages.with_state(:using).each{|pack|
+    app.release_packs.with_state(:using).each{|pack|
       pack.off if pack.id != id
     }
   end

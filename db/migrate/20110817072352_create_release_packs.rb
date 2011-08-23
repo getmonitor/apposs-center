@@ -1,6 +1,6 @@
-class CreatePackages < ActiveRecord::Migration
+class CreateReleasePacks < ActiveRecord::Migration
   def self.up
-    create_table :packages do |t|
+    create_table :release_packs do |t|
       t.string  :version
       t.string  :branch
       t.integer :app_id
@@ -11,6 +11,6 @@ class CreatePackages < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :packages
+    drop_table :release_packs
   end
 end

@@ -41,6 +41,7 @@ gem "database_cleaner", :group => ["development", "test"]
 gem "shoulda", :group => ["development", "test"]
 gem "spork", :group => ["development", "test"]
 gem "launchy", :group => ["development", "test"]
+gem "rcov", :group => ["development", "test"]
 gem "inherited_resources_views"
 gem "inherited_resources"
 gem "warbler"

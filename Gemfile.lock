@@ -94,6 +94,7 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.9.2)
+    rcov (0.9.10-java)
     responders (0.6.4)
     rspec (2.6.0.rc6)
       rspec-core (= 2.6.0.rc6)
@@ -149,6 +150,7 @@ DEPENDENCIES
   mongrel
   rails (= 3.0.6)
   rake
+  rcov
   rspec-rails (= 2.6.0.rc6)
   ruby-debug
   ruby-graphviz
