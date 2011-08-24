@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
 
   has_many :operations, :foreign_key => "operator_id"
 
-  def is_admin
+  def is_admin?
     roles.where(:name => Role::Admin).count > 0
   end
 end

@@ -13,15 +13,21 @@ class Directive < ActiveRecord::Base
   end
 
   state_machine :state, :initial => :init do
+    event :clear do transition [:init,:ready] => :done end
     event :download do transition :init => :ready end
     event :invoke do transition :ready => :running end
     event :error do transition :running => :failure end
     event :ok do transition :running => :done end
     event :ack do transition :failure => :done end
 
+    after_transition :on => :clear, :do => :response_clear
     after_transition :on => :invoke, :do => :fire_operation
     after_transition :on => :error, :do => :error_operation
     after_transition :on => :ok, :do => :check_ok_operation
+  end
+
+  def response_clear
+    response = "be cleared"
   end
 
   def fire_operation

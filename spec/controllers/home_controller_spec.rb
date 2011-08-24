@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe HomeController do
 
+  render_views
+  
   describe "GET 'index'" do
     it "should redirect_to login" do
       get 'index'

@@ -4,16 +4,17 @@ class OperationTemplate < ActiveRecord::Base
 
   validates_length_of :expression,:minimum => 1,:message => "操作模板中的指令模板不能为空"
   # cmd set def 定义了一个命令包，对于指定的一个operation_id，可以为之创建命令包所对应的一组执行命令
-  def create_operation user, choosedMachineIds
+  def create_operation user, choosed_machine_ids
     operation = operations.create :operator => user, :name => name, :app => app
-    build_directives operation.id, choosedMachineIds
+    build_directives operation.id, choosed_machine_ids
+    operation
   end
 
   # 根据 cmd set id 生成 command 记录（同时command会自动生成 directive 记录)
   # choosedMachineIds 要求必须是一个integer数组
-  def build_directives operation_id, choosedMachineIds
-    if choosedMachineIds
-      machines = app.machines.where(:id => choosedMachineIds[0..10]).select([:id, :host, :room_id])
+  def build_directives operation_id, choosed_machine_ids
+    if choosed_machine_ids
+      machines = app.machines.where(:id => choosed_machine_ids[0..10]).select([:id, :host, :room_id])
     else
       machines = app.machines.select([:id, :host, :room_id])
     end
