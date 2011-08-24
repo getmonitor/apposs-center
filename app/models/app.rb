@@ -4,6 +4,8 @@ class App < ActiveRecord::Base
   has_many :operators, :through => :stakeholders, :class_name => 'User'
   
   has_many :release_packs
+
+  has_many :softwares
   
   # Machine
   has_many :machines
