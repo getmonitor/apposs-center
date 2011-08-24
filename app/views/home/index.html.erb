@@ -25,7 +25,7 @@
 
         //应用的中心命令执行状态面板
         //操作模型的定义
-        createModel('Command', ['id','name','state',{name:'created_at',type: 'date'}]);
+        createModel('Command', ['id','name','state','response',{name:'created_at',type: 'date'},{name:'updated_at',type: 'date'}]);
 
         //一台机器上的所有的命令的执行状态的模型
 //    createModel('MachineCommand', ['id','name','state']);
@@ -262,6 +262,7 @@
                     {
                         header:'最近更新时间',
                         dataIndex:'updated_at',
+                        renderer : Ext.util.Format.dateRenderer('Y-m-d H:i:s'),
                         flex:1
                     }
                 ],
@@ -280,7 +281,28 @@
                             }
                         ]
                     }
-                ]
+                ],
+                listeners: {
+                    itemclick:function(view, record, item, index, e, options) {
+                        if (record.isLeaf()) {
+                            var responseWin = Ext.create('Ext.Window', {
+                                title:'指令执行结果',
+                                width:400,
+                                height:100,
+                                layout:'border',
+                                items:[
+                                    {
+                                        region:'center',
+                                        xtype     : 'label',
+//                                        fieldLabel: '当前指令执行结果',
+                                        text:record.get('response')
+                                    }
+                                ]
+                            });
+                            responseWin.show();
+                        }
+                    }
+                }
             });
 
             //当前应用的单台机器上的命令执行状态树结构
