@@ -39,6 +39,10 @@ class Admin::AppsController < Admin::BaseController
     end
   end
 
+  def update_app_user_role
+    respond_with Stakeholder.find(params[:stakeholder_id]).update_attributes(:app_id => params[:id],:user_id => params[:user_id],:role_id => params[:role_id])
+  end
+
   def model
     App
   end

@@ -57,7 +57,9 @@ Apposs::Application.routes.draw do
     root :to => 'home#index'
     resources :directive_templates
     resources :directive_groups
-    resources :apps
+    resources :apps do
+      put :update_app_user_role, :on => :member
+    end
     resources :users
     resources :roles
     resources :machines

@@ -900,6 +900,44 @@
                                     tooltip: '编辑',
                                     handler: function(grid, rowIndex, colIndex) {
                                         var record = grid.getStore().getAt(rowIndex);
+                                        var editAppStore = Ext.create('Ext.data.Store', {
+                                            fields:['id','app_id','user_id','role_id','user','role'],
+                                            storeId:'editAppStore' + record.get('id'),
+                                            proxy:{
+                                                url:"<%= admin_apps_path %>/" + record.get('id'),
+                                                type:'ajax',
+                                                reader:{
+                                                    type:'json'
+                                                }
+                                            },
+                                            autoLoad:true
+                                        });
+                                        var userStore = Ext.create('Ext.data.Store', {
+                                            fields:['id','email'],
+                                            proxy:{
+                                                url:"<%= admin_users_path %>",
+                                                type:'ajax',
+                                                reader:{
+                                                    type:'json',
+                                                    totalProperty:'totalCount',
+                                                    root:'users'
+                                                }
+                                            },
+                                            autoLoad:true
+                                        });
+                                        var roleStore = Ext.create('Ext.data.Store', {
+                                            fields:['id','name'],
+                                            proxy:{
+                                                url:"<%= admin_roles_path %>",
+                                                type:'ajax',
+                                                reader:{
+                                                    type:'json',
+                                                    totalProperty:'totalCount',
+                                                    root:'roles'
+                                                }
+                                            },
+                                            autoLoad:true
+                                        });
                                         var editAppWin = Ext.create('Ext.Window', {
                                             title:'管理当前应用的用户角色',
                                             width:500,
@@ -958,18 +996,7 @@
                                                     plugins: [
                                                         appPanelRowEditing
                                                     ],
-                                                    store:Ext.create('Ext.data.Store', {
-                                                        fields:['id','app_id','user_id','role_id','user','role'],
-                                                        storeId:'editAppStore' + record.get('id'),
-                                                        proxy:{
-                                                            url:"<%= admin_apps_path %>/" + record.get('id'),
-                                                            type:'ajax',
-                                                            reader:{
-                                                                type:'json'
-                                                            }
-                                                        },
-                                                        autoLoad:true
-                                                    }),
+                                                    store: editAppStore,
                                                     columns:[
                                                         {
                                                             text:'用户',
@@ -979,23 +1006,12 @@
                                                                 xtype:'combo',
                                                                 valueField:'id',
                                                                 displayField:'email',
-                                                                store:Ext.create('Ext.data.Store', {
-                                                                    fields:['id','email'],
-                                                                    proxy:{
-                                                                        url:"<%= admin_users_path %>",
-                                                                        type:'ajax',
-                                                                        reader:{
-                                                                            type:'json',
-                                                                            totalProperty:'totalCount',
-                                                                            root:'users'
-                                                                        }
-                                                                    },
-                                                                    autoLoad:true
-                                                                }),
+                                                                store:userStore,
                                                                 editable:false
                                                             },
-                                                            renderer:function(value, metadata, record) {
-                                                                return record.get('user');
+                                                            renderer:function(value) {
+                                                                var r = userStore.getById(value);
+                                                                return r.get('email');
                                                             }
                                                         },
                                                         {
@@ -1006,23 +1022,12 @@
                                                                 xtype:'combo',
                                                                 valueField:'id',
                                                                 displayField:'name',
-                                                                store:Ext.create('Ext.data.Store', {
-                                                                    fields:['id','name'],
-                                                                    proxy:{
-                                                                        url:"<%= admin_roles_path %>",
-                                                                        type:'ajax',
-                                                                        reader:{
-                                                                            type:'json',
-                                                                            totalProperty:'totalCount',
-                                                                            root:'roles'
-                                                                        }
-                                                                    },
-                                                                    autoLoad:true
-                                                                }),
+                                                                store:roleStore,
                                                                 editable:false
                                                             },
-                                                            renderer:function(value, metadata, record) {
-                                                                return record.get('role');
+                                                            renderer:function(value) {
+                                                                var r = roleStore.getById(value);
+                                                                return r.get('name');
                                                             }
                                                         },
                                                         {
@@ -1177,7 +1182,25 @@
                                                                 editAppForUserWin.show();
                                                             }
                                                         }
-                                                    ]
+                                                    ],
+                                                    listeners: {
+                                                        edit:function(editor, e) {
+                                                            editor.record.commit();
+                                                            var record = editor.record;
+                                                            Ext.Ajax.request({
+                                                                url:"<%= admin_apps_path %>/" + record.get('app_id') + "/update_app_user_role",
+                                                                method:'PUT',
+                                                                params:{
+                                                                    authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                                                    'stakeholder_id':record.get('id'),
+                                                                    'user_id':record.get('user_id'),
+                                                                    'role_id':record.get('role_id')
+                                                                },
+                                                                callback:function(options, success, response) {
+                                                                }
+                                                            });
+                                                        }
+                                                    }
                                                 }
                                             ]
                                         });
