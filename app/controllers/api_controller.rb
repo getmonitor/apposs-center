@@ -1,17 +1,21 @@
 class ApiController < ApplicationController
   def commands
   	room = Room.where(:name => params[:room_name]).first
-  	# 查询参数包括机房的 name 和 id，是考虑到 room 表的name字段发生变动，
-  	# 此时应该谨慎处理，不下发相应的命令
-    if params[:reload]
-      operQuery = Directive.with_state(:init,:ready,:running)
+    if room.nil?
+      render :text => ""
     else
-      operQuery = Directive.with_state(:init)
+      # 查询参数包括机房的 name 和 id，是考虑到 room 表的name字段发生变动，
+      # 此时应该谨慎处理，不下发相应的命令
+      if params[:reload]
+        operQuery = Directive.with_state(:init,:ready,:running)
+      else
+        operQuery = Directive.with_state(:init)
+      end
+      render :text => operQuery.where(:room_id => room.id, :room_name => room.name).collect{|o|
+        o.download
+        "#{o.machine_host}:#{o.command_name}:#{o.id}"
+      }.join("\n")
     end
-  	render :text => operQuery.where(:room_id => room.id, :room_name => room.name).collect{|o|
-  		o.download
-  		"#{o.machine_host}:#{o.command_name}:#{o.id}"
-  	}.join("\n")
   end
   
   #{host,Host},{oid,DirectiveId}
@@ -23,7 +27,7 @@ class ApiController < ApplicationController
   # {isok,atom_to_list(IsOk)},{host,Host},{oid,DirectiveId},{body,Body}
   def callback
     Directive.find(params[:oid]).callback(
-        "true"==params[:isok], params[:body]
+        "true"==params[:isok], params[:body].gsub(/%a$/,'')
     )
   	render :text => 'ok'
   end
@@ -31,7 +35,7 @@ class ApiController < ApplicationController
   def load_hosts
     hosts = params[:hosts].split("|")[0,9] #考虑到性能，仅取前10个，其余下次再获取
     render :text => Machine.where(:host => hosts).collect{|m|
-      "host=#{m.host},port=22,user=#{m.user},password=#{m.password}"
+      "host=#{m.host},port=#{m.port || 22},user=#{m.user},password=#{m.password}"
     }.join("\n")
   end
   

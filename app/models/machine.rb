@@ -6,4 +6,9 @@ class Machine < ActiveRecord::Base
 
   validates_inclusion_of :port,:in => 1..65535,:message => "port必须在1到65535之间"
 
+  def before_save
+    if self.host.nil? or host.empty?
+      self.host = self.name
+    end
+  end
 end
