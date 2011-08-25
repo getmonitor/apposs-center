@@ -75,6 +75,7 @@ Apposs::Application.routes.draw do
     end
     resources :operation_templates
     resources :operations
+    resources :softwares
   end
 
   # You can have the root of your site routed with "root"

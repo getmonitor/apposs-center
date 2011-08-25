@@ -175,6 +175,167 @@
                         handler:function() {
                             Ext.getCmp('centerCardPanel' + id).layout.setActiveItem(0);
                         }
+                    },
+                    {
+                        text:'编辑软件包',
+                        xtype:'button',
+                        iconCls:'add',
+                        handler:function() {
+                            var editSoftwaresWin = Ext.create('Ext.Window', {
+                                title:'编辑软件包',
+                                width:400,
+                                height:400,
+                                layout:'border',
+                                items:[
+                                    {
+                                        region:'center',
+                                        xtype:'gridpanel',
+                                        store:Ext.create('Ext.data.Store', {
+                                            storeId:'softwares' + id,
+                                            fields:['id','name'],
+                                            proxy:{
+                                                url:"<%= apps_path %>/" + id + "/softwares",
+                                                type:'ajax',
+                                                reader:{
+                                                    type:'json'
+                                                }
+                                            },
+                                            autoLoad:true
+                                        }),
+                                        split:true,
+                                        columnLines:true,
+                                        viewConfig: {
+                                            stripeRows: true
+                                        },
+                                        plugins:[
+                                            Ext.create('Ext.grid.plugin.RowEditing', {
+                                                clicksToEdit: 1
+                                            })
+                                        ],
+                                        columns:[
+                                            {
+                                                text:'软件包名',
+                                                dataIndex:'name',
+                                                flex:1,
+                                                editor: {
+                                                    xtype: 'textfield',
+                                                    allowBlank: false
+                                                }
+                                            },
+                                            {
+                                                flex:1,
+                                                xtype: 'actioncolumn',
+                                                items: [
+                                                    {
+                                                        icon   : "<%= root_path %>" + 'stylesheets/images/delete.gif',
+                                                        tooltip: '删除当前软件包',
+                                                        handler: function(grid, rowIndex, colIndex) {
+                                                            var store = this.up('gridpanel').getStore();
+                                                            var r = store.getAt(rowIndex);
+                                                            Ext.Ajax.request({
+                                                                url:"<%= apps_path %>/" + id + "/softwares/" + r.get('id'),
+                                                                method:'DELETE',
+                                                                params:{
+                                                                    authenticity_token:$('meta[name="csrf-token"]').attr('content')
+                                                                },
+                                                                callback:function (options, success, response) {
+                                                                    store.remove(r);
+                                                                    store.load();
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        tbar: [
+                                            {
+                                                text: '增加软件包',
+                                                iconCls:'add',
+                                                handler : function() {
+                                                    var addSoftwareWin = Ext.create('Ext.Window', {
+                                                        title:'增加软件包',
+                                                        layout:'border',
+                                                        width:300,
+                                                        height:150,
+                                                        items:[
+                                                            Ext.create('Ext.form.Panel', {
+                                                                region:'center',
+                                                                frame:'true',
+                                                                url:"<%= apps_path %>/" + id + "/softwares",
+                                                                defaultType:'textfield',
+                                                                defaults: {
+                                                                    labelWidth:90,
+                                                                    anchor:'95%'
+                                                                },
+                                                                items:[
+                                                                    {
+                                                                        xtype:'hidden',
+                                                                        name:'authenticity_token',
+                                                                        value:$('meta[name="csrf-token"]').attr('content')
+                                                                    },
+                                                                    {
+                                                                        fieldLabel:'软件包名',
+                                                                        name:'software[name]',
+                                                                        allowBlank:false,
+                                                                        blankText:'软件包名不能为空'
+                                                                    }
+                                                                ],
+                                                                buttons:[
+                                                                    {
+                                                                        text:'保存',
+                                                                        handler:function() {
+                                                                            var form = this.up('form').getForm();
+                                                                            var that = this;
+                                                                            if (form.isValid()) {
+                                                                                form.submit({
+                                                                                    success: function(form, action) {
+                                                                                        Ext.data.StoreManager.lookup('softwares' + id).load();
+                                                                                        addSoftwareWin.close();
+                                                                                    },
+                                                                                    failure: function(form, action) {
+                                                                                        Ext.data.StoreManager.lookup('softwares' + id).load();
+                                                                                        addSoftwareWin.close();
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        text:'取消',
+                                                                        handler:function() {
+                                                                            this.up('window').close();
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            })
+                                                        ]
+                                                    });
+                                                    addSoftwareWin.show();
+                                                }
+                                            }
+                                        ],
+                                        listeners: {
+                                            edit:function(editor, e) {
+                                                editor.record.commit();
+                                                var record = editor.record;
+                                                Ext.Ajax.request({
+                                                    url:"<%= apps_path %>/" + id + "/softwares/" + record.get('id'),
+                                                    method:'PUT',
+                                                    params:{
+                                                        authenticity_token:$('meta[name="csrf-token"]').attr('content'),
+                                                        'software[name]':record.get('name')
+                                                    },
+                                                    callback:function(options, success, response) {
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                ]
+                            });
+                            editSoftwaresWin.show();
+                        }
                     }
                 ]
             };
@@ -514,6 +675,7 @@
                                 handler:
                                         (function(url, method, type, cmdSetDefId) {
                                             return function() {
+                                                var breakdown = false;
                                                 if (type.toLowerCase() == 'simple') {
                                                     chooseMachineToExecuteAppId = appId;
                                                     chooseMachineToExecuteOperationTemplateId = cmdSetDefId;
@@ -592,19 +754,42 @@
                                                     });
                                                     executeCommandWin.show();
                                                     return;
-                                                }
-                                                Ext.Ajax.request({
-                                                    url:url,
-                                                    method:method,
-                                                    params:{
-                                                        authenticity_token:csrf_token,
-                                                        operation_template_id:cmdSetDefId
-                                                    },
-                                                    callback:(function(type) {
-                                                        return function(options, success, response) {
-                                                            if (type == 'simple') {
-                                                                Ext.Msg.alert('消息', response.responseText);
-                                                            } else if (type == 'multi') {
+                                                } else if (type == 'delete') {
+                                                    Ext.Msg.show({
+                                                        title:'提示',
+                                                        msg: '您确定要删除当前操作模板吗？',
+                                                        buttons: Ext.Msg.YESNOCANCEL,
+                                                        fn: function(btn) {
+                                                            if (btn == 'yes') {
+                                                                Ext.Ajax.request({
+                                                                    url:url,
+                                                                    method:method,
+                                                                    params:{
+                                                                        authenticity_token:csrf_token,
+                                                                        operation_template_id:cmdSetDefId
+                                                                    },
+                                                                    callback:(function(type) {
+                                                                        return function(options, success, response) {
+                                                                            var cmdSetPanel = Ext.getCmp('commands' + appId);
+                                                                            cmdSetPanel.removeAll();
+                                                                            loadOperationForApp(appId);
+                                                                        }
+                                                                    })(type)
+                                                                })
+                                                            }
+                                                        },
+                                                        icon: Ext.window.MessageBox.QUESTION
+                                                    });
+                                                } else if (type == 'multi') {
+                                                    Ext.Ajax.request({
+                                                        url:url,
+                                                        method:method,
+                                                        params:{
+                                                            authenticity_token:csrf_token,
+                                                            operation_template_id:cmdSetDefId
+                                                        },
+                                                        callback:(function(type) {
+                                                            return function(options, success, response) {
                                                                 var respondUrl = Ext.decode(response.responseText).url;
                                                                 var multiWin = Ext.create('Ext.Window', {
                                                                     width:720,
@@ -620,18 +805,9 @@
                                                                 });
                                                                 multiWin.show();
                                                             }
-                                                            else if (type == 'delete') {
-                                                                Ext.Msg.confirm('提示', '您确定要删除当前操作模板吗？', function(btn) {
-                                                                    if (btn === 'yes') {
-                                                                        var cmdSetPanel = Ext.getCmp('commands' + appId);
-                                                                        cmdSetPanel.removeAll();
-                                                                        loadOperationForApp(appId);
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-                                                    })(type)
-                                                })
+                                                        })(type)
+                                                    })
+                                                }
                                             }
                                         })(cmdSet[j].actions[k - 1].url, cmdSet[j].actions[k - 1].method, cmdSet[j].actions[k - 1].type, cmdSet[j].id)
                             }
@@ -909,7 +1085,8 @@
                                 width: 20,
                                 items: [
                                     {
-                                        icon   :"<%= root_path %>" + 'stylesheets/images/delete.gif',                                    tooltip: '删除当前命令',
+                                        icon   :"<%= root_path %>" + 'stylesheets/images/delete.gif',
+                                        tooltip: '删除当前命令',
                                         handler: function(tree, rowIndex, colIndex) {
                                             var root = this.up('treepanel').getRootNode();
                                             if (rowIndex == 0) {
