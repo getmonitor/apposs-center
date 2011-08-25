@@ -31,7 +31,7 @@ class OperationsController < BaseController
       choosedMachineIds = params[:choosedMachines].split(',').collect{|s| s.to_i}.uniq
     end
     current_app.operation_templates.find(params[:operation_template_id]).create_operation(current_user, choosedMachineIds)
-    render :text => "命令包已创建"
+    render :text => "操作已创建"
   end
 
 end

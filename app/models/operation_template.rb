@@ -3,7 +3,7 @@ class OperationTemplate < ActiveRecord::Base
   has_many :operations
 
   validates_length_of :expression,:minimum => 1,:message => "操作模板中的指令模板不能为空"
-  # cmd set def 定义了一个命令包，对于指定的一个operation_id，可以为之创建命令包所对应的一组执行命令
+  # operation_template 创建了一个操作，对于指定的一个operation_id，可以为之创建操作所对应的一组执行指令
   def create_operation user, choosed_machine_ids
     operation = operations.create :operator => user, :name => name, :app => app
     build_directives operation.id, choosed_machine_ids

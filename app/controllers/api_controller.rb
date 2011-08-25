@@ -41,8 +41,8 @@ class ApiController < ApplicationController
   
   def packages
     name,version,branch = params[:name], params[:version], params[:branch]
-    app = App.find_by_name name
-    if app
+    software = Software.with_name(name).first
+    if software and (app = software.app)
       if request.post?
         app.release_packs.create :version => version, :branch => branch
         render :text => "ok"
