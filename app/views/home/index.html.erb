@@ -92,7 +92,6 @@
                                 verticalScrollerType: 'paginggridscroller',
                                 invalidateScrollerOnRefresh: false,
                                 region:'center',
-//                            selModel:Ext.create('Ext.selection.CheckboxModel'),
                                 viewConfig: {
                                     stripeRows: true
                                 },
@@ -115,17 +114,18 @@
                                     }
                                 ],
                                 listeners:{
-                                    selectionchange:function(view, selections) {
-                                        if (Ext.getCmp('centerCardPanel' + id).layout.getActiveItem() == appMachineCommandStateTreePanel) {
-                                            var machine = selections[0];
-                                            if (machine) {
-                                                requestMachineDirectiveStateQueue.push(machine);
-                                                if (!requestMachineDirectiveInProcess) {
-                                                    requestMachineDirectiveInProcess = true;
-                                                    appMachineCommandStateTreePanel.setTitle("当前应用的" + machine.get('name') + "机器上的命令执行状态");
-                                                    machineCommandStore.proxy.url = "<%= apps_path %>/" + id + '/machines/' + machine.get('id') + '/command_state'
-                                                    machineCommandStore.load();
-                                                }
+                                    itemclick:function(view, record, item, index, e, options) {
+                                        if (Ext.getCmp('centerCardPanel' + id).layout.getActiveItem() != appMachineCommandStateTreePanel) {
+                                            Ext.getCmp('centerCardPanel' + id).layout.setActiveItem(2);
+                                        }
+                                        var machine = view.getSelectionModel().getSelection()[0];
+                                        if (machine) {
+                                            requestMachineDirectiveStateQueue.push(machine);
+                                            if (!requestMachineDirectiveInProcess) {
+                                                requestMachineDirectiveInProcess = true;
+                                                appMachineCommandStateTreePanel.setTitle("当前应用的" + machine.get('name') + "机器上的命令执行状态");
+                                                machineCommandStore.proxy.url = "<%= apps_path %>/" + id + '/machines/' + machine.get('id') + '/command_state'
+                                                machineCommandStore.load();
                                             }
                                         }
                                     }
@@ -160,14 +160,6 @@
                     }
                 ],
                 tbar:[
-                    {
-                        text:'查看<span style="font-weight: bolder;color: blue;">机器</span>的命令执行状态',
-                        xtype:'button',
-                        iconCls:'view',
-                        handler:function() {
-                            Ext.getCmp('centerCardPanel' + id).layout.setActiveItem(2);
-                        }
-                    },
                     {
                         text:'查看<span style="font-weight: bolder;color: blue;">当前应用</span>的命令执行状态',
                         xtype:'button',
