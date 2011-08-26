@@ -23,6 +23,10 @@ ul#welcome_info {
     background: url("images/refresh.gif");
 }
 
+.arrow_refresh {
+    background: url("images/arrow_refresh.png");
+}
+
 .execute {
     background: url(images/icons.png) no-repeat -3px -245px !important;
 }

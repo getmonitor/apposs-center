@@ -106,6 +106,9 @@
                                     {
                                         flex:1,
                                         xtype: 'actioncolumn',
+                                        renderer:function() {
+                                            return '查看状态';
+                                        },
                                         items: [
                                             {
                                                 icon   : "<%= root_path %>" + 'stylesheets/images/view.png',
@@ -124,6 +127,22 @@
                                                             machineCommandStore.load();
                                                         }
                                                     }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        flex:1,
+                                        xtype: 'actioncolumn',
+                                        renderer:function() {
+                                            return '继续执行';
+                                        },
+                                        items: [
+                                            {
+                                                icon   : "<%= root_path %>" + 'stylesheets/images/continue.png',
+                                                tooltip: '继续执行',
+                                                handler: function(view, rowIndex, colIndex) {
+//
                                                 }
                                             }
                                         ]
@@ -431,18 +450,31 @@
                             {
                                 xtype: 'button',
                                 text: '停止实时查看',
-                                iconCls:'refresh',
+                                iconCls:'arrow_refresh',
                                 enableToggle:true,
                                 listeners:{
                                     toggle:function(button) {
                                         if (button.text === '停止实时查看') {
                                             button.setText('启动实时查看');
+                                            Ext.getCmp('refreshDirective').setDisabled(false);
                                             stopPoller();
                                         } else {
                                             button.setText('停止实时查看');
+                                            Ext.getCmp('refreshDirective').setDisabled(true);
                                             startPoller();
                                         }
                                     }
+                                }
+                            },
+                            {
+                                xtype: 'button',
+                                text:'刷新',
+                                iconCls:'refresh',
+                                id:'refreshDirective',
+                                disabled:true,
+                                handler:function() {
+                                    var commandStore = Ext.data.StoreManager.lookup('commandStore' + id);
+                                    commandStore.load();
                                 }
                             }
                         ]
