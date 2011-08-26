@@ -12,16 +12,18 @@ class OperationTemplatesController < BaseController
       else
         respond_with operation_templates.collect { |obj|
           obj.serializable_hash.update("actions" => [
-              {:name=>"准备执行", :flex => 1.7, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
-              {:name=>"修改", :flex => 1, :url=> edit_app_operation_template_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
-              {:name=>"删除", :flex => 1, :url=> app_operation_template_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
+              {:name=>"准备执行", :flex => 2.0, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
+              {:name=>"分组执行", :flex => 2.0, :url => app_operations_path(app_id), :type => 'group', :method => 'POST'},
+              {:name=>"修改", :flex => 1.2, :url=> edit_app_operation_template_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
+              {:name=>"删除", :flex => 1.2, :url=> app_operation_template_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
           ], "flex" => 8, "add" => true)
         }
       end
     else
       respond_with current_app.operation_templates.collect { |obj|
         obj.serializable_hash.update("actions" => [
-            {:name=>"准备执行", :flex => 1, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'}
+            {:name=>"准备执行", :flex => 1, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
+            {:name=>"分组执行", :flex => 1, :url => app_operations_path(app_id), :type => 'group', :method => 'POST'}
         ], "flex" => 5, "add" => false)
       }
     end
@@ -50,5 +52,9 @@ class OperationTemplatesController < BaseController
 
   def destroy
     respond_with current_app.operation_templates.find(params[:id]).delete
+  end
+
+  def group_execute
+    render :text => "分组已创建"
   end
 end

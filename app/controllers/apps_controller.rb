@@ -8,7 +8,9 @@ class AppsController < BaseController
     respond_with current_user.apps.find(params[:id])
   end
 
-  def operations
-    respond_with current_app.operations
+  def rooms
+    respond_with(current_user.apps.find(params[:id]).machines.select([:room_id]).uniq.collect do |machine|
+      Room.find(machine.room_id)
+    end)
   end
 end

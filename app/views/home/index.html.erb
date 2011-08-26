@@ -42,7 +42,6 @@
                 pageSize: 200,
                 model:'AppMachine',
                 buffered:true,
-//            clearOnPageLoad:false,
                 proxy:{
                     type:'ajax',
                     url:"<%= apps_path %>/" + id + '/machines',
@@ -58,7 +57,6 @@
                 pageSize: 200,
                 model:'AppMachine',
                 buffered:true,
-//            clearOnPageLoad:false,
                 proxy:{
                     type:'ajax',
                     url:"<%= apps_path %>/" + id + '/machines',
@@ -95,41 +93,42 @@
                                 viewConfig: {
                                     stripeRows: true
                                 },
+                                selModel:Ext.create('Ext.selection.CheckboxModel', {
+                                    mode:'MULTI'
+                                }),
                                 store:machineStore,
                                 columns:[
-                                    {
-                                        xtype: 'rownumberer',
-                                        width: 50,
-                                        sortable: false
-                                    },
-                                    {
-                                        header:'机器名',
-                                        dataIndex:'name',
-                                        flex:1
-                                    },
                                     {
                                         header:'主机',
                                         dataIndex:'host',
                                         flex:1
-                                    }
-                                ],
-                                listeners:{
-                                    itemclick:function(view, record, item, index, e, options) {
-                                        if (Ext.getCmp('centerCardPanel' + id).layout.getActiveItem() != appMachineCommandStateTreePanel) {
-                                            Ext.getCmp('centerCardPanel' + id).layout.setActiveItem(2);
-                                        }
-                                        var machine = view.getSelectionModel().getSelection()[0];
-                                        if (machine) {
-                                            requestMachineDirectiveStateQueue.push(machine);
-                                            if (!requestMachineDirectiveInProcess) {
-                                                requestMachineDirectiveInProcess = true;
-                                                appMachineCommandStateTreePanel.setTitle("当前应用的" + machine.get('name') + "机器上的命令执行状态");
-                                                machineCommandStore.proxy.url = "<%= apps_path %>/" + id + '/machines/' + machine.get('id') + '/command_state'
-                                                machineCommandStore.load();
+                                    },
+                                    {
+                                        flex:1,
+                                        xtype: 'actioncolumn',
+                                        items: [
+                                            {
+                                                icon   : "<%= root_path %>" + 'stylesheets/images/view.png',
+                                                tooltip: '查看当前机器上的指令执行状态',
+                                                handler: function(view, rowIndex, colIndex) {
+                                                    if (Ext.getCmp('centerCardPanel' + id).layout.getActiveItem() != appMachineCommandStateTreePanel) {
+                                                        Ext.getCmp('centerCardPanel' + id).layout.setActiveItem(2);
+                                                    }
+                                                    var machine = view.getStore().getAt(rowIndex);
+                                                    if (machine) {
+                                                        requestMachineDirectiveStateQueue.push(machine);
+                                                        if (!requestMachineDirectiveInProcess) {
+                                                            requestMachineDirectiveInProcess = true;
+                                                            appMachineCommandStateTreePanel.setTitle("当前应用的" + machine.get('name') + "机器上的命令执行状态");
+                                                            machineCommandStore.proxy.url = "<%= apps_path %>/" + id + '/machines/' + machine.get('id') + '/command_state'
+                                                            machineCommandStore.load();
+                                                        }
+                                                    }
+                                                }
                                             }
-                                        }
+                                        ]
                                     }
-                                }
+                                ]
                             }
                         ]
                     },
@@ -351,6 +350,11 @@
                     text:'命令',
                     id:'root',
                     expanded:true
+                },
+                listeners:{
+                    load:function(store) {
+                        store.getRootNode().expand(true);
+                    }
                 }
             });
 
@@ -426,10 +430,19 @@
                         items: [
                             {
                                 xtype: 'button',
-                                text: '<span style="font-size: 14px;">刷新</span>',
+                                text: '停止实时查看',
                                 iconCls:'refresh',
-                                handler:function() {
-                                    Ext.data.StoreManager.lookup('commandStore' + id).load();
+                                enableToggle:true,
+                                listeners:{
+                                    toggle:function(button) {
+                                        if (button.text === '停止实时查看') {
+                                            button.setText('启动实时查看');
+                                            stopPoller();
+                                        } else {
+                                            button.setText('停止实时查看');
+                                            startPoller();
+                                        }
+                                    }
                                 }
                             }
                         ]
@@ -457,6 +470,21 @@
                     }
                 }
             });
+
+            var checkDirectiveStatus;
+
+            function startPoller() {
+                checkDirectiveStatus = setInterval(function() {
+                    var commandStore = Ext.data.StoreManager.lookup('commandStore' + id);
+                    commandStore.load();
+                }, 5000);
+            }
+
+            function stopPoller() {
+                clearInterval(checkDirectiveStatus);
+            }
+
+            startPoller();
 
             //当前应用的单台机器上的命令执行状态树结构
             var appMachineCommandStateTreePanel = Ext.create('Ext.tree.Panel', {
@@ -487,6 +515,7 @@
                     {
                         header:'最近更新时间',
                         dataIndex:'updated_at',
+                        renderer : Ext.util.Format.dateRenderer('Y-m-d H:i:s'),
                         flex:1
                     }
                 ],
@@ -615,30 +644,6 @@
             appPanels[appPanels.length] = appPanel;
         }
 
-        //分组Store
-        var groupStore = Ext.create('Ext.data.Store', {
-            fields:['group_count'],
-            data:[
-                {
-                    'group_count':1
-                },
-                {
-                    'group_count':2
-                },
-                {
-                    'group_count':3
-                },
-                {
-                    'group_count':4
-                },
-                {
-                    'group_count':5
-                },
-                {
-                    'group_count':6
-                }
-            ]
-        });
         //为应用加载操作模板
         function loadOperationForApp(appId) {
             Ext.Ajax.request({
@@ -669,82 +674,27 @@
                                             return function() {
                                                 var breakdown = false;
                                                 if (type.toLowerCase() == 'simple') {
-                                                    chooseMachineToExecuteAppId = appId;
-                                                    chooseMachineToExecuteOperationTemplateId = cmdSetDefId;
-                                                    var executeCommandWin = Ext.create('Ext.Window', {
-                                                        title:'选择执行方式',
-                                                        width:300,
-                                                        height:160,
-                                                        layout:'border',
-                                                        items:[
-                                                            {
-                                                                xtype:'fieldset',
-                                                                region:'center',
-                                                                frame:true,
-                                                                items:[
-                                                                    {
-                                                                        xtype: 'radiogroup',
-                                                                        columns: 2,
-                                                                        margin:'10 0 0 0',
-                                                                        id:'execute_strategy',
-                                                                        items: [
-                                                                            {
-                                                                                name:'execute_strategy',
-                                                                                boxLabel:'顺序执行',
-                                                                                inputValue:1,
-                                                                                checked:true,
-                                                                                listeners:{
-                                                                                    change:function(field, newValue, oldValue) {
-                                                                                        if (newValue == true) {
-                                                                                            Ext.getCmp('groupCount').hide();
-                                                                                        }
-                                                                                    }
-                                                                                }
-
-                                                                            },
-                                                                            {
-                                                                                name:'execute_strategy',
-                                                                                boxLabel:'分组执行',
-                                                                                inputValue:2,
-                                                                                listeners:{
-                                                                                    change:function(field, newValue, oldValue) {
-                                                                                        if (newValue == true) {
-                                                                                            Ext.getCmp('groupCount').show();
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    },
-                                                                    {
-                                                                        xtype:'combo',
-                                                                        id:'groupCount',
-                                                                        fieldLabel:'请选择分组数',
-                                                                        queryMode: 'local',
-                                                                        displayField: 'group_count',
-                                                                        valueField: 'group_count',
-                                                                        store:groupStore,
-                                                                        value:3,
-                                                                        editable:false,
-                                                                        hidden:true
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ],
-                                                        buttons:[
-                                                            {
-                                                                text:'确定',
-                                                                handler:function() {
-                                                                    var fieldset = Ext.getCmp('execute_strategy');
-                                                                    if (fieldset.getChecked()[0].getGroupValue() == 1) {
-                                                                        Ext.getCmp('centerCardPanel' + appId).layout.setActiveItem(1);
-                                                                    }
-                                                                    executeCommandWin.close();
-                                                                }
-                                                            }
-                                                        ]
+                                                    var selectedMachines = Ext.getCmp('machines' + appId).getSelectionModel().getSelection();
+                                                    var choosedMachines = [];
+                                                    for (var i = 0; i < selectedMachines.length; i++) {
+                                                        choosedMachines.push(selectedMachines[i].get('id'));
+                                                    }
+                                                    if (choosedMachines.length == 0) {
+                                                        Ext.Msg.alert('提示', '请选择要执行指令的机器！');
+                                                        return;
+                                                    }
+                                                    Ext.Ajax.request({
+                                                        url:"<%= apps_path %>/" + appId + '/operations',
+                                                        method:'POST',
+                                                        params:{
+                                                            authenticity_token:csrf_token,
+                                                            operation_template_id:cmdSetDefId,
+                                                            choosedMachines:choosedMachines.join(',')
+                                                        },
+                                                        callback:function(options, success, response) {
+                                                            Ext.Msg.alert('消息', response.responseText);
+                                                        }
                                                     });
-                                                    executeCommandWin.show();
                                                     return;
                                                 } else if (type == 'delete') {
                                                     Ext.Msg.show({
@@ -799,6 +749,123 @@
                                                             }
                                                         })(type)
                                                     })
+                                                } else if (type == 'group') {
+//                                                    chooseMachineToExecuteAppId = appId;
+//                                                    chooseMachineToExecuteOperationTemplateId = cmdSetDefId;
+                                                    var executeCommandWin = Ext.create('Ext.Window', {
+                                                        title:'选择执行方式',
+                                                        width:300,
+                                                        height:200,
+                                                        layout:'border',
+                                                        items:[
+                                                            {
+                                                                xtype:'fieldset',
+                                                                region:'center',
+                                                                frame:true,
+                                                                items:[
+                                                                    {
+                                                                        xtype: 'radiogroup',
+                                                                        columns: 2,
+                                                                        margin:'10 0 0 0',
+                                                                        id:'execute_strategy',
+                                                                        items: [
+                                                                            {
+                                                                                name:'execute_strategy',
+                                                                                boxLabel:'全部执行',
+                                                                                inputValue:1,
+                                                                                checked:true,
+                                                                                listeners:{
+                                                                                    change:function(field, newValue, oldValue) {
+                                                                                        if (newValue == true) {
+                                                                                            Ext.getCmp('groupCount').hide();
+                                                                                            Ext.getCmp('roomGroup').hide();
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                            },
+                                                                            {
+                                                                                name:'execute_strategy',
+                                                                                boxLabel:'分组执行',
+                                                                                inputValue:2,
+                                                                                listeners:{
+                                                                                    change:function(field, newValue, oldValue) {
+                                                                                        if (newValue == true) {
+                                                                                            Ext.getCmp('groupCount').show();
+                                                                                            Ext.getCmp('roomGroup').show();
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        xtype:'combo',
+                                                                        id:'roomGroup',
+                                                                        fieldLabel:'请选择机房',
+                                                                        queryMode: 'remote',
+                                                                        displayField: 'name',
+                                                                        valueField: 'id',
+                                                                        store:Ext.create('Ext.data.Store', {
+                                                                            fields:['id','name'],
+                                                                            proxy:{
+                                                                                url:"<%= apps_path %>/" + appId + "/rooms",
+                                                                                type:'ajax',
+                                                                                reader: {
+                                                                                    type:'json'
+                                                                                }
+                                                                            }
+                                                                        }),
+                                                                        editable:false,
+                                                                        hidden:true
+                                                                    },
+                                                                    {
+                                                                        xtype:'numberfield',
+                                                                        id:'groupCount',
+                                                                        fieldLabel:'请输入分组数',
+                                                                        hidden:true,
+                                                                        minValue:1
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ],
+                                                        buttons:[
+                                                            {
+                                                                text:'确定',
+                                                                handler:function() {
+                                                                    var fieldset = Ext.getCmp('execute_strategy');
+                                                                    if (fieldset.getChecked()[0].getGroupValue() == 1) {
+                                                                        Ext.Ajax.request({
+                                                                            url:"<%= apps_path %>/" + appId + '/operations',
+                                                                            method:'POST',
+                                                                            params:{
+                                                                                authenticity_token:csrf_token,
+                                                                                operation_template_id:cmdSetDefId
+                                                                            },
+                                                                            callback:function(options, success, response) {
+                                                                                Ext.Msg.alert('消息', response.responseText);
+                                                                            }
+                                                                        });
+                                                                    } else {
+                                                                        Ext.Ajax.request({
+                                                                            url:"<%= apps_path %>/" + appId + "/operation_templates/" + cmdSetDefId + "/group_execute",
+                                                                            method:'POST',
+                                                                            params:{
+                                                                                authenticity_token:csrf_token,
+                                                                                room_id:Ext.getCmp('roomGroup').value,
+                                                                                group_count:Ext.getCmp('groupCount').value
+                                                                            },
+                                                                            callback:function(options, success, response) {
+                                                                                Ext.Msg.alert('消息', response.responseText);
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                    executeCommandWin.close();
+                                                                }
+                                                            }
+                                                        ]
+                                                    });
+                                                    executeCommandWin.show();
                                                 }
                                             }
                                         })(cmdSet[j].actions[k - 1].url, cmdSet[j].actions[k - 1].method, cmdSet[j].actions[k - 1].type, cmdSet[j].id)
@@ -807,7 +874,6 @@
                         cmdSetPanel[cmdSetPanel.length] = {
                             xtype:'panel',
                             border:false,
-//                        layout:'column',
                             layout:'hbox',
                             anchor:'100%',
                             frame:true,

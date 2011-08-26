@@ -71,13 +71,15 @@ Apposs::Application.routes.draw do
   resources :rooms
 
   resources :apps do
-    resources :machines
     resources :machines do
       get :command_state, :on => :member
     end
-    resources :operation_templates
+    resources :operation_templates do
+      post :group_execute, :on => :member
+    end
     resources :operations
     resources :softwares
+    get :rooms, :on => :member
   end
 
   # You can have the root of your site routed with "root"
