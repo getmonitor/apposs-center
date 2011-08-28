@@ -1,9 +1,9 @@
 class Directive < ActiveRecord::Base
   belongs_to :machine
   belongs_to :operation
-  default_scope order("id")
+  default_scope order("operation_id asc, id asc")
 
-  scope :inits, where(:state => :init)
+  scope :normal, where('operation_id <> 0')
 
   def callback( isok, body)
     self.isok = isok
@@ -22,8 +22,8 @@ class Directive < ActiveRecord::Base
 
     after_transition :on => :clear, :do => :response_clear
     after_transition :on => :invoke, :do => :fire_operation
-    after_transition :on => :error, :do => :error_operation
-    after_transition :on => :ok, :do => :check_ok_operation
+    after_transition :on => :error, :do => :error_fire
+    after_transition :on => [:ok,:ack], :do => :check_operation
   end
 
   def response_clear
@@ -31,17 +31,24 @@ class Directive < ActiveRecord::Base
   end
 
   def fire_operation
-    operation.fire
+    operation.fire if has_operation?
+  end
+
+  def error_fire
+    operation.error if has_operation?
+    machine.error
   end
   
-  def error_operation
-    operation.error
-  end
-  
-  def check_ok_operation
-    if operation.directives.without_state(:done).count == 0
-      operation.ok
+  def check_operation
+    p 'check ok operation'
+    if has_operation? and operation.directives.without_state(:done).count == 0
+      operation.ok || operation.ack
     end
   end
-  
+
+  # 对于某些特殊的指令（例如：针对machine的，对应的operation_id 为0
+  def has_operation?
+    operation_id != Operation::GLOBAL_ID
+  end
+
 end

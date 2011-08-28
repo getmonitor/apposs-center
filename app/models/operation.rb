@@ -1,4 +1,7 @@
 class Operation < ActiveRecord::Base
+
+  GLOBAL_ID = 0
+
   belongs_to :operation_template
 
   has_many :directives

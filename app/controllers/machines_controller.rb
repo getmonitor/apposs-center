@@ -8,7 +8,7 @@ class MachinesController < BaseController
   end
 
   def command_state
-    directives = Machine.find(params[:id]).directives.collect do |o|
+    directives = current_app.machines.find(params[:id]).directives.normal.collect do |o|
       o.attributes.update(
           "leaf" => true,
           "state" => o.human_state_name,
@@ -18,4 +18,7 @@ class MachinesController < BaseController
     respond_with directives
   end
 
+  def reset
+    respond_with current_app.machines.find(params[:id]).resume
+  end
 end

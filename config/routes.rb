@@ -1,3 +1,4 @@
+
 Apposs::Application.routes.draw do
 
   devise_for :users
@@ -72,13 +73,21 @@ Apposs::Application.routes.draw do
 
   resources :apps do
     resources :machines do
-      get :command_state, :on => :member
+      member do
+        get :command_state
+        put :reset
+      end
     end
     resources :operation_templates do
       post :group_execute, :on => :member
     end
     resources :operations
     resources :softwares
+    resources :directives do
+      member do
+        put :ack
+      end
+    end
     get :rooms, :on => :member
   end
 

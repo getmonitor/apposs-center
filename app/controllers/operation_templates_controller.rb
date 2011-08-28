@@ -55,6 +55,31 @@ class OperationTemplatesController < BaseController
   end
 
   def group_execute
+#    if params[:group_count] && params[:group_count].to_i > 0
+#      group_count = params[:group_count]
+#    else
+#      group_count = 1
+#    end
+#
+#    all_ids = current_app.machines.collection_singular_ids
+#    operataion_template = current_app.operation_templates.find(params[:id])
+#
+#    next_operation_id = nil
+#    group( all_ids, group_count ).reverse_each{|id_group|
+#      next_operation_id = operation_template.create_simple_operation(current_user, id_group, next_operation_id).id
+#    }
     render :text => "分组已创建"
   end
+
+  private
+  def group arr, group_count
+    group_length = arr.size / group_count
+    groups = []
+    arr.each_with_index{|e,i|
+      groups << [] if ((i % group_length) ==0 && i < (group_length * group_count))
+      groups.last << e
+    }
+    groups
+  end
+
 end
