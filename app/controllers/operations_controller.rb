@@ -1,7 +1,9 @@
+# coding: utf-8
 class OperationsController < BaseController
   def index
-    respond_with current_app.operations.without_state(:done).collect { |cs|
+    respond_with current_app.operations.without_state(:done).order('id asc').collect { |cs|
       cs.attributes.update(
+          "name" => "#{cs.id}. #{cs.name}",
           "state" => cs.human_state_name,
           "children" => cs.machines.uniq.collect { |m|
             m.attributes.update(
@@ -12,7 +14,7 @@ class OperationsController < BaseController
                       "id" => "#{cs.id}|#{m.id}|#{o.id}",
                       "leaf" => "true",
                       "state" => o.human_state_name,
-                      "name" => o.command_name
+                      "name" => "#{o.id}. #{o.command_name}"
                   )
                 }
             )
@@ -25,8 +27,10 @@ class OperationsController < BaseController
     if params[:choosedMachines]
       choosed_machine_ids = params[:choosedMachines].split(',').collect { |s| s.to_i }.uniq
     end
-    current_app.operation_templates.find(params[:operation_template_id]).create_operation(current_user, choosed_machine_ids)
-    render :text => "操作已创建"
+    current_app.operation_templates.find(params[:operation_template_id]).gen_operation(current_user, choosed_machine_ids)
   end
 
+  def continue
+    render :text =>  current_app.operations.find(params[:id]).continue
+  end
 end

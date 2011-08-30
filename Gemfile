@@ -18,6 +18,11 @@ gem 'rake'
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
 # gem 'ruby-debug19', :require => 'ruby-debug'
+if /1.9/ === RUBY_VERSION
+  gem "ruby-debug19", :require => 'ruby-debug'
+else
+  gem "ruby-debug"
+end
 
 # Bundle the extra gems:
 # gem 'bj'
@@ -31,28 +36,26 @@ gem 'rake'
 # group :development, :test do
 #   gem 'webrat'
 # end
-gem "ruby-debug"
 gem "arel", "2.0.9"
 gem "rspec-rails", "2.6.0.rc6", :group => ["development", "test"]
 # gem "cucumber-rails", :group => ["development", "test"]
 # gem "capybara", :group => ["development", "test"]
 gem "factory_girl_rails", :group => ["development", "test"]
-gem "database_cleaner", :group => ["development", "test"]
-gem "shoulda", :group => ["development", "test"]
-gem "spork", :group => ["development", "test"]
-gem "launchy", :group => ["development", "test"]
 gem "rcov", :group => ["development", "test"]
 gem "inherited_resources_views"
 gem "inherited_resources"
-gem "warbler"
 gem "jquery-rails"
 gem "devise"
-gem "jdbc-sqlite3"
-gem "activerecord-jdbc-adapter"
-gem "jruby-openssl"
+if /java/ === RUBY_PLATFORM
+  gem "jdbc-sqlite3"
+  gem "activerecord-jdbc-adapter"
+  gem "jruby-openssl"
+  gem "warbler"
+else
+  gem 'sqlite3-ruby', :require => 'sqlite3'
+end
 gem "state_machine"
 gem "ruby-graphviz", :group => ["development"]
 gem "will_paginate", "~> 3.0.pre4"
-gem "mongrel"
 #gem "redis"
-# gem "mvn:org.springframework:spring"
+#gem "mvn:org.springframework:spring"

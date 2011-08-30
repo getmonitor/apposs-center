@@ -7,6 +7,8 @@ zh-CN:
         running: "<span style='color:red;'>执行中</span>"
         failure: "失败"
         done: "完成"
+        wait: "等待"
+        hold: "暂停"
       events:
         download: "下载"
         invoke: "执行"
@@ -37,7 +39,7 @@ zh-CN:
         room: '所属机房'
         app: '所属应用'
       role:
-      	name: '角色名'
+        name: '角色名'
       room:
         name: '名称'
       directive_group:

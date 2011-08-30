@@ -16,6 +16,22 @@
         //Application Panel array
         var appPanels = [];
         var csrf_token = $('meta[name="csrf-token"]').attr('content');
+
+        var msgCt;//向其中加入显示消息的元素
+        function createBox(t, s) {
+            return '<div class="msg"><h3>' + t + '</h3><p>' + s + '</p></div>';
+        }
+        //显示瞬时消息
+        function light_msg(title, format) {
+            if (!msgCt) {
+                msgCt = Ext.core.DomHelper.insertFirst(document.body, {id:'msg-div'}, true);
+            }
+            var s = Ext.String.format.apply(String, Array.prototype.slice.call(arguments, 1));
+            var m = Ext.core.DomHelper.append(msgCt, createBox(title, s), true);
+            m.hide();
+            m.slideIn('t').ghost("t", { delay: 1000, remove: true});
+        }
+
         //Current User Application TabPanel
         var appTabPanel = Ext.create('Ext.tab.Panel', {
             region: 'center',
@@ -27,23 +43,17 @@
         //操作模型的定义
         createModel('Command', ['id','name','state','response',{name:'created_at',type: 'date'},{name:'updated_at',type: 'date'}]);
 
-        var actionItemGen = function(preurl, urlAction, msg){
+        var actionItemGen = function(preurl, urlAction, msg, level){
             return {
                 icon   : "<%= root_path %>" + 'stylesheets/images/continue.png',
                 tooltip: msg,
                 handler: function(view, rowIndex, colIndex) {
                             var item = view.getStore().getAt(rowIndex);
-                            if(item.isLeaf && !item.isLeaf()){
-                                return false;
-                            }else{
-                                var subId;
-                                if(item.isLeaf){
-                                    var recordId = item.get("id");
-                                    var ids = recordId.split("|");
-                                    subId = ids[ids.length - 1];
-                                }else{
-                                    subId = item.get("id");
-                                }
+                            var recordId = item.get("id");
+                            if(recordId){
+                                var ids = recordId.toString().split("|");
+                                if(ids.length != level) return false;
+                                var subId = ids[level-1];
                                 Ext.Ajax.request({
                                     url:preurl+"/"+subId+urlAction,
                                     method: 'PUT',
@@ -56,9 +66,11 @@
                                             Ext.Msg.alert('提示', result.errors.expression[0]);
                                             return;
                                         }
-                                        Ext.Msg.alert('提示',msg+"已完成");
+                                        light_msg('提示',"收到 :-)");
                                     }
                                 });
+                            }else{
+                                return false;
                             }
                 }
             }
@@ -172,11 +184,33 @@
                                             return '继续执行';
                                         },
                                         items: [
-                                            actionItemGen(
-                                                "<%= apps_path %>/" + id + '/machines',
-                                                "/reset",
-                                                "下发reset指令"
-                                            )
+                                            {
+                                                icon   : "<%= root_path %>" + 'stylesheets/images/continue.png',
+                                                tooltip: "下发reset指令",
+                                                handler: function(view, rowIndex, colIndex) {
+                                                            var item = view.getStore().getAt(rowIndex);
+                                                            var recordId = item.get("id");
+                                                            if(recordId){
+                                                                Ext.Ajax.request({
+                                                                    url:"<%= apps_path %>/" + id + '/machines/'+recordId+'/reset',
+                                                                    method: 'PUT',
+                                                                    params: {
+                                                                        authenticity_token:csrf_token
+                                                                    },
+                                                                    callback:function(options, success, response) {
+                                                                        var result = Ext.decode(response.responseText);
+                                                                        if (result && result.errors && result.errors.expression) {
+                                                                            Ext.Msg.alert('提示', result.errors.expression[0]);
+                                                                            return;
+                                                                        }
+                                                                        light_msg('提示',"下发reset指令已完成");
+                                                                    }
+                                                                });
+                                                            }else{
+                                                                return false;
+                                                            }
+                                                }
+                                            }
                                         ]
                                     }
                                 ]
@@ -452,29 +486,46 @@
                 columns: [
                     {
                         xtype:'treecolumn',
-                        header:'命令名',
+                        header:'指令',
                         dataIndex:'name',
+                        minWidth: 200,
                         flex:1
                     },
                     {
-                        header:'命令执行状态',
+                        header:'执行状态',
                         dataIndex:'state',
                         flex:1
                     },
                     {
                         header:'创建时间',
                         dataIndex:'created_at',
-                        renderer : Ext.util.Format.dateRenderer('Y-m-d H:i:s'),
+                        renderer : Ext.util.Format.dateRenderer('H:i:s'),
                         flex:1
                     },
                     {
-                        header:'最近更新时间',
+                        header:'更新时间',
                         dataIndex:'updated_at',
-                        renderer : Ext.util.Format.dateRenderer('Y-m-d H:i:s'),
+                        renderer : Ext.util.Format.dateRenderer('H:i:s'),
                         flex:1
                     },
                     {
-                        header:'错误清理',
+                        header:'继续',
+                        xtype: 'actioncolumn',
+                        flex:1,
+                        renderer: function(value,metaData,record){
+                            return (record.get("id") && record.get("id").toString().split("|").length == 1) ? null : "&nbsp;";
+                        },
+                        items: [
+                            actionItemGen(
+                                    "<%= apps_path %>/" + id + '/operations',
+                                    '/continue',
+                                    "继续",
+                                    1
+                            )
+                        ]
+                    },
+                    {
+                        header:'清理',
                         xtype: 'actioncolumn',
                         flex:1,
                         renderer: function(value,metaData,record){
@@ -484,7 +535,8 @@
                             actionItemGen(
                                     "<%= apps_path %>/" + id + '/directives',
                                     '/ack',
-                                    "错误清理"
+                                    "错误清理",
+                                    3
                             )
                         ]
                     },
@@ -530,9 +582,9 @@
                         items: [
                             {
                                 xtype: 'button',
-                                text: '停止实时查看',
+                                text: '启动实时查看',
                                 iconCls:'arrow_refresh',
-                                enableToggle:true,
+                                enableToggle:false,
                                 listeners:{
                                     toggle:function(button) {
                                         if (button.text === '停止实时查看') {
@@ -552,7 +604,7 @@
                                 text:'刷新',
                                 iconCls:'refresh',
                                 id:'refreshDirective',
-                                disabled:true,
+                                disabled:false,
                                 handler:function() {
                                     var commandStore = Ext.data.StoreManager.lookup('commandStore' + id);
                                     commandStore.load();
@@ -576,7 +628,7 @@
                 clearInterval(checkDirectiveStatus);
             }
 
-            startPoller();
+//            startPoller();
 
             //当前应用的单台机器上的命令执行状态树结构
             var appMachineCommandStateTreePanel = Ext.create('Ext.tree.Panel', {
@@ -884,6 +936,7 @@
                                                                                     change:function(field, newValue, oldValue) {
                                                                                         if (newValue == true) {
                                                                                             Ext.getCmp('groupCount').show();
+                                                                                            Ext.getCmp('isHold').show();
                                                                                             Ext.getCmp('roomGroup').show();
                                                                                         }
                                                                                     }
@@ -917,6 +970,13 @@
                                                                         fieldLabel:'请输入分组数',
                                                                         hidden:true,
                                                                         minValue:1
+                                                                    },
+                                                                    {
+                                                                        xtype:'checkboxfield',
+                                                                        id:'isHold',
+                                                                        fieldLabel:'每分组运行后暂停',
+                                                                        hidden:true,
+                                                                        checked:true
                                                                     }
                                                                 ]
                                                             }
@@ -945,7 +1005,8 @@
                                                                             params:{
                                                                                 authenticity_token:csrf_token,
                                                                                 room_id:Ext.getCmp('roomGroup').value,
-                                                                                group_count:Ext.getCmp('groupCount').value
+                                                                                group_count:Ext.getCmp('groupCount').value,
+                                                                                is_hold:Ext.getCmp('isHold').value
                                                                             },
                                                                             callback:function(options, success, response) {
                                                                                 Ext.Msg.alert('消息', response.responseText);

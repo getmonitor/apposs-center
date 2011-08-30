@@ -1,3 +1,4 @@
+# coding: utf-8
 class OperationTemplatesController < BaseController
   def index
     app_id = params[:app_id]
@@ -12,7 +13,7 @@ class OperationTemplatesController < BaseController
       else
         respond_with operation_templates.collect { |obj|
           obj.serializable_hash.update("actions" => [
-              {:name=>"准备执行", :flex => 2.0, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
+              {:name=>"选择执行", :flex => 2.0, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
               {:name=>"分组执行", :flex => 2.0, :url => app_operations_path(app_id), :type => 'group', :method => 'POST'},
               {:name=>"修改", :flex => 1.2, :url=> edit_app_operation_template_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
               {:name=>"删除", :flex => 1.2, :url=> app_operation_template_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
@@ -22,7 +23,7 @@ class OperationTemplatesController < BaseController
     else
       respond_with current_app.operation_templates.collect { |obj|
         obj.serializable_hash.update("actions" => [
-            {:name=>"准备执行", :flex => 1, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
+            {:name=>"选择执行", :flex => 1, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
             {:name=>"分组执行", :flex => 1, :url => app_operations_path(app_id), :type => 'group', :method => 'POST'}
         ], "flex" => 5, "add" => false)
       }
@@ -55,19 +56,23 @@ class OperationTemplatesController < BaseController
   end
 
   def group_execute
-#    if params[:group_count] && params[:group_count].to_i > 0
-#      group_count = params[:group_count]
-#    else
-#      group_count = 1
-#    end
-#
-#    all_ids = current_app.machines.collection_singular_ids
-#    operataion_template = current_app.operation_templates.find(params[:id])
-#
-#    next_operation_id = nil
-#    group( all_ids, group_count ).reverse_each{|id_group|
-#      next_operation_id = operation_template.create_simple_operation(current_user, id_group, next_operation_id).id
-#    }
+    if params[:group_count] && params[:group_count].to_i > 0
+      group_count = params[:group_count].to_i
+    else
+      group_count = 1
+    end
+
+    all_ids = current_app.machine_ids
+    operation_template = current_app.operation_templates.find(params[:id])
+
+    previous_id = nil
+    ss = group( all_ids, group_count )
+    operations = ss.collect{|id_group|
+      operation_on_bottom = operation_template.gen_operation(current_user, id_group, previous_id, params[:is_hold]=="true" )
+      previous_id = operation_on_bottom.id
+      operation_on_bottom
+    }
+    operations.first.enable
     render :text => "分组已创建"
   end
 

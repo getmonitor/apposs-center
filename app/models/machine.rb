@@ -1,3 +1,4 @@
+# coding: utf-8
 class Machine < ActiveRecord::Base
   belongs_to :room
   belongs_to :app
@@ -7,9 +8,9 @@ class Machine < ActiveRecord::Base
   validates_inclusion_of :port,:in => 1..65535,:message => "port必须在1到65535之间"
   validates_presence_of :name
 
-  before_create :fulfill_host
+  before_create :fulfill_default
 
-  def fulfill_host
+  def fulfill_default
     if self.host.nil? or self.host.empty?
       self.host = self.name
     end
