@@ -25,7 +25,7 @@ class CreateDirectives < ActiveRecord::Migration
   def self.down
     change_table(:directives) do |t|
       t.remove_index :index_directives_on_machine_id
-      t.remove_index :index_directives_on_status
+      t.remove_index :index_directives_on_state
     end
     drop_table :directives
   end

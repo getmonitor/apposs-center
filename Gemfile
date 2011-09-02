@@ -47,11 +47,13 @@ gem "inherited_resources"
 gem "jquery-rails"
 gem "devise"
 if /java/ === RUBY_PLATFORM
+  gem "jdbc-mysql"
   gem "jdbc-sqlite3"
   gem "activerecord-jdbc-adapter"
-  gem "jruby-openssl"
   gem "warbler"
+  gem "jruby-openssl"
 else
+  gem 'mysql-ruby', :require => 'mysql'
   gem 'sqlite3-ruby', :require => 'sqlite3'
 end
 gem "state_machine"
