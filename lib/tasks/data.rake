@@ -16,6 +16,39 @@ namespace :data do
     }
   end
 
+  desc "copy data to mongodb"
+  task :to_mongo => 'db:migrate' do
+    config = YAML::load(ERB.new(IO.read('config/old_database.yml')).result)
+    $spec = config[Rails.env].inject({}) do |hash, value|
+      hash.update value[0].to_sym => value[1]
+    end
+    (ActiveRecord::Base.connection.tables - ["schema_migrations"]).each {|table_name|
+      Rails.logger.info "copy #{table_name}"
+
+      class_name = table_name.camelize.singularize
+      eval %Q[
+        class #{class_name}Old < ActiveRecord::Base
+          establish_connection $spec
+          set_table_name '#{table_name}'
+        end
+      ]
+      Object.send :remove_const, class_name rescue nil
+      eval %Q[
+        class #{class_name}
+          include Mongoid::Document
+          store_in :#{table_name}
+        end
+      ]
+      new_clazz, old_clazz = [class_name.constantize, "#{class_name}Old".constantize]
+
+      old_clazz.all.each{|o|
+        attr_hash = o.attributes.inject({}) do |hash,v| hash.update v[0] => ((v[1].is_a? Time) ? v[1].utc : v[1]) end
+        new_o = new_clazz.new(attr_hash)
+        new_o.save!
+      }
+    }
+  end
+
   desc "backup all data"
   task :backup => :environment do
     Dir.mkdir "data" unless File.exist? "data"

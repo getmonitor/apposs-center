@@ -52,6 +52,9 @@ if /java/ === RUBY_PLATFORM
   gem "activerecord-jdbc-adapter"
   gem "warbler"
   gem "jruby-openssl"
+  gem "mongoid"
+  gem "bson"
+  gem "bson_ext"
 else
   gem 'mysql-ruby', :require => 'mysql'
   gem 'sqlite3-ruby', :require => 'sqlite3'
