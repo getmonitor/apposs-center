@@ -18,11 +18,12 @@ gem 'rake'
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
 # gem 'ruby-debug19', :require => 'ruby-debug'
-if /1.9/ === RUBY_VERSION
-  gem "ruby-debug19", :require => 'ruby-debug'
-else
-  gem "ruby-debug"
-end
+
+#if /1.9/ === RUBY_VERSION
+#  gem "ruby-debug19", :require => 'ruby-debug'
+#else
+#  gem "ruby-debug"
+#end
 
 # Bundle the extra gems:
 # gem 'bj'
@@ -37,20 +38,22 @@ end
 #   gem 'webrat'
 # end
 gem "arel", "2.0.9"
-gem "rspec-rails", "2.6.0.rc6", :group => ["development", "test"]
+gem "rspec"
+#gem "rspec-rails", "2.6.0.rc6", :group => ["development", "test"]
 # gem "cucumber-rails", :group => ["development", "test"]
 # gem "capybara", :group => ["development", "test"]
-gem "factory_girl_rails", :group => ["development", "test"]
-gem "rcov", :group => ["development", "test"]
-gem "inherited_resources_views"
-gem "inherited_resources"
-gem "jquery-rails"
+#gem "factory_girl_rails", :group => ["development", "test"]
+#gem "rcov", :group => ["development", "test"]
+#gem "inherited_resources_views"
+#gem "inherited_resources"
+#gem "jquery-rails"
 gem "devise"
 if /java/ === RUBY_PLATFORM
   gem "jdbc-mysql"
-  gem "jdbc-sqlite3"
+#  gem "jdbc-sqlite3"
   gem "activerecord-jdbc-adapter"
-  gem "warbler"
+#  gem "warbler"
+  gem "mongrel", :group => ["development"]
   gem "jruby-openssl"
 else
   gem 'mysql-ruby', :require => 'mysql'
