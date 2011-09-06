@@ -5,11 +5,20 @@ class Directive < ActiveRecord::Base
 
   scope :normal, where('operation_id <> 0')
 
+  attr_accessor :params
+
+  before_create :params_inline
+
+  def params_inline
+    if params && params.is_a?(Hash)
+      params.each{|pair| command_name.gsub! %r{\$#{pair[0]}}, pair[1] }
+    end
+  end
+
   def callback( isok, body)
     self.isok = isok
     self.response = body
     isok ? ok : error
-    
   end
 
   state_machine :state, :initial => :init do
@@ -30,7 +39,7 @@ class Directive < ActiveRecord::Base
   end
 
   def response_clear
-    response = "be cleared"
+    update_attribute :response, "be cleared"
   end
 
   def fire_operation

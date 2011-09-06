@@ -33,6 +33,7 @@ class OperationTemplate < ActiveRecord::Base
         where(:id => machines.collect { |m| m.room_id }.uniq).
         inject({}) { |map, room| map.update(room.id => room.name) }
 
+    envs = app.envs.pairs
     directive_templates do |directive_template, next_when_fail|
       # 循环创建 directive 对象
       machines.collect { |m|
@@ -45,6 +46,7 @@ class OperationTemplate < ActiveRecord::Base
             :machine_host => m.host,
             :command_name => command_name,
             :room_name => room_map[m.room_id],
+            :params => envs,
             :next_when_fail => next_when_fail,
             :state => is_hold ? 'hold' : 'init'
         )

@@ -1,6 +1,6 @@
 class ReleasePack < ActiveRecord::Base
 
-  NAME = 'release_pack'
+  NAME = 'VERSION'
 
   belongs_to :app
   

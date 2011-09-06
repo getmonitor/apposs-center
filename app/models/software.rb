@@ -1,6 +1,6 @@
 class Software < ActiveRecord::Base
   
-  NAME = 'software'
+  NAME = 'PKG_NAME'
 
   belongs_to :app
 
