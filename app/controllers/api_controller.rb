@@ -43,20 +43,21 @@ class ApiController < ApplicationController
   
   def packages
     name,version,branch = params[:name], params[:version], params[:branch]
-    software = Software.with_name(name).first
-    if software and (app = software.app)
+    software = Software.where(:name => name).first
+    if not software
+      render :text => "no_software"
+    elsif (app = software.app).nil?
+      render :text => "no_app"
+    else
       if request.post?
-        app.release_packs.create :version => version, :branch => branch
+        if(app.release_packs.where(:version => version, :branch => branch).count == 0)
+          release_pack = app.release_packs.create :version => version, :branch => branch          
+          release_pack.use
+        end
         render :text => "ok"
       else
-        if pack = app.release_packs.with_state(:using).first
-          render :text => pack.version
-        else
-          render :text => ""
-        end
+        render :text => app.envs[ReleasePack::NAME] || ""
       end
-    else
-      render :text => "no_app"
     end
   end
 end

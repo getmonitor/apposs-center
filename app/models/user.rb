@@ -8,8 +8,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
   has_many :stakeholders
-  has_many :apps, :through => :stakeholders, :class_name => 'App'
-  has_many :roles, :through => :stakeholders, :class_name => 'Role'
+  has_many :apps, :through => :stakeholders, :source => :app
+  has_many :roles, :through => :stakeholders, :source => :role
 
   has_many :operations, :foreign_key => "operator_id"
 

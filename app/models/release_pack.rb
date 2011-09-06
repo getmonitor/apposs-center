@@ -1,22 +1,15 @@
 class ReleasePack < ActiveRecord::Base
+
+  NAME = 'release_pack'
+
   belongs_to :app
   
   def vnumber
     version =~ /(\d+)(\.\d+)?$/
     $1
   end
-  
-  state_machine :state, :initial => :init do
-    event :use   do transition :init  => :using end
-    event :off   do transition :using => :used  end
-    event :reuse do transition :used  => :using end
-    
-    after_transition :on => [:use,:reuse], :do => :offline_others
-  end
-  
-  def offline_others
-    app.release_packs.with_state(:using).each{|pack|
-      pack.off if pack.id != id
-    }
+
+  def use
+    app.envs[NAME] = self.version
   end
 end
