@@ -28,6 +28,10 @@ class App < ActiveRecord::Base
         item.update_attribute(:value, value) && item
       end
     end
+
+    def pairs
+      all.inject({}){|hash,env| hash.update(env.key => env.value) }
+    end
   end
 
   def to_s
