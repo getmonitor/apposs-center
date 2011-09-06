@@ -44,8 +44,8 @@ gem "rspec"
 # gem "capybara", :group => ["development", "test"]
 #gem "factory_girl_rails", :group => ["development", "test"]
 #gem "rcov", :group => ["development", "test"]
-#gem "inherited_resources_views"
-#gem "inherited_resources"
+gem "inherited_resources_views"
+gem "inherited_resources"
 #gem "jquery-rails"
 gem "devise"
 if /java/ === RUBY_PLATFORM

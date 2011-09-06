@@ -1,6 +1,7 @@
 class HomeController < BaseController
 
   def index
+    @apps = current_user.apps
   	render :layout => 'application'
   end
 

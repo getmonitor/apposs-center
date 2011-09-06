@@ -1,14 +1,70 @@
 /* Style for application.html.erb and admin.html.erb*/
-#notice {
-    margin-left: 500px;
-    display: block;
+body{
+}
+#north{
+    padding: 5px;
+    height: 25px;
+    margin-left:auto;
+    margin-right:auto;
+    border:1px solid #99BCE8;
+}
+span#notice {
+    position:relative;
+    margin:auto 10px;
     font-size: 18px;
-    float: left;
 }
 
-ul#welcome_info {
-    list-style: none;
-    float: right;
+div#welcome_info {
+    position:absolute;
+    right: 15px;
+    margin:auto;
+}
+
+#menu {
+    position:relative;
+    top: -30px;
+    heigth:25px;
+}
+
+#menu ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0 10px 0 10px;
+}
+
+#menu a{
+    background-color: #5068a6;
+    color: #FFFFFF;
+    display: block;
+    float: left;
+    font-weight: bolder;
+    padding: 4px 12px;
+    text-decoration: none;
+}
+
+#app{
+    clear:both;
+    position:relative;
+    top: -25px;
+    height:550px;
+}
+
+#navleft{
+    float:left;
+    width:30%;
+    height:100%;
+    background-color:red;
+}
+
+#zone{
+    float:left;
+    width:70%;
+    height:100%;
+    background-color:green;
+}
+
+#clear{
+    clear:both;
 }
 
 .add {
@@ -35,10 +91,6 @@ ul#welcome_info {
     background: url(images/icons.png) no-repeat -3px -137px !important;
 }
 
-.clear {
-    background: url("images/clear_all.png");
-}
-
 .view {
     background: url("images/view.png");
 }
@@ -60,8 +112,4 @@ ul#welcome_info {
 .admin_nav_menu table tbody tr td div {
     font-size: 20px;
     font-weight: bolder;
-}
-
-.x-grid-row-selected {
-    color: blue;
 }

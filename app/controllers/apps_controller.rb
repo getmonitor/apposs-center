@@ -5,7 +5,10 @@ class AppsController < BaseController
   end
 
   def show
-    respond_with current_user.apps.find(params[:id])
+    @app = current_user.apps.find(params[:id])
+    respond_to do |format|
+      format.js
+    end
   end
 
   def rooms
