@@ -18,15 +18,13 @@ class CreateDirectives < ActiveRecord::Migration
       # 时间戳
       t.timestamps
     end
-    add_index :directives, ["machine_id"], :name => "index_directives_on_machine_id"
-    add_index :directives, ["state"], :name => "index_directives_on_state"
+    add_index :directives, "machine_id"
+    add_index :directives, "state"
   end
 
   def self.down
-    change_table(:directives) do |t|
-      t.remove_index :index_directives_on_machine_id
-      t.remove_index :index_directives_on_state
-    end
+    remove_index :directives, "machine_id"
+    remove_index :directives, "state"
     drop_table :directives
   end
 end
