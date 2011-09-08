@@ -25,7 +25,11 @@ if /java/ === RUBY_PLATFORM and ENV["IGNORE_JAVA_SIDE"].nil?
     $stderr.puts "unknown error - #{e.to_s}"
   end
 elsif not ENV["IGNORE_JAVA_SIDE"].nil?
-  warn "java_side is ignored: #{Thread.current} - #{java.lang.Thread.currentThread}"
+  if /java/ === RUBY_PLATFORM
+    warn "java_side is ignored: #{Thread.current} - #{java.lang.Thread.currentThread}"
+  else
+    warn "java_side is ignored: #{Thread.current}"
+  end
 else
   warn "java_side is only for use with JRuby"
 end
