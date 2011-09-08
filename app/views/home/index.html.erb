@@ -1,7 +1,7 @@
 <div id="menu">
   <ul>
   <% @apps.each{|app| %>
-    <li><%=link_to app, app_path(app),:remote => true, :update => 'app' %></li>
+    <li><%=link_to app, app_path(app),:remote => true %></li>
   <% } %>
   </ul>
 </div>
