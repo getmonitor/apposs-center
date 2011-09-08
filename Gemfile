@@ -56,8 +56,9 @@ if /java/ === RUBY_PLATFORM
   gem "mongrel", :group => ["development"]
   gem "jruby-openssl"
 else
-  gem 'mysql-ruby', :require => 'mysql'
-  gem 'sqlite3-ruby', :require => 'sqlite3'
+  gem "mysql2", '< 0.3'
+  gem "mongrel", :group => ["development"]
+#  gem 'sqlite3-ruby', :require => 'sqlite3'
 end
 gem "state_machine"
 gem "ruby-graphviz", :group => ["development"]
