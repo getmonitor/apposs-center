@@ -15,23 +15,23 @@ class App < ActiveRecord::Base
   has_many :operations
 
   has_many :envs do
-    def [] key
-      item = where(:key => key).first
+    def [] name
+      item = where(:name => name).first
       item.value if item
     end
 
-    def []=key,value
-      item = where(:key => key).first
+    def []=name,value
+      item = where(:name => name).first
       if item.nil?
-        new(:key => key, :value => value).save!
+        new(:name => name, :value => value).save!
       else
         item.update_attribute(:value, value) && item
       end
     end
 
     def pairs
-      all.inject({}){|hash,env| hash.update(env.key => env.value) }
-    end
+      all.inject({}){|hash,env| hash.update(env.name => env.value) }
+      end
   end
 
   def to_s
