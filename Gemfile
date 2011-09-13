@@ -52,12 +52,13 @@ if /java/ === RUBY_PLATFORM
   gem "jdbc-mysql"
 #  gem "jdbc-sqlite3"
   gem "activerecord-jdbc-adapter"
-#  gem "warbler"
-  gem "mongrel", :group => ["development"]
+#  gem "mongrel", :group => ["development"]
+  gem "trinidad"
   gem "jruby-openssl"
 else
-  gem 'mysql-ruby', :require => 'mysql'
-  gem 'sqlite3-ruby', :require => 'sqlite3'
+  gem "mysql2", '< 0.3'
+  gem "mongrel", :group => ["development"]
+#  gem 'sqlite3-ruby', :require => 'sqlite3'
 end
 gem "state_machine"
 gem "ruby-graphviz", :group => ["development"]
