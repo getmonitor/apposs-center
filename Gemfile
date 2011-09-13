@@ -52,8 +52,8 @@ if /java/ === RUBY_PLATFORM
   gem "jdbc-mysql"
 #  gem "jdbc-sqlite3"
   gem "activerecord-jdbc-adapter"
-#  gem "warbler"
-  gem "mongrel", :group => ["development"]
+#  gem "mongrel", :group => ["development"]
+  gem "trinidad"
   gem "jruby-openssl"
 else
   gem "mysql2", '< 0.3'
