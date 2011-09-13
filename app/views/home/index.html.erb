@@ -1,11 +1,31 @@
-<div id="menu">
-  <ul>
-  <% @apps.each{|app| %>
-    <li><%=link_to app, app_path(app),:remote => true %></li>
+<div id="app_tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+  <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+  <% @apps.each_with_index{|app,index| %>
+    <li class="ui-state-default ui-corner-top <%= index==0 ? 'ui-state-active' : '' %>">
+      <%=link_to app, app_path(app),:remote => true %>
+    </li>
   <% } %>
+    <li class="info">
+      <span><%= flash[:notice] %></span>
+      <span><%= current_user.email %>，欢迎使用淘宝运维系统！
+      <%= link_to "退出", destroy_user_session_path %></span>
+    </li>
   </ul>
+  <div id="app">
+    <%=render "/apps/app", :app => @apps.first  %>
+    <div class="clear" />
+  </div>
 </div>
-<div id="app" class="clear">
-  <%=render "/apps/app", :app => @apps.first  %>
-  <div class="clear"></div>
-</div>
+<script type="text/javascript">
+  $(function(){
+     /** 支持tab切换，基于 jquery */
+     $("#app_tabs ul li.ui-state-default a").each(function(index,element){
+         $(element).bind('click', function(){
+             $(element).parent().parent().children().each(function(index,child){
+                $(child).removeClass("ui-state-active");
+             });
+             $(element).parent().addClass("ui-state-active");
+         })
+     });
+  });
+</script>
