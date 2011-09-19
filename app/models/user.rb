@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
   has_many :stakeholders
-  has_many :apps, :through => :stakeholders, :source => :app
+  has_many :apps, :through => :stakeholders, :source => :app, :conditions => ['parent_id is null']
   has_many :roles, :through => :stakeholders, :source => :role
 
   has_many :operations, :foreign_key => "operator_id"

@@ -60,7 +60,9 @@ else
   gem "mongrel", :group => ["development"]
 #  gem 'sqlite3-ruby', :require => 'sqlite3'
 end
+gem "json"
 gem "state_machine"
+gem "acts_as_tree"
 gem "ruby-graphviz", :group => ["development"]
 gem "will_paginate", "~> 3.0.pre4"
 #gem "redis"

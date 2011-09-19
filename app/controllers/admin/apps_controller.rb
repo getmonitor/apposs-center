@@ -7,8 +7,9 @@ class Admin::AppsController < Admin::BaseController
   end
 
   def index
-    apps = App.all
-    respond_with apps
+    apps = App.reals.paginate(:per_page => params[:per_page].to_i, :page => params[:page].to_i)
+    total = App.reals.count
+    respond_with :totalCount => total, :apps => apps
   end
 
   def show
@@ -27,7 +28,7 @@ class Admin::AppsController < Admin::BaseController
       s = Stakeholder.create(:app_id => params[:app_id], :user_id => params[:user_id], :role_id => params[:role_id])
       render :text => {"errors" => s.errors}.to_json
     else
-      respond_with App.create(params[:app])
+      respond_with App.create(params[:app].update(:virtual => false))
     end
   end
 

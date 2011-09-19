@@ -1,7 +1,7 @@
 class Admin::DirectiveTemplatesController < Admin::BaseController
   def index
     directive_templates = DirectiveTemplate.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
-    total = directive_templates.count
+    total = DirectiveTemplate.count
     respond_with :totalCount => total, :directive_templates => directive_templates
   end
 

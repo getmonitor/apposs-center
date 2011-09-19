@@ -1,4 +1,9 @@
 class App < ActiveRecord::Base
+
+  acts_as_tree
+
+  scope :reals, where(:virtual => false, :state => :running)
+
   # People
   has_many :stakeholders
   has_many :operators, :through => :stakeholders, :class_name => 'User'
@@ -36,6 +41,13 @@ class App < ActiveRecord::Base
 
   def to_s
   	send :name
+  end
+
+  # running 表示应用运行中，hold 表示暂时标记为不可用，offline 表示应用下线
+  state_machine :state, :initial => :running do
+    event :pause do transition :running => :hold end
+    event :use do transition :hold => :running end
+    event :stop do transition [:running, :hold] => :offline end
   end
 
 end

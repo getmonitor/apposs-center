@@ -13,7 +13,7 @@ class ApiController < ApplicationController
       end
       render :text => oper_query.where(:room_id => room.id, :room_name => room.name).collect{|directive|
         directive.download
-        directive.invoke if directive.has_operation?
+        directive.invoke unless directive.has_operation?
         "#{directive.machine_host}:#{directive.command_name}:#{directive.id}"
       }.join("\n")
     end
