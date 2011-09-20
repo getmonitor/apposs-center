@@ -48,11 +48,10 @@ class Directive < ActiveRecord::Base
 
   def error_fire
     operation.error if has_operation?
-    machine.error
+    machine.error if machine
   end
   
   def check_operation
-    p 'check ok operation'
     if has_operation? and operation.directives.without_state(:done).count == 0
       operation.ok || operation.ack
     end

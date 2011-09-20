@@ -1,3 +1,4 @@
+# coding: utf-8
 namespace :daily do
 
   task :default => [:app]

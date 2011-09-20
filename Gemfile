@@ -38,12 +38,12 @@ gem 'rake'
 #   gem 'webrat'
 # end
 gem "arel", "2.0.9"
-gem "rspec"
-#gem "rspec-rails", "2.6.0.rc6", :group => ["development", "test"]
+#gem "rspec", :group => ["development", "test"]
+gem "rspec-rails", '2.5.0'
 # gem "cucumber-rails", :group => ["development", "test"]
 # gem "capybara", :group => ["development", "test"]
 #gem "factory_girl_rails", :group => ["development", "test"]
-#gem "rcov", :group => ["development", "test"]
+gem "rcov"
 #gem "inherited_resources_views"
 #gem "inherited_resources"
 #gem "jquery-rails"
@@ -57,7 +57,7 @@ if /java/ === RUBY_PLATFORM
   gem "jruby-openssl"
 else
   gem "mysql2", '< 0.3'
-  gem "mongrel", :group => ["development"]
+  gem "mongrel", :group => ["development","test"]
 #  gem 'sqlite3-ruby', :require => 'sqlite3'
 end
 gem "json"

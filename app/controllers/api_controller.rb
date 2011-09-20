@@ -56,7 +56,7 @@ class ApiController < ApplicationController
         end
         render :text => "ok"
       else
-        render :text => app.envs[ReleasePack::NAME] || ""
+        render :text => app.properties[ReleasePack::NAME] || ""
       end
     end
   end

@@ -1,3 +1,4 @@
+# coding: utf-8
 namespace :java_side do
 
   desc "编译maven项目，准备相应的jar和class，并通过warbler打包为war"

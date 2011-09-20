@@ -4,6 +4,7 @@ class AppAsTree < ActiveRecord::Migration
     add_column :apps, :virtual, :boolean
     add_column :apps, :state, :string
 
+    require 'app.rb'
     App.where('state is null').each{|app|
       app.update_attributes :virtual => false, :state => 'running', :parent_id => 0
     }
@@ -12,7 +13,7 @@ class AppAsTree < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :apps, :virtual, :integer
+    remove_column :apps, :virtual
     remove_column :apps, :parent_id
     remove_column :apps, :state
 

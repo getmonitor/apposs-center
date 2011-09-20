@@ -1,0 +1,36 @@
+global:
+  id: 1
+  name: software
+  value: apposs
+  resource_type: GLOBAL
+  resource_id: 
+app 1 version:
+  id: 2
+  name: version
+  value: 2
+  resource_type: App
+  resource_id: 1
+app 1 software:
+  id: 3
+  name: software
+  value: something
+  resource_type: App
+  resource_id: 1
+app 1 path:
+  id: 4
+  name: path
+  value: "/home/a/projects"
+  resource_type: App
+  resource_id: 1
+env 1 software:
+  id: 5
+  name: software
+  value: other soft
+  resource_type: Env
+  resource_id: 1
+env 1 version:
+  id: 6
+  name: version
+  value: 1
+  resource_type: Env
+  resource_id: 1

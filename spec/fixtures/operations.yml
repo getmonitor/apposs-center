@@ -2,5 +2,6 @@ operation1:
   id: 1
   operation_template_id: 1
   app_id: 1
-  name: upgrade package
+  operator_id: 1
+  name: "upgrade package"
   state: running
