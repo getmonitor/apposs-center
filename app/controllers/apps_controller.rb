@@ -1,7 +1,7 @@
 class AppsController < BaseController
 
   def index
-    respond_with current_user.apps.uniq
+    respond_with current_user.apps.reals.uniq
   end
 
   def show
