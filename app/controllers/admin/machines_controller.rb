@@ -1,7 +1,7 @@
 class Admin::MachinesController < Admin::BaseController
   def index
     machines = Machine.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
-    total = Machine.all.count
+    total = Machine.count
     machines = machines.collect do |m|
       m.serializable_hash.delete_if {|k,v| k == 'password'}
     end

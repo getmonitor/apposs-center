@@ -4,7 +4,7 @@ class Admin::UsersController < Admin::BaseController
     users = users.inject([]) do |user_infos, u|
       user_infos << u.attributes
     end
-    total = users.count
+    total = User.count
     respond_with :totalCount => total, :users => users
   end
 

@@ -83,7 +83,7 @@ Apposs::Application.routes.draw do
     end
     resources :operations do
       member do
-        put :continue
+        put :enable
       end
     end
     resources :softwares

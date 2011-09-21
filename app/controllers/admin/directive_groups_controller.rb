@@ -2,7 +2,7 @@ class Admin::DirectiveGroupsController < Admin::BaseController
 
   def index()
     directive_groups = DirectiveGroup.paginate(:per_page => params[:limit].to_i, :page => params[:page].to_i)
-    total = directive_groups.count
+    total = DirectiveGroup.count
     respond_with :totalCount => total, :directive_groups => directive_groups
   end
 

@@ -10,6 +10,6 @@ class ReleasePack < ActiveRecord::Base
   end
 
   def use
-    app.envs[NAME] = self.version
+    app.properties[NAME] = self.version
   end
 end

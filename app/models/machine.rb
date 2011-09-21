@@ -1,7 +1,7 @@
 # coding: utf-8
 class Machine < ActiveRecord::Base
   belongs_to :room
-  belongs_to :app
+  belongs_to :env
 
   has_many :directives
 
@@ -32,5 +32,9 @@ class Machine < ActiveRecord::Base
         :machine_host => self.host,
         :command_name => "machine|reset"
     )
+  end
+  
+  def properties
+    env.app.properties.pairs.update( env.properties.pairs )
   end
 end

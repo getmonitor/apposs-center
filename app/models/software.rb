@@ -9,6 +9,6 @@ class Software < ActiveRecord::Base
   after_create :update_env
 
   def update_env
-    app.envs[NAME] = name
+    app.properties[NAME] = name
   end
 end

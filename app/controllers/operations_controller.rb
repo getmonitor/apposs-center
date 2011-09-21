@@ -31,7 +31,7 @@ class OperationsController < BaseController
     render :text => "操作已创建"
   end
 
-  def continue
-    render :text =>  current_app.operations.find(params[:id]).continue
+  def enable
+    render :text =>  current_app.operations.find(params[:id]).enable
   end
 end
