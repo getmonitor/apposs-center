@@ -7,9 +7,14 @@ class Admin::AppsController < Admin::BaseController
   end
 
   def index
-    apps = App.reals.paginate(:per_page => params[:per_page].to_i, :page => params[:page].to_i)
-    total = App.reals.count
-    respond_with :totalCount => total, :apps => apps
+    if params[:per_page] #分页查询
+      apps = App.reals.paginate(:per_page => params[:per_page].to_i, :page => params[:page].to_i)
+      total = App.reals.count
+      respond_with :totalCount => total, :apps => apps
+    else #不分页，取部分
+      apps = App.reals.paginate(:per_page => 10, :page => params[:page].to_i)
+      respond_with apps
+    end
   end
 
   def show
