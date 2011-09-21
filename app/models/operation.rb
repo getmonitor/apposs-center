@@ -14,6 +14,8 @@ class Operation < ActiveRecord::Base
 
   belongs_to :app
 
+  attr_accessor :machine_ids
+
   state_machine :state, :initial => :init do
     # 需要延迟使用的directive，可以初始化为hold状态
     event :enable do transition [:hold,:wait] => :init end

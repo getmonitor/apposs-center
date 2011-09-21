@@ -8,7 +8,6 @@ class AppAsTree < ActiveRecord::Migration
     App.where('state is null').each{|app|
       app.update_attributes :virtual => false, :state => 'running', :parent_id => 0
     }
-#    add_column :operation_templates, :hosts, :text
 #    add_column :operations, :hosts, :text
   end
 
@@ -18,6 +17,5 @@ class AppAsTree < ActiveRecord::Migration
     remove_column :apps, :state
 
 #    remove_column :operations, :hosts, :text
-#    remove_column :operation_templates, :hosts, :text
   end
 end

@@ -1,24 +1,26 @@
 <div id="navleft">
+  <%= form_for :operations, :remote => true do |f| %>
   <div id="machines">
-    本应用涉及<%=app.machines.count %>台服务器:
+    <div class="title">服务器列表，共<%=app.machines.count %>台</div>
     <ul>
     <% app.machines.each{|machine|%>
-    <li><%=machine.name %></li>
+      <li><label>
+        <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
+        <%=machine.name %>
+      </label></li>
     <% }%>
     </ul>
   </div>
   <div id="operation_templates">
-    本应用包括<%=app.operation_templates.count %>个操作模板：
-    <ul>
-    <% app.operation_templates.each{|template|%>
-    <li><%=template.name %></li>
-    <% }%>
-    </ul>
+    <%=render "/operation_templates/collection", {
+      :collection => app.operation_templates, :parent => app
+    } %>
   </div>
+  <%end%>
 </div>
 <div id="zone">
   <div id="operations">
-    当前正在运行的操作:
+    当前正在运行的操作
     <ul>
     <% app.operations.each{|operation|%>
     <li><%=operation.name %></li>

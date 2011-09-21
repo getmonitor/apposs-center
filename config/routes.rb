@@ -80,6 +80,7 @@ Apposs::Application.routes.draw do
     end
     resources :operation_templates do
       post :group_execute, :on => :member
+      post :execute, :on => :member
     end
     resources :operations do
       member do
@@ -95,6 +96,7 @@ Apposs::Application.routes.draw do
     get :rooms, :on => :member
   end
 
+  resources :operation_templates
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   # root :to => "welcome#index"

@@ -23,6 +23,7 @@ class OperationsController < BaseController
     }
   end
 
+  # TODO deprecated
   def create
     if params[:choosedMachines]
       choosed_machine_ids = params[:choosedMachines].split(',').collect { |s| s.to_i }.uniq

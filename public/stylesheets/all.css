@@ -1,22 +1,50 @@
 /* Style for application.html.erb and admin.html.erb*/
 body {
-    font-size:10pt;
+  font-size:8pt;
+}
+
+div.title{
+  /** block 标题 */
+  text-align:center;
+  font-size:10pt;
+  font-weight:bolder;
+  padding:4px;
+  background-color:#cccccc;
 }
 
 #navleft{
-    float:left;
-    width:30%;
-    background-color:red;
-    height:500px;
+  float:left;
+  width:30%;
+  height:500px;
+}
+
+#machines{
+  background-color:#eeeeee;
+}
+
+#machines ul{
+  list-style:none;
+  padding:0 0 4px 0;
+  margin: 0;
+}
+
+#operation_templates{
+  background-color:#999999;    
+}
+
+#operation_templates ul{
+  list-style:none;
+  padding:0 0 4px 0;
+  margin: 0;
 }
 
 #zone{
-    float:left;
-    width:70%;
-    background-color:green;
-    height:500px;
+  float:left;
+  width:70%;
+  background-color:green;
+  height:500px;
 }
 
 .clear {
-    clear:both;
+  clear:both;
 }

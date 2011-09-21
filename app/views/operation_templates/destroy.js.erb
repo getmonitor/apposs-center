@@ -1,0 +1,5 @@
+$("#operation_templates").html('<%= escape_javascript(
+  render "/operation_templates/collection", {
+    :collection => @app.operation_templates, :parent => @app
+  }
+) %>');

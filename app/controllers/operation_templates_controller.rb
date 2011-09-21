@@ -37,7 +37,16 @@ class OperationTemplatesController < BaseController
 
   def edit
     @operation_template = current_app.operation_templates.find(params[:id])
-    render
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def new
+    @resource = current_app.operation_templates.new
+    respond_to do |format|
+      format.js
+    end
   end
 
   def create
@@ -52,9 +61,24 @@ class OperationTemplatesController < BaseController
   end
 
   def destroy
-    respond_with current_app.operation_templates.find(params[:id]).delete
+    @app = current_app
+    @app.operation_templates.find(params[:id]).delete
+    respond_to do |format|
+      format.js
+    end
   end
 
+  # 创建一个操作实例
+  def execute
+    if params[:choosedMachines]
+      choosed_machine_ids = params[:choosedMachines].split(',').collect { |s| s.to_i }.uniq
+    end
+    current_app.operation_templates.find(params[:id]).gen_operation(current_user, choosed_machine_ids)
+    render :text => "操作已创建"
+  end
+
+
+  # 分组创建操作实例
   def group_execute
     if params[:group_count] && params[:group_count].to_i > 0
       group_count = params[:group_count].to_i
