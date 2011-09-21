@@ -518,7 +518,7 @@
                         items: [
                             actionItemGen(
                                     "<%= apps_path %>/" + id + '/operations',
-                                    '/continue',
+                                    '/enable',
                                     "继续",
                                     1
                             )
@@ -742,7 +742,7 @@
                                     choosedMachines:choosedMachines.join(',')
                                 },
                                 callback:function(options, success, response) {
-                                    Ext.Msg.alert('消息', response.responseText);
+                                    light_msg('消息', response.responseText);
                                     Ext.getCmp('centerCardPanel' + id).layout.setActiveItem(0);
                                 }
                             });
@@ -836,7 +836,7 @@
                                                             choosedMachines:choosedMachines.join(',')
                                                         },
                                                         callback:function(options, success, response) {
-                                                            Ext.Msg.alert('消息', response.responseText);
+                                                            light_msg('消息', response.responseText);
                                                         }
                                                     });
                                                     return;
@@ -995,7 +995,7 @@
                                                                                 operation_template_id:operationTemplateId
                                                                             },
                                                                             callback:function(options, success, response) {
-                                                                                Ext.Msg.alert('消息', response.responseText);
+                                                                                light_msg('消息', response.responseText);
                                                                             }
                                                                         });
                                                                     } else {
@@ -1009,7 +1009,7 @@
                                                                                 is_hold:Ext.getCmp('isHold').value
                                                                             },
                                                                             callback:function(options, success, response) {
-                                                                                Ext.Msg.alert('消息', response.responseText);
+                                                                                light_msg('消息', response.responseText);
                                                                             }
                                                                         });
                                                                     }

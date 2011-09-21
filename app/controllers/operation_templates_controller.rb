@@ -13,7 +13,7 @@ class OperationTemplatesController < BaseController
       else
         respond_with operation_templates.collect { |obj|
           obj.serializable_hash.update("actions" => [
-              {:name=>"选择执行", :flex => 2.0, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
+              {:name=>"选中执行", :flex => 2.0, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
               {:name=>"分组执行", :flex => 2.0, :url => app_operations_path(app_id), :type => 'group', :method => 'POST'},
               {:name=>"修改", :flex => 1.2, :url=> edit_app_operation_template_path(app_id, obj.id), :type => 'multi', :method => 'GET'},
               {:name=>"删除", :flex => 1.2, :url=> app_operation_template_path(app_id, obj.id), :type => 'delete', :method => 'DELETE'}
@@ -23,7 +23,7 @@ class OperationTemplatesController < BaseController
     else
       respond_with current_app.operation_templates.collect { |obj|
         obj.serializable_hash.update("actions" => [
-            {:name=>"选择执行", :flex => 1, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
+            {:name=>"选中执行", :flex => 1, :url=> app_operations_path(app_id), :type => 'simple', :method => 'POST'},
             {:name=>"分组执行", :flex => 1, :url => app_operations_path(app_id), :type => 'group', :method => 'POST'}
         ], "flex" => 5, "add" => false)
       }
