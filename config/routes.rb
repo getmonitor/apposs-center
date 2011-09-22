@@ -97,6 +97,11 @@ Apposs::Application.routes.draw do
   end
 
   resources :operation_templates
+  
+  resources :directive_groups do
+    get :items, :on => :member
+  end
+  
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   # root :to => "welcome#index"

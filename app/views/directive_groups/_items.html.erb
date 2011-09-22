@@ -1,0 +1,3 @@
+<% collection.each do |item| %>
+  <%=content_tag :div, item.name, :id => "directive_template_#{item.id}", :draggable=>"true" %>
+<% end %>

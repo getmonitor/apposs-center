@@ -1,6 +1,22 @@
 <%=form_for object, :remote => true do %>
-
-<div id="sources" style="float:left">fdsfsdafasd</div>
-<div id="selected_source" style="float:right">fdsfsdfsd</div>
-
+<div id="sources" style="float:left">
+  <div id="accordion" style="width:200px">
+  <% DirectiveGroup.find_each do |d_group| %>
+    <%=content_tag :h3, link_to( d_group.name,items_directive_group_path(d_group.id), :remote => true), :id => "directive_group_#{d_group.id}" %>
+    <div></div>
+  <% end %>
+  </div>
+</div>
+<div id="selected_source" style="float:right">
+  hello
+</div>
 <% end %>
+<script type="text/javascript">
+$( "#accordion" ).accordion({
+  active:false,
+  change: function(event, ui){
+    var newHeader = ui.newHeader;
+    $(newHeader).next().attr("style","");
+  }
+});
+</script>

@@ -43,7 +43,7 @@ class OperationTemplatesController < BaseController
   end
 
   def new
-    @resource = current_app.operation_templates.new
+    @object = current_app.operation_templates.new
     respond_to do |format|
       format.js
     end
