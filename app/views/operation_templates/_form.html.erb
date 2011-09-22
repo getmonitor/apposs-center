@@ -1,14 +1,46 @@
 <%=form_for object, :remote => true do %>
-<div id="sources" style="float:left">
-  <div id="accordion" style="width:200px">
-  <% DirectiveGroup.find_each do |d_group| %>
-    <%=content_tag :h3, link_to( d_group.name,items_directive_group_path(d_group.id), :remote => true), :id => "directive_group_#{d_group.id}" %>
-    <div></div>
-  <% end %>
+
+<!--<div class="demo ui-widget ui-helper-clearfix">-->
+
+<!--<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">-->
+<!--	<li class="ui-widget-content ui-corner-tr">-->
+<!--		<h5 class="ui-widget-header">High Tatras</h5>-->
+
+<!--		<span>The peaks of High Tatras</span>-->
+<!--	</li>-->
+<!--	<li class="ui-widget-content ui-corner-tr">-->
+<!--		<h5 class="ui-widget-header">High Tatras 2</h5>-->
+<!--		<span>The chalet at the Green mountain lake</span>-->
+
+<!--	</li>-->
+<!--	<li class="ui-widget-content ui-corner-tr">-->
+<!--		<h5 class="ui-widget-header">High Tatras 3</h5>-->
+<!--		<span>Planning the ascent</span>-->
+<!--	</li>-->
+<!--	<li class="ui-widget-content ui-corner-tr">-->
+<!--		<h5 class="ui-widget-header">High Tatras 4</h5>-->
+<!--		<span>On top of Kozi kopka</span>-->
+
+<!--	</li>-->
+<!--</ul>-->
+
+<!--<div id="trash" class="ui-widget-content ui-state-default">-->
+<!--	<h4 class="ui-widget-header"><span class="ui-icon ui-icon-trash">Trash</span> Trash</h4>-->
+<!--</div>-->
+
+<!--</div>-->
+<div style="margin:auto;padding:4px">
+  <div id="sources" style="float:left;width:60%;padding:0 2px">
+    <div id="accordion">
+    <% DirectiveGroup.find_each do |d_group| %>
+      <%=content_tag :h3, link_to( d_group.name,items_directive_group_path(d_group.id), :remote => true), :id => "directive_group_#{d_group.id}" %>
+      <div></div>
+    <% end %>
+    </div>
   </div>
-</div>
-<div id="selected_source" style="float:right">
-  hello
+  <div id="selected_source" style="float:left;width: 35%;border-top-right-radius: 5px;border-top-left-radius: 5px;" class="ui-widget-content ui-state-default">
+	  <h4 class="ui-widget-header"><span class="ui-icon ui-icon-trash">已选择的指令</span> Trash</h4>
+  </div>
 </div>
 <% end %>
 <script type="text/javascript">
@@ -19,4 +51,76 @@ $( "#accordion" ).accordion({
     $(newHeader).next().attr("style","");
   }
 });
+
+	$(function() {
+		// there's the gallery and the trash
+		var $gallery = $( "#gallery" ),
+			$trash = $( "#trash" );
+
+		// let the gallery items be draggable
+		$( "li", $gallery ).draggable({
+			revert: "invalid", // when not dropped, the item will revert back to its initial position
+			containment: "document",
+			helper: "clone",
+			cursor: "move"
+		});
+
+		// let the trash be droppable, accepting the gallery items
+		$trash.droppable({
+			accept: "#gallery > li",
+			activeClass: "ui-state-highlight",
+			drop: function( event, ui ) {
+				deleteImage( ui.draggable );
+			}
+		});
+
+		// let the gallery be droppable as well, accepting items from the trash
+		$gallery.droppable({
+			accept: "#trash li",
+			activeClass: "custom-state-active",
+			drop: function( event, ui ) {
+				recycleImage( ui.draggable );
+			}
+		});
+
+		// image deletion function
+		var recycle_icon = "<a href='link/to/recycle/script/when/we/have/js/off' title='Recycle this image' class='ui-icon ui-icon-refresh'>Recycle image</a>";
+		function deleteImage( $item ) {
+			$item.fadeOut(function() {
+				var $list = $( "ul", $trash ).length ?
+					$( "ul", $trash ) :
+					$( "<ul class='gallery ui-helper-reset'/>" ).appendTo( $trash );
+
+				$item.appendTo( $list ).fadeIn();
+			});
+		}
+
+		// image recycle function
+		var trash_icon = "<a href='link/to/trash/script/when/we/have/js/off' title='Delete this image' class='ui-icon ui-icon-trash'>Delete image</a>";
+		function recycleImage( $item ) {
+			$item.fadeOut(function() {
+				$item
+					.find( "a.ui-icon-refresh" )
+					.end()
+					.appendTo( $gallery )
+					.fadeIn();
+			});
+		}
+
+		// resolve the icons behavior with event delegation
+		$( "ul.gallery > li" ).click(function( event ) {
+			var $item = $( this ),
+				$target = $( event.target );
+
+			if ( $target.is( "a.ui-icon-trash" ) ) {
+				deleteImage( $item );
+			} else if ( $target.is( "a.ui-icon-zoomin" ) ) {
+				viewLargerImage( $target );
+			} else if ( $target.is( "a.ui-icon-refresh" ) ) {
+				recycleImage( $item );
+			}
+
+			return false;
+		});
+	});
 </script>
