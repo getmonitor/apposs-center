@@ -1,8 +1,5 @@
 <% collection.each do |item| %>
-  <div id="directive_template_<%= item.id%>">
-    <label onclick="javascript:alert($('#selected_source').html());void 0;">
-      <%=item.alias || item.name %>
-      <%=image_tag "add.png",:alt => "添加"%>
-    </label>
-  </div>
+  <li class="draggable" value="<%=item.id%>">
+    <%=item.alias || item.name %>
+  </li>
 <% end %>

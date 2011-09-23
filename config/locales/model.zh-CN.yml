@@ -23,6 +23,7 @@ zh-CN:
       role: '角色'
       directive: '原子指令'
       directive_group: '指令组'
+      operation_template: '操作模板'
     attributes:
       user:
         email: '邮箱'
@@ -45,4 +46,7 @@ zh-CN:
       directive_group:
         name: '名称'
         directive_template: '原子指令'
+      operation_template:
+        name: '操作名称'
+        source_ids: '原子指令'
 

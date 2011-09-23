@@ -1,126 +1,73 @@
-<%=form_for object, :remote => true do %>
-
-<!--<div class="demo ui-widget ui-helper-clearfix">-->
-
-<!--<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">-->
-<!--	<li class="ui-widget-content ui-corner-tr">-->
-<!--		<h5 class="ui-widget-header">High Tatras</h5>-->
-
-<!--		<span>The peaks of High Tatras</span>-->
-<!--	</li>-->
-<!--	<li class="ui-widget-content ui-corner-tr">-->
-<!--		<h5 class="ui-widget-header">High Tatras 2</h5>-->
-<!--		<span>The chalet at the Green mountain lake</span>-->
-
-<!--	</li>-->
-<!--	<li class="ui-widget-content ui-corner-tr">-->
-<!--		<h5 class="ui-widget-header">High Tatras 3</h5>-->
-<!--		<span>Planning the ascent</span>-->
-<!--	</li>-->
-<!--	<li class="ui-widget-content ui-corner-tr">-->
-<!--		<h5 class="ui-widget-header">High Tatras 4</h5>-->
-<!--		<span>On top of Kozi kopka</span>-->
-
-<!--	</li>-->
-<!--</ul>-->
-
-<!--<div id="trash" class="ui-widget-content ui-state-default">-->
-<!--	<h4 class="ui-widget-header"><span class="ui-icon ui-icon-trash">Trash</span> Trash</h4>-->
-<!--</div>-->
-
-<!--</div>-->
-<div style="margin:auto;padding:4px">
-  <div id="sources" style="float:left;width:60%;padding:0 2px">
-    <div id="accordion">
-    <% DirectiveGroup.find_each do |d_group| %>
-      <%=content_tag :h3, link_to( d_group.name,items_directive_group_path(d_group.id), :remote => true), :id => "directive_group_#{d_group.id}" %>
-      <div></div>
-    <% end %>
+<%- form_for("#{resource_instance_name.to_s.downcase}",
+      resource,
+      :url => resource.new_record? ? collection_url : resource_url(resource),
+      :html => { :method => (resource.new_record? ? "post" : "put") },
+      :remote => true) do|f| %>
+<%=f.hidden_field :app_id, :value => params[:app_id] %>
+<fieldset style="margin:30px">
+  <legend style="text-align:right;background-color:white;font-weight:bolder">
+      <%=resource.new_record? ? "新增" : "修改"%>操作模板
+  </legend>
+  <div class="errors" style="padding:8px"></div>
+  <div style="margin:auto;padding:4px 20px">
+    <div style="padding:8px">
+      <h4 style="display:inline"><%=resource_class.human_attribute_name :name %>:</h4>
+      <%=resource.new_record? ? f.text_field(:name) : resource.name %>
     </div>
+    <div id="source">
+      <h4 style="margin:0;text-align:center">原子指令列表</h4>
+      <div id="groups">
+      <% DirectiveGroup.find_each do |d_group| %>
+        <h3 id="directive_group_<%=d_group.id %>">
+          <%=link_to( d_group.name,items_directive_group_path(d_group.id), :remote => true) %>
+        </h3>
+        <ul class="list"></ul>
+      <% end %>
+      </div>
+    </div>
+    <div id="selected_source" class="ui-widget-content ui-state-default">
+	    <h4 class="ui-widget-header">已选择的指令</h4>
+	      <ul class="list">
+	      <% resource.directive_templates do |d_template,checked| %>
+	      <li class="draggable">
+	        <input type="hidden" 
+	          name="operation_template[source_ids][]" 
+	          value="<%="#{d_template.id}|#{checked}" %>" />
+          <%=d_template.alias || d_template.name %>
+        </li>
+	      <% end %>
+	      </ul>
+    </div>
+    <div style="clear:both"><%=f.submit '提交' %></div>
   </div>
-  <div id="selected_source" style="float:left;width: 35%;border-top-right-radius: 5px;border-top-left-radius: 5px;" class="ui-widget-content ui-state-default">
-	  <h4 class="ui-widget-header"><span class="ui-icon ui-icon-trash">已选择的指令</span> Trash</h4>
-  </div>
-</div>
+</fieldset>
 <% end %>
 <script type="text/javascript">
-$( "#accordion" ).accordion({
+$( "#groups" ).accordion({
   active:false,
   change: function(event, ui){
     var newHeader = ui.newHeader;
     $(newHeader).next().attr("style","");
+    $(newHeader).next().find("li").draggable({
+      containment: 'document', appendTo: 'body', helper:'clone'
+    });
   }
 });
-
-	$(function() {
-		// there's the gallery and the trash
-		var $gallery = $( "#gallery" ),
-			$trash = $( "#trash" );
-
-		// let the gallery items be draggable
-		$( "li", $gallery ).draggable({
-			revert: "invalid", // when not dropped, the item will revert back to its initial position
-			containment: "document",
-			helper: "clone",
-			cursor: "move"
-		});
-
-		// let the trash be droppable, accepting the gallery items
-		$trash.droppable({
-			accept: "#gallery > li",
-			activeClass: "ui-state-highlight",
-			drop: function( event, ui ) {
-				deleteImage( ui.draggable );
-			}
-		});
-
-		// let the gallery be droppable as well, accepting items from the trash
-		$gallery.droppable({
-			accept: "#trash li",
-			activeClass: "custom-state-active",
-			drop: function( event, ui ) {
-				recycleImage( ui.draggable );
-			}
-		});
-
-		// image deletion function
-		var recycle_icon = "<a href='link/to/recycle/script/when/we/have/js/off' title='Recycle this image' class='ui-icon ui-icon-refresh'>Recycle image</a>";
-		function deleteImage( $item ) {
-			$item.fadeOut(function() {
-				var $list = $( "ul", $trash ).length ?
-					$( "ul", $trash ) :
-					$( "<ul class='gallery ui-helper-reset'/>" ).appendTo( $trash );
-
-				$item.appendTo( $list ).fadeIn();
-			});
-		}
-
-		// image recycle function
-		var trash_icon = "<a href='link/to/trash/script/when/we/have/js/off' title='Delete this image' class='ui-icon ui-icon-trash'>Delete image</a>";
-		function recycleImage( $item ) {
-			$item.fadeOut(function() {
-				$item
-					.find( "a.ui-icon-refresh" )
-					.end()
-					.appendTo( $gallery )
-					.fadeIn();
-			});
-		}
-
-		// resolve the icons behavior with event delegation
-		$( "ul.gallery > li" ).click(function( event ) {
-			var $item = $( this ),
-				$target = $( event.target );
-
-			if ( $target.is( "a.ui-icon-trash" ) ) {
-				deleteImage( $item );
-			} else if ( $target.is( "a.ui-icon-zoomin" ) ) {
-				viewLargerImage( $target );
-			} else if ( $target.is( "a.ui-icon-refresh" ) ) {
-				recycleImage( $item );
-			}
-
-			return false;
-		});
-	});
+$( "#selected_source" ).droppable({
+  accept: "#groups ul li",
+	activeClass: "ui-state-hover",
+	hoverClass: "ui-state-active",
+	drop: function( event, ui ) {
+		var list = $( this )
+			.find( "ul" );
+	  var fragment = "<li class='draggable'>" + 
+	    ui.draggable.html() + 
+	    '<input type="hidden" value="' + 
+	      ui.draggable.attr("value") + 
+	    '|false" name="operation_template[source_ids][]">'
+	  "</li>";
+		list.append(fragment);	
+	}
+});
+$("#selected_source ul").sortable();
 </script>

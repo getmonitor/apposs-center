@@ -1,0 +1,2 @@
+alert("操作已创建");
+$("#operations").html('<%=escape_javascript(render "/operations/collection", :parent => App.find(params[:app_id])) %>');

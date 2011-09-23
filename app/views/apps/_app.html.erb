@@ -2,7 +2,7 @@
   <%= form_for :operations, :remote => true do |f| %>
   <div id="machines">
     <div class="title">服务器列表，共<%=app.machines.count %>台</div>
-    <ul>
+    <ul class="list">
     <% app.machines.each{|machine|%>
       <li><label>
         <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
@@ -12,19 +12,12 @@
     </ul>
   </div>
   <div id="operation_templates">
-    <%=render "/operation_templates/collection", {
-      :collection => app.operation_templates, :parent => app
-    } %>
+    <%=render "/operation_templates/collection", :parent => app %>
   </div>
   <%end%>
 </div>
 <div id="zone">
   <div id="operations">
-    当前正在运行的操作
-    <ul>
-    <% app.operations.each{|operation|%>
-    <li><%=operation.name %></li>
-    <% }%>
-    </ul>
+    <%=render "/operations/collection", :parent => app %>
   </div>
 </div>

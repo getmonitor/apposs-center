@@ -2,8 +2,19 @@
 class OperationTemplate < ActiveRecord::Base
   belongs_to :app
   has_many :operations
+  
+  attr_accessor :source_ids
 
-  validates_length_of :expression,:minimum => 1,:message => "操作模板中的指令模板不能为空"
+  validates_length_of :source_ids,:minimum => 1,:message => "至少需要选择一个"
+  
+  validates_uniqueness_of :name, :scope => [:app_id]
+  
+  validates_presence_of :name
+
+  before_save do
+    self.expression = self.source_ids.join "," if self.source_ids
+  end
+
   # operation_template 创建了一个操作，对于指定的一个operation_id，可以为之创建操作所对应的一组执行指令
   def gen_operation user, choosed_machine_ids,previous_id=nil, is_hold=nil
     state = case is_hold
@@ -55,7 +66,7 @@ class OperationTemplate < ActiveRecord::Base
   end
 
   def directive_templates
-    pairs = expression.strip.split(',').collect{ |item|
+    pairs = (expression||"").strip.split(',').collect{ |item|
       k,v = item.squish.split('|')
       [k.to_i, v]
     }
