@@ -3,7 +3,8 @@
     find("div.errors").
     html('<ul class="errors"><%=raw resource.errors.to_a.collect{|msg| content_tag :li, msg}.join %></ul>');
 <% else %>
-  $("#zone").html("修改成功！");
+  $("#zone").empty();
+  alert("修改成功！");
   $("#operation_templates").html('<%=escape_javascript(render "/operation_templates/collection", :parent => resource.app ) %>');
 <% end %>
 
