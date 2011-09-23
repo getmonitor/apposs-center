@@ -19,11 +19,11 @@ gem 'rake'
 # gem 'ruby-debug'
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
-#if /1.9/ === RUBY_VERSION
-#  gem "ruby-debug19", :require => 'ruby-debug'
-#else
-#  gem "ruby-debug"
-#end
+if /1.9/ === RUBY_VERSION
+  gem "ruby-debug19", :require => 'ruby-debug'
+else
+  gem "ruby-debug"
+end
 
 # Bundle the extra gems:
 # gem 'bj'
