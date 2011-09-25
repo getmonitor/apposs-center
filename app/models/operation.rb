@@ -1,3 +1,6 @@
+# coding: utf-8
+
+# 运维操作的实例，代表一次运维操作
 class Operation < ActiveRecord::Base
 
   DEFAULT_ID = 0 # 某些指令独立执行，没有真实关联的操作对象，此时统一指定的操作ID

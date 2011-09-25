@@ -1,3 +1,4 @@
+# coding: utf-8
 class DirectiveTemplate < ActiveRecord::Base
   GLOBAL_ID = 0
 
