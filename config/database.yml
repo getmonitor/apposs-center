@@ -12,7 +12,7 @@ development:
   <<: *defaults
   database: apposs_development
 
-test:
+test: &test
   <<: *defaults
   database: apposs_test
 
@@ -21,3 +21,5 @@ production:
   database: apposs_production
 
 
+cucumber:
+  <<: *test

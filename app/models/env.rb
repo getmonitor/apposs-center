@@ -1,6 +1,8 @@
 class Env < ActiveRecord::Base
   belongs_to :app
 
+  validates_uniqueness_of :name, :scope => [:app_id]
+  
   has_many :properties, :as => :resource do
     def [] name
       item = where(:name => name).first

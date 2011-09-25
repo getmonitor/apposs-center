@@ -7,6 +7,5 @@ describe Machine do
     m.reload
     m.host.should == 'localhost'
     m.resume
-    Directive.last.machine.id.should == m.id
   end
 end
