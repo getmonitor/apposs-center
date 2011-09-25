@@ -38,8 +38,23 @@ end
 #   gem 'webrat'
 # end
 gem "arel", "2.0.9"
-#gem "rspec", :group => ["development", "test"]
-gem "rspec-rails", '2.5.0'
+group :development do
+  gem "guard"
+  gem "guard-rspec"
+  gem "rspec-rails", '2.5.0'
+  gem "cucumber-rails"
+end
+
+group :test do
+  gem "spork"
+  gem "guard-spork"
+  gem "rspec"
+  gem "cucumber"
+  gem "rspec-expectations"
+#gem "webrat"
+  gem "libnotify"
+  gem "rb-inotify"
+end
 # gem "cucumber-rails", :group => ["development", "test"]
 # gem "capybara", :group => ["development", "test"]
 #gem "factory_girl_rails", :group => ["development", "test"]

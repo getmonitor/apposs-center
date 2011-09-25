@@ -10,8 +10,10 @@ describe Operation do
     directive_count = ot.expression.split(",").count
     os = ot.gen_operation User.first, nil
     os.directives.count.should == (directive_count * app.machines.count)
-    os2 = ot.gen_operation User.first,[1]
+    machine = Machine.first
+    os2 = ot.gen_operation User.first,[machine.id]
     os2.directives.count.should == directive_count
+    os2.directives.first.machine.should == machine
   end
   
   it "can make an waiting operation seqence" do
