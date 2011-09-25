@@ -1,10 +1,11 @@
+# coding: utf-8
 require 'spec_helper'
 
 describe Operation do
   fixtures :directive_groups, :directive_templates,
            :users, :roles, :apps, :stakeholders,
            :operation_templates,:rooms,:machines
-  it "can be create by template" do
+  it "从操作模板中创建一个普通的操作" do
     app = App.first
     ot = app.operation_templates.first
     directive_count = ot.expression.split(",").count
@@ -16,7 +17,7 @@ describe Operation do
     os2.directives.first.machine.should == machine
   end
   
-  it "can make an waiting operation seqence" do
+  it "创建一个自动继续的操作序列" do
 
     operations = build_operation_sequence(false)
     
@@ -24,8 +25,7 @@ describe Operation do
     second = first.next
     second.state.should == 'wait'
 
-    complete_a_operation first
-
+    complete_an_operation first
     
     first.reload
     first.state.should == 'done'
@@ -33,14 +33,14 @@ describe Operation do
     second.state.should == 'init'
   end
   
-  it "can make an holding operation seqence" do
+  it "创建一个人工继续的操作序列" do
     operations = build_operation_sequence(true)
     
     first = operations.first
     second = first.next
     second.state.should == 'hold'
 
-    complete_a_operation first
+    complete_an_operation first
     
     first.reload
     first.state.should == 'done'
@@ -71,7 +71,7 @@ describe Operation do
     operations
   end
   
-  def complete_a_operation operation
+  def complete_an_operation operation
     operation.directives.each{|dire|
       dire.download && dire.invoke && dire.ok
     }
