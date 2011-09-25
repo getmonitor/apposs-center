@@ -1,8 +1,9 @@
+# coding: utf-8
 require 'spec_helper'
 
 describe App do
   fixtures :users,:apps
-  it "should transit well" do
+  it '能够正确执行状态迁移' do
     app = App.first
     app.should_not be_nil
     app.state.should == 'running'

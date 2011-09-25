@@ -24,7 +24,7 @@ class Machine < ActiveRecord::Base
   def resume
     reset
     directives.create(
-        :operation_id => Operation::GLOBAL_ID,
+        :operation_id => Operation::DEFAULT_ID,
         :directive_template_id => DirectiveTemplate::GLOBAL_ID,
         :next_when_fail => true,
         :room_id => room_id,

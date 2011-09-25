@@ -7,14 +7,15 @@ class Directive < ActiveRecord::Base
 
   attr_accessor :params
 
-  before_create :params_inline
-
-  def params_inline
+  before_create do
     if params && params.is_a?(Hash)
-      params.each{|pair| command_name.gsub! %r{\$#{pair[0]}}, pair[1] }
+      params.each do |pair|
+        command_name.gsub! %r{\$#{pair[0]}}, pair[1]
+      end
     end
   end
 
+  # 反馈执行结果
   def callback( isok, body)
     self.isok = isok
     self.response = body
@@ -35,7 +36,7 @@ class Directive < ActiveRecord::Base
     after_transition :on => :clear, :do => :response_clear
     after_transition :on => :invoke, :do => :fire_operation
     after_transition :on => :error, :do => :error_fire
-    after_transition :on => [:ok,:ack], :do => :check_operation
+    after_transition :on => [:ok,:ack], :do => :try_operation_done
   end
 
   def response_clear
@@ -51,15 +52,15 @@ class Directive < ActiveRecord::Base
     machine.error if machine
   end
   
-  def check_operation
+  def try_operation_done
     if has_operation? and operation.directives.without_state(:done).count == 0
       operation.ok || operation.ack
     end
   end
 
-  # 对于某些特殊的指令（例如：针对machine的，对应的operation_id 为0
+  # 独立指令没有对应的操作对象，此时 operation_id 为0
   def has_operation?
-    operation_id != Operation::GLOBAL_ID
+    operation_id != Operation::DEFAULT_ID
   end
 
 end

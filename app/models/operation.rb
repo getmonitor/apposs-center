@@ -1,6 +1,6 @@
 class Operation < ActiveRecord::Base
 
-  GLOBAL_ID = 0
+  DEFAULT_ID = 0 # 某些指令独立执行，没有真实关联的操作对象，此时统一指定的操作ID
 
   belongs_to :operation_template
 
