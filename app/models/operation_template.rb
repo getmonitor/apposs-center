@@ -1,4 +1,6 @@
 # coding: utf-8
+
+# 操作模板，所有的运维操作都基于一个模型来执行，大部分原子指令也是在 gen_operation 的时候生成的
 class OperationTemplate < ActiveRecord::Base
   belongs_to :app
   has_many :operations
