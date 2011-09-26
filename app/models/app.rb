@@ -26,8 +26,8 @@ class App < ActiveRecord::Base
   end
 
   has_many :properties, :as => :resource do
-    def [] name
-      item = where(:name => name).first
+    def [] name1
+      item = where(:name => name1).first
       item.value if item
     end
 

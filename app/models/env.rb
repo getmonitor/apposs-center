@@ -22,4 +22,10 @@ class Env < ActiveRecord::Base
       all.inject({}){|hash,env| hash.update(env.name => env.value) }
       end
   end
+  
+  def enable_properties
+    Property.global.pairs.
+      update( app.properties.pairs).
+      update( properties.pairs )
+  end
 end

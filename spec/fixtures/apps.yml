@@ -2,3 +2,4 @@ normal:
   id: 1
   name: sample-app
   state: running
+  virtual: 0

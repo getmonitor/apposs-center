@@ -1,35 +1,47 @@
-global:
-  id: 1
-  name: software
-  value: apposs
+global root:
+  id: <%=(id=1)%>
+  name: root
+  value: "/home/a"
+  resource_type: GLOBAL
+  resource_id: 
+global conf_file:
+  id: <%=(id=(id+1))%>
+  name: conf_file
+  value: "/home/a/conf/pe.conf"
+  resource_type: GLOBAL
+  resource_id: 
+global project_path:
+  id: <%=(id=(id+1))%>
+  name: project_path
+  value: "/home/a/project"
   resource_type: GLOBAL
   resource_id: 
 app 1 version:
-  id: 2
+  id: <%=(id=(id+1))%>
   name: version
   value: 2
   resource_type: App
   resource_id: 1
 app 1 software:
-  id: 3
+  id: <%=(id=(id+1))%>
   name: software
-  value: something
+  value: "app 1 software"
   resource_type: App
   resource_id: 1
 app 1 path:
-  id: 4
+  id: <%=(id=(id+1))%>
   name: path
   value: "/home/a/projects"
   resource_type: App
   resource_id: 1
 env 1 software:
-  id: 5
+  id: <%=(id=(id+1))%>
   name: software
-  value: other soft
+  value: "env 1 software"
   resource_type: Env
   resource_id: 1
 env 1 version:
-  id: 6
+  id: <%=(id=(id+1))%>
   name: version
   value: 1
   resource_type: Env
