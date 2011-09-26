@@ -35,6 +35,7 @@ class Machine < ActiveRecord::Base
   end
   
   def properties
-    env.app.properties.pairs.update( env.properties.pairs )
+    env.enable_properties
   end
+  
 end
