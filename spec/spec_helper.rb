@@ -32,5 +32,4 @@ end
 end
 
 Spork.each_run do
-  p 'spork run'
 end
