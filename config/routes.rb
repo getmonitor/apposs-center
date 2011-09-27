@@ -95,6 +95,10 @@ Apposs::Application.routes.draw do
     end
     get :rooms, :on => :member
   end
+  
+  resources :envs do
+    get :upload_properties, :on => :collection
+  end
 
   resources :operation_templates
   

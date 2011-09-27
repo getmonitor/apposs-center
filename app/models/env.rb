@@ -3,6 +3,10 @@ class Env < ActiveRecord::Base
 
   validates_uniqueness_of :name, :scope => [:app_id]
   
+  attr_accessor :property_file, :property_content
+  
+  before_save :check_for_property
+  
   has_many :properties, :as => :resource do
     def [] name
       item = where(:name => name).first
@@ -23,9 +27,30 @@ class Env < ActiveRecord::Base
       end
   end
   
+  def check_for_property
+    if self.property_file
+      data = property_file.read
+      reload_property_data(data)
+    else
+      Rails.logger.info 'no property file'
+    end
+
+    if self.property_content
+      reload_property_data self.property_content
+    end
+  end
+
   def enable_properties
     Property.global.pairs.
       update( app.properties.pairs).
       update( properties.pairs )
+  end
+  
+  def reload_property_data data
+    self.properties.destroy_all
+    data.split( "\n" ).each{|line|
+      k,v = line.split('=')
+      self.properties[k]=v if v
+    }
   end
 end

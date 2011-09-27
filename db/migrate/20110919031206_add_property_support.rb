@@ -1,13 +1,13 @@
 class AddPropertySupport < ActiveRecord::Migration
   def self.up
 
-    rename_table :envs, :properties
+    rename_table  :envs, :properties
     rename_column :properties, :app_id, :resource_id
-    add_column :properties, :resource_type, :string
+    add_column    :properties, :resource_type, :string
 
     create_table :envs do |t|
       t.integer :app_id
-      t.string :name
+      t.string  :name
       t.timestamps
     end
     
@@ -20,10 +20,10 @@ class AddPropertySupport < ActiveRecord::Migration
 
   def self.down
     remove_column :machines, :env_id
-    drop_table :envs
+    drop_table    :envs
     remove_column :properties, :resource_type
     rename_column :properties, :resource_id, :app_id
-    rename_table :properties, :envs
+    rename_table  :properties, :envs
   end
   
   def self.update_app_and_machine_association

@@ -8,4 +8,5 @@ class HomeController < BaseController
 	def welcome
     respond_with current_user
 	end
+
 end
