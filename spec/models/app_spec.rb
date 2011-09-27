@@ -17,7 +17,7 @@ describe App do
   
   fixtures :apps, :properties
   it '支持访问自身 property' do
-    App.first.properties.size.should == 3
+    App.first.properties.size.should == 4
     App.first.properties['software'].should == 'app 1 software'
     App.first.properties['version'].should == '2'
     App.first.envs.first.properties['version'].should == '1'

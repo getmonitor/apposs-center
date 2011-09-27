@@ -1,5 +1,7 @@
 class Env < ActiveRecord::Base
   belongs_to :app
+  
+  has_many :machines
 
   validates_uniqueness_of :name, :scope => [:app_id]
   
@@ -51,6 +53,22 @@ class Env < ActiveRecord::Base
     data.split( "\n" ).each{|line|
       k,v = line.split('=')
       self.properties[k]=v if v
+    }
+  end
+
+  def download_properties
+    data = Property.build_property enable_properties
+    if block_given?
+      yield data
+    end
+
+    machines.each{|m|
+      DirectiveGroup['default'].directive_templates['download'].gen_directive(
+          :room_id => m.room.id,
+          :room_name => m.room.name,
+          :machine_host => m.host,
+          :machine => m
+      )
     }
   end
 end

@@ -6,6 +6,8 @@
 class Directive < ActiveRecord::Base
   belongs_to :machine
   belongs_to :operation
+  belongs_to :directive_template
+  
   default_scope order("operation_id asc, id asc")
 
   scope :normal, where('operation_id <> 0')
@@ -14,8 +16,8 @@ class Directive < ActiveRecord::Base
 
   before_create do
     if params && params.is_a?(Hash)
-      params.each do |pair|
-        command_name.gsub! %r{\$#{pair[0]}}, pair[1]
+      params.each_pair do |k,v|
+        command_name.gsub! %r{\$#{k}}, "#{v}"
       end
     end
   end
