@@ -609,6 +609,17 @@
                                     var commandStore = Ext.data.StoreManager.lookup('commandStore' + id);
                                     commandStore.load();
                                 }
+                            },
+                            {
+                                xtype: 'button',
+                                text:'上传配置文件',
+                                iconCls:'view',
+                                id:'uploadfile',
+                                disabled:false,
+                                handler:function() {
+                                  $('#new_window_').attr("href",'/envs/upload_properties?app_id='+id);
+                                  document.getElementById('new_window_').click();
+                                }
                             }
                         ]
                     }
