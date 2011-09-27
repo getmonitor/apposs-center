@@ -11,4 +11,7 @@ class Property < ActiveRecord::Base
     all.inject({}){|hash,env| hash.update(env.name => env.value) }
   end
 
+  def self.build_property hash
+    "[config]\n" + hash.collect{|k,v| "#{k}=#{v}"}.join( "\n" )
+  end
 end

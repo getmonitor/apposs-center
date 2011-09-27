@@ -4,10 +4,10 @@ global root:
   value: "/home/a"
   resource_type: GLOBAL
   resource_id: 
-global conf_file:
+global property_path:
   id: <%=(id=(id+1))%>
-  name: conf_file
-  value: "/home/a/conf/pe.conf"
+  name: property_path
+  value: "/home/test/conf/pe.conf"
   resource_type: GLOBAL
   resource_id: 
 global project_path:
@@ -16,6 +16,18 @@ global project_path:
   value: "/home/a/project"
   resource_type: GLOBAL
   resource_id: 
+global site_url:
+  id: <%=(id=(id+1))%>
+  name: site_url
+  value: "http://127.0.0.1:9999"
+  resource_type: GLOBAL
+  resource_id: 
+app 1 id:
+  id: <%=(id=(id+1))%>
+  name: app_id
+  value: 1
+  resource_type: App
+  resource_id: 1
 app 1 version:
   id: <%=(id=(id+1))%>
   name: version
@@ -33,6 +45,12 @@ app 1 path:
   name: path
   value: "/home/a/projects"
   resource_type: App
+  resource_id: 1
+env 1 id:
+  id: <%=(id=(id+1))%>
+  name: env_id
+  value: 1
+  resource_type: Env
   resource_id: 1
 env 1 software:
   id: <%=(id=(id+1))%>

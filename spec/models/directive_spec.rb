@@ -34,7 +34,9 @@ describe Directive do
   
   it "正常结束时自动尝试关闭操作" do
     app = App.first
-    o = app.operation_templates.last.gen_operation User.first, app.machines.collect{|m| m.id}[0..1]
+    o = app.operation_templates.last.gen_operation(
+      User.first, app.machines.collect{|m| m.id}[0..1]
+    )
     o.state.should == 'init'
     o.directives.each_with_index do |directive,index|
       directive.download;
@@ -50,7 +52,9 @@ describe Directive do
   
   it "异常结束时不关闭操作，ack后尝试关闭操作" do
     app = App.first
-    o = app.operation_templates.last.gen_operation User.first, app.machines.collect{|m| m.id}[0..1]
+    o = app.operation_templates.last.gen_operation(
+      User.first, app.machines.collect{|m| m.id}[0..1]
+    )
     o.state.should == 'init'
     o.directives.each_with_index do |directive,index|
       directive.download;
@@ -78,7 +82,9 @@ describe Directive do
   def create_and_change_state_until_running
     host = 'localhost'
     machine = Machine.where(:host => host).first
-    directive = Directive.create :operation_id => 1, :machine_host => host, :machine => machine
+    directive = Directive.create(
+      :operation_id => 1, :machine_host => host, :machine => machine
+    )
     directive.state.should == 'init'
     directive.download
     directive.state.should == 'ready'

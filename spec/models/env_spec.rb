@@ -13,8 +13,8 @@ describe Env do
   
   it "支持访问自身的 property" do
     env = Env.first
-    env.properties.count.should == 2
-    env.enable_properties.count.should == 6
+    env.properties.count.should == 3
+    env.enable_properties.count.should == 9
   end
 
   it "支持输出当前环境的配置项信息，允许覆盖" do
@@ -65,5 +65,14 @@ newpackage=t_site_taobaoke-1.0.19-170.noarch.rpm
 
     env.reload #清理对象缓存
     env.properties['url'].should be_nil
+  end
+  
+  it "合并、下载配置信息" do
+    env = Env.first
+    env.download_properties
+    directive_template_id = DirectiveGroup['default'].directive_templates['download'].id
+    env.machines{|directive|
+      directive.directive_template_id.should == directive_template_id
+    }
   end
 end

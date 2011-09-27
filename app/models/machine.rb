@@ -23,14 +23,11 @@ class Machine < ActiveRecord::Base
 
   def resume
     reset
-    directives.create(
-        :operation_id => Operation::DEFAULT_ID,
-        :directive_template_id => DirectiveTemplate::GLOBAL_ID,
-        :next_when_fail => true,
-        :room_id => room_id,
+    DirectiveGroup['default'].directive_templates['machine|reset'].gen_directive(
+        :room_id => room.id,
         :room_name => room.name,
         :machine_host => self.host,
-        :command_name => "machine|reset"
+        :machine => self
     )
   end
   
