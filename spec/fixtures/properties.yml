@@ -2,11 +2,12 @@ global root:
   id: <%=(id=1)%>
   name: root
   value: "/home/a"
+  locked: 1
   resource_type: GLOBAL
   resource_id: 
-global property_path:
+global profile_path:
   id: <%=(id=(id+1))%>
-  name: property_path
+  name: profile_path
   value: "/home/test/conf/pe.conf"
   resource_type: GLOBAL
   resource_id: 
@@ -38,6 +39,7 @@ app 1 software:
   id: <%=(id=(id+1))%>
   name: software
   value: "app 1 software"
+  locked: 1
   resource_type: App
   resource_id: 1
 app 1 path:
@@ -50,6 +52,7 @@ env 1 id:
   id: <%=(id=(id+1))%>
   name: env_id
   value: 1
+  locked: 1
   resource_type: Env
   resource_id: 1
 env 1 software:

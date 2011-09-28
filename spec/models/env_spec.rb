@@ -69,10 +69,12 @@ newpackage=t_site_taobaoke-1.0.19-170.noarch.rpm
   
   it "合并、下载配置信息" do
     env = Env.first
-    env.download_properties
-    directive_template_id = DirectiveGroup['default'].directive_templates['download'].id
-    env.machines{|directive|
+    env.sync_profile
+    directive_template_id = DirectiveGroup['default'].directive_templates['sync_profile'].id
+    env.machines.each{|m|
+      directive = m.directives.last
       directive.directive_template_id.should == directive_template_id
+      directive.command_name.include?("$").should be_false
     }
   end
 end

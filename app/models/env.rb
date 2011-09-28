@@ -41,33 +41,35 @@ class Env < ActiveRecord::Base
       reload_property_data self.property_content
     end
   end
-
-  def enable_properties
-    Property.global.pairs.
-      update( app.properties.pairs).
-      update( properties.pairs )
-  end
   
   def reload_property_data data
-    self.properties.destroy_all
+    self.properties.not_lock.destroy_all
     data.split( "\n" ).each{|line|
       k,v = line.split('=')
       self.properties[k]=v if v
     }
   end
 
-  def download_properties
-    data = Property.build_property enable_properties
+  def enable_properties
+    Property.global.pairs.
+      update( app.properties.pairs).
+      update( properties.pairs )
+  end
+
+  def sync_profile
+    prop_hash = enable_properties
+    data = Property.build_property prop_hash
     if block_given?
       yield data
     end
 
     machines.each{|m|
-      DirectiveGroup['default'].directive_templates['download'].gen_directive(
+      DirectiveGroup['default'].directive_templates['sync_profile'].gen_directive(
           :room_id => m.room.id,
           :room_name => m.room.name,
           :machine_host => m.host,
-          :machine => m
+          :machine => m,
+          :params => prop_hash
       )
     }
   end
