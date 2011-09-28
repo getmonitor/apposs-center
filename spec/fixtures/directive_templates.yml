@@ -21,8 +21,8 @@ directive_template5:
 directive_template6:
   id: 6
   directive_group_id: 3
-  name: 'mkdir -p `dirname $property_path` && wget "$site_url/store/$app_id/$env_id/pe.conf" -O "$property_path"'
-  alias: 'download'
+  name: 'mkdir -p `dirname $profile_path` && wget "$site_url/store/$app_id/$env_id/pe.conf" -O "$profile_path"'
+  alias: 'sync_profile'
 directive_template7:
   id: 7
   directive_group_id: 3

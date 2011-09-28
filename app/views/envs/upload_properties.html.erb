@@ -7,8 +7,11 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
+  <div style="margin:15px">
+    更新配置信息：<span style="color:green"><%=@env.app.name %></span>
+  </div>
   <fieldset>
-    <legend>上传当前环境的配置文件</legend>
+    <legend>上传完整的配置文件</legend>
     <%=form_for @env, :html => { :multipart => true } do |f| %>
       <%=f.hidden_field :id %>
       <%=f.file_field :property_file %>
@@ -16,7 +19,7 @@
     <% end %>
   </fieldset>
   <fieldset>
-    <legend>修改当前环境的配置信息</legend>
+    <legend>修改当前环境的配置内容</legend>
     <%=form_for @env do |f| %>
       <%=f.hidden_field :id %>
       <%=f.text_area :property_content %>

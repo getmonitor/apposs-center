@@ -7,11 +7,11 @@ class EnvsController < BaseController
   end
 
   def update
-    @env = Env.find(params[:env][:id])
-    if not @env.update_attributes( params[:env] )
+    env = Env.find(params[:env][:id])
+    if not env.update_attributes( params[:env] )
       render :upload_properties
     else
-      @env.download_properties do |data|
+      env.sync_profile do |data|
         file_folder = "#{Rails.root}/public/store/#{env.app.id}/#{env.id}"
         FileUtils.mkdir_p file_folder unless File.exist? file_folder
         File.open("#{file_folder}/pe.conf","w"){|f| f.write data }
