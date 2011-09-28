@@ -68,9 +68,7 @@ gem "inherited_resources"
 gem "devise"
 if /java/ === RUBY_PLATFORM
   gem "jdbc-mysql"
-#  gem "jdbc-sqlite3"
   gem "activerecord-jdbc-adapter"
-#  gem "mongrel", :group => ["development"]
   gem "trinidad"
   gem "jruby-openssl"
 else
