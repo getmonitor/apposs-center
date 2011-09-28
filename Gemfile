@@ -43,7 +43,7 @@ group :development do
   gem "guard-rspec"
   gem "rspec-rails", '2.5.0'
   gem "cucumber-rails"
-end
+end if RUBY_PLATFORM !~ /java/
 
 group :test do
   gem "spork", "0.9.0.rc9"
@@ -54,7 +54,8 @@ group :test do
 #gem "webrat"
   gem "libnotify"
   gem "rb-inotify"
-end
+end if RUBY_PLATFORM !~ /java/
+
 # gem "cucumber-rails", :group => ["development", "test"]
 # gem "capybara", :group => ["development", "test"]
 #gem "factory_girl_rails", :group => ["development", "test"]
