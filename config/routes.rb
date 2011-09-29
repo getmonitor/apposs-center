@@ -101,6 +101,7 @@ Apposs::Application.routes.draw do
   end
 
   resources :operation_templates
+  resources :softwares
   
   resources :directive_groups do
     get :items, :on => :member

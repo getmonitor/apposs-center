@@ -4,8 +4,8 @@
       :html => { :method => (resource.new_record? ? "post" : "put") },
       :remote => true) do|f| %>
 <%=f.hidden_field :app_id, :value => params[:app_id] %>
-<fieldset style="margin:30px">
-  <legend style="text-align:right;background-color:white;font-weight:bolder">
+<fieldset>
+  <legend>
       <%=resource.new_record? ? "新增" : "修改"%>操作模板
   </legend>
   <div class="errors" style="padding:8px"></div>

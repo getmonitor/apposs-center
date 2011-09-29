@@ -1,15 +1,13 @@
 <div id="navleft">
+  <div id="app_settings">
+    <div class="title">应用设置</div>
+    <ul class="list">
+      <li><%=link_to '管理软件包', app_softwares_path(app), :remote => true %></li>
+    </ul>
+  </div>
   <%= form_for :operations, :remote => true do |f| %>
   <div id="machines">
-    <div class="title">服务器列表，共<%=app.machines.count %>台</div>
-    <ul class="list">
-    <% app.machines.each{|machine|%>
-      <li><label>
-        <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
-        <%=machine.name %>
-      </label></li>
-    <% }%>
-    </ul>
+    <%=render "/machines/collection", :parent => app %>
   </div>
   <div id="operation_templates">
     <%=render "/operation_templates/collection", :parent => app %>

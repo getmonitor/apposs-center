@@ -1,4 +1,2 @@
-$("#operation_templates").html('<%= escape_javascript(
-  render "/operation_templates/collection", :parent => resource.app
-) %>');
+$("#zone").css("margin","10px").html('<%= escape_javascript(render resource.app.softwares) %>');
 alert("已删除");

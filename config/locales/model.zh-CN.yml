@@ -24,6 +24,7 @@ zh-CN:
       directive: '原子指令'
       directive_group: '指令组'
       operation_template: '操作模板'
+      software: '软件'
     attributes:
       user:
         email: '邮箱'
@@ -49,4 +50,7 @@ zh-CN:
       operation_template:
         name: '操作名称'
         source_ids: '原子指令'
+      software:
+        name: '软件名称'
+        app_id: '应用'
 

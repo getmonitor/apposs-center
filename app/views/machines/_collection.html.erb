@@ -1,0 +1,12 @@
+<div class="title">
+  服务器列表，共<%=parent.machines.count %>台
+</div>
+<ul class="list">
+  <% parent.machines.each{|machine|%>
+  <li><label>
+    <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
+    <%=machine.name %>
+  </label></li>
+  <% }%>
+</ul>
+

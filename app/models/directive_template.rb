@@ -7,6 +7,8 @@ class DirectiveTemplate < ActiveRecord::Base
   
   validates_uniqueness_of :alias, :scope => [:directive_group_id]
   
+  validates_presence_of :name,:alias
+  
   has_many :directives
   
   def gen_directive params
@@ -18,4 +20,5 @@ class DirectiveTemplate < ActiveRecord::Base
       }.update(params)
     )
   end
+  
 end

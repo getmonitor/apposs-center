@@ -16,17 +16,19 @@ div.title{
   background-color:#cccccc;
 }
 
-#app {
-  background-color:#eeeeee
+fieldset {
+  margin:30px;
+  border-radius: 10px;
+}
+
+fieldset legend{
+  font-weight:bolder;
 }
 
 #navleft{
   float:left;
   width:30%;
   height:500px;
-}
-
-#machines{
   background-color:#eeeeee;
 }
 
@@ -38,16 +40,7 @@ ul.list{
 ul.list li{
   list-style:none;
   padding:2px 6px;
-}
-
-#operation_templates{
-  background-color:#999999;    
-}
-
-#operation_templates ul{
-  list-style:none;
-  padding:0 0 4px 0;
-  margin: 0;
+  border-bottom: #bbbbbb 1px solid;
 }
 
 #zone{
@@ -98,19 +91,24 @@ ul.errors li{
   clear:both;
 }
 
-#gallery { float: left; width: 65%; min-height: 12em; }
-.gallery.custom-state-active { background: #eee; }
-.gallery li { float: left; width: 96px; padding: 0.4em; margin: 0 0.4em 0.4em 0; text-align: center; }
-.gallery li h5 { margin: 0 0 0.4em; cursor: move; }
-.gallery li a {
-  float: right;
-}
-.gallery li a.ui-icon-zoomin { 
-  float: left;
-}
-.gallery li img { width: 100%; cursor: move; }
-
 #selected_source { min-height: 18em; padding: 1%;} 
 #selected_source h4 { line-height: 16px; margin: 0 0 0.4em; }
 #selected_source h4 .ui-icon { float: left; }
 
+/** 定义提示信息格式 */
+#msg-div {
+    position: absolute;
+    left: 35%;
+    top: 0;
+    width: 300px;
+    z-index: 20000;
+}
+
+#msg-div .msg {
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    background: #F6F6F6;
+    border: 2px solid #ccc;
+    padding: 10px 15px;
+    color: #555;
+}

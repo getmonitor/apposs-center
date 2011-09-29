@@ -1,0 +1,3 @@
+$("#zone").css("margin","10px").html('<%= escape_javascript(
+  render 'collection', :collection => collection, :parent_id => params[:app_id]
+) %>');

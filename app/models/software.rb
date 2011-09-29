@@ -4,6 +4,7 @@ class Software < ActiveRecord::Base
 
   belongs_to :app
 
+  validates_uniqueness_of :name, :scope => [:app_id]
   validates_presence_of :name
 
   after_create :update_env
