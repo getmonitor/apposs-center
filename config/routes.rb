@@ -80,6 +80,7 @@ Apposs::Application.routes.draw do
     end
     resources :operation_templates do
       member do
+        get  :group_form
         post :group_execute
         post :execute
       end

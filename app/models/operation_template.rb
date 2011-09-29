@@ -66,6 +66,10 @@ class OperationTemplate < ActiveRecord::Base
       }
     end
   end
+  
+  def available_machine_ids
+    app.machine_ids
+  end
 
   def directive_templates
     pairs = (expression||"").strip.split(',').collect{ |item|

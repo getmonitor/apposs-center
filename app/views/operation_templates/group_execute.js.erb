@@ -1,0 +1,6 @@
+<% if @errmsg %>
+  alert('<%=@errmsg%>');
+<% else %>
+  alert('操作分组已创建，共<%=@operations.count %>个分组');
+  $('#zone').empty();
+<% end %>

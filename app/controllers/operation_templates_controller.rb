@@ -10,32 +10,32 @@ class OperationTemplatesController < ResourceController
           find(params[:id]).
             gen_operation(current_user, @choosed_machine_ids)
     end
-    respond_to do |format|
-      format.js
-    end
   end
 
+  def group_form
+    
+  end
 
   # 分组创建操作实例
   def group_execute
-    if params[:group_count] && params[:group_count].to_i > 0
-      group_count = params[:group_count].to_i
+    group = params[:group]
+    if group[:group_count] && group[:group_count].to_i > 0
+      group_count = group[:group_count].to_i
+      operation_template = current_app.operation_templates.find(params[:id])
+      all_ids = operation_template.available_machine_ids
+
+      previous_id = nil
+      ss = group( all_ids, group_count )
+      @operations = ss.collect{|id_group|
+        operation_on_bottom = operation_template.gen_operation(current_user, id_group, previous_id, group[:is_hold]=="true" )
+        previous_id = operation_on_bottom.id
+        operation_on_bottom
+      }
+      @operations.first.enable
     else
-      group_count = 1
+      @errmsg = '分组数应当是数字'
     end
 
-    all_ids = current_app.machine_ids
-    operation_template = current_app.operation_templates.find(params[:id])
-
-    previous_id = nil
-    ss = group( all_ids, group_count )
-    operations = ss.collect{|id_group|
-      operation_on_bottom = operation_template.gen_operation(current_user, id_group, previous_id, params[:is_hold]=="true" )
-      previous_id = operation_on_bottom.id
-      operation_on_bottom
-    }
-    operations.first.enable
-    render :text => "分组已创建"
   end
 
   private
