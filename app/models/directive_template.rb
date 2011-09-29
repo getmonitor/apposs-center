@@ -21,4 +21,8 @@ class DirectiveTemplate < ActiveRecord::Base
     )
   end
   
+  def to_s
+    self.alias || self.name
+  end
+  
 end

@@ -29,12 +29,9 @@
 	    <h4 class="ui-widget-header">已选择的指令</h4>
 	      <ul class="list">
 	      <% resource.directive_templates do |d_template,checked| %>
-	      <li class="draggable">
-	        <input type="hidden" 
-	          name="operation_template[source_ids][]" 
-	          value="<%="#{d_template.id}|#{checked}" %>" />
-          <%=d_template.alias || d_template.name %>
-        </li>
+	        <li class="draggable">
+            <%=draggable_item d_template,checked %>
+          </li>
 	      <% end %>
 	      </ul>
     </div>
@@ -53,6 +50,8 @@ $( "#groups" ).accordion({
     });
   }
 });
+
+//过于复杂，需要重构
 $( "#selected_source" ).droppable({
   accept: "#groups ul li",
 	activeClass: "ui-state-hover",
@@ -61,11 +60,17 @@ $( "#selected_source" ).droppable({
 		var list = $( this )
 			.find( "ul" );
 	  var fragment = "<li class='draggable'>" + 
+	    '<%=image_tag "delete.png", :onclick=>"$(this).parent().remove();" %>' +
 	    ui.draggable.html() + 
 	    '<input type="hidden" value="' + 
-	      ui.draggable.attr("value") + 
-	    '|false" name="operation_template[source_ids][]">'
-	  "</li>";
+      ui.draggable.attr("value") + 
+	    '|false" name="operation_template[source_ids][]" />' +
+	    '<input type="checkbox" name="#"' +
+      '  title="如选中，表示本指令即使失败，后续指令也可继续执行" onchange="' +
+      "    var template_id = $(this).prev().attr('value').split('|')[0];" +
+      "    $(this).prev().attr('value',template_id+'|'+this.checked); " +
+      '"/>' +
+      '</li>';
 		list.append(fragment);	
 	}
 });
