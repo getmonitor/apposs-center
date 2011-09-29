@@ -79,8 +79,10 @@ Apposs::Application.routes.draw do
       end
     end
     resources :operation_templates do
-      post :group_execute, :on => :member
-      post :execute, :on => :member
+      member do
+        post :group_execute
+        post :execute
+      end
     end
     resources :operations do
       member do

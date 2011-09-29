@@ -3,10 +3,16 @@ class OperationTemplatesController < ResourceController
 
   # 创建一个操作实例
   def execute
-    if params[:choosedMachines]
-      choosed_machine_ids = params[:choosedMachines].split(',').collect { |s| s.to_i }.uniq
+    @choosed_machine_ids = check_machine_ids(params[:machine_ids])
+    if @choosed_machine_ids.size > 0
+      @operation = current_app.
+        operation_templates.
+          find(params[:id]).
+            gen_operation(current_user, @choosed_machine_ids)
     end
-    current_app.operation_templates.find(params[:id]).gen_operation(current_user, choosed_machine_ids)
+    respond_to do |format|
+      format.js
+    end
   end
 
 
@@ -43,4 +49,7 @@ class OperationTemplatesController < ResourceController
     groups
   end
 
+  def check_machine_ids machine_ids
+    (machine_ids||[]).collect { |s| s.to_i }.uniq
+  end
 end

@@ -5,14 +5,19 @@
       <li><%=link_to '管理软件包', app_softwares_path(app), :remote => true %></li>
     </ul>
   </div>
-  <%= form_for :operations, :remote => true do |f| %>
+  
+  <%= form_for( :operation_templates,
+      :url => '#',
+      :remote => true,
+      :html => { :name => 'execute_form', :method => "post" }
+      ) do|f| %>
   <div id="machines">
     <%=render "/machines/collection", :parent => app %>
   </div>
   <div id="operation_templates">
     <%=render "/operation_templates/collection", :parent => app %>
   </div>
-  <%end%>
+  <% end%>
 </div>
 <div id="zone">
   <%=render "/operations/collection", :parent => app %>
