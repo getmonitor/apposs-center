@@ -1,5 +1,6 @@
 <div class="title">
   服务器列表，共<%=parent.machines.count %>台
+  <%=link_to '刷新', app_machines_path(parent.id), :remote => true %>
 </div>
 <ul class="list">
   <% parent.machines.each{|machine|%>
