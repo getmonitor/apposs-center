@@ -27,7 +27,7 @@ fieldset legend{
 
 #navleft{
   float:left;
-  width:30%;
+  width:32%;
   height:500px;
   background-color:#eeeeee;
 }
@@ -45,7 +45,7 @@ ul.list li{
 
 #zone{
   float:left;
-  width:65%;
+  width:67%;
   background-color:white;
   height:500px;
   padding:4px;
