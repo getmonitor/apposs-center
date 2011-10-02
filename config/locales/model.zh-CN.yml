@@ -9,6 +9,8 @@ zh-CN:
         done: "完成"
         wait: "等待"
         hold: "暂停"
+        normal: "正常"
+        pause: "暂停"
       events:
         download: "下载"
         invoke: "执行"

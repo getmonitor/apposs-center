@@ -2,12 +2,14 @@
   服务器列表，共<%=parent.machines.count %>台
   <%=link_to '刷新', app_machines_path(parent.id), :remote => true %>
 </div>
-<ul class="list">
+<ul class="list" style="height:200px; overflow-y:auto">
   <% parent.machines.each{|machine|%>
   <li><label>
     <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
     <%=machine.name %>
-  </label></li>
+  </label>
+  <%=show_state machine %>
+  </li>
   <% }%>
 </ul>
 
