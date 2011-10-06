@@ -1,0 +1,15 @@
+<ul class="list" style="background-color:#ddd">
+  <% @machines.each do |machine| %>
+  <li box-href="<%=directives_operation_machine_path(params[:operation_id],machine.id) %>" box-type="last">
+    <span style="float:left;margin-right:4px">
+      <%=image_tag 'refresh.png', :onclick=>'$(this).parent().parent().trigger("refresh.application"); return false;' %>
+    </span>
+    <span style="float:left" onclick="return $(this).parent().trigger('load_toggle.application')">
+      <%=machine.name %>
+    </span>
+    <span style="float:right"><%=machine.human_state_name%></span>
+    <div style="clear:both"></div>
+    <div></div>
+  </li>
+  <% end %>
+</ul>

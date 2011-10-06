@@ -13,7 +13,8 @@ div.title{
   font-size:10pt;
   font-weight:bolder;
   padding:4px;
-  background-color:#cccccc;
+  background-color:#888888;
+  color:#FFF;
 }
 
 fieldset {
@@ -33,13 +34,13 @@ fieldset legend{
 }
 
 ul.list{
-  padding:0 0 4px 0;
+  padding:0;
   margin: 0;
 }
 
 ul.list li{
   list-style:none;
-  padding:2px 6px;
+  padding:2px 0 2px 10px;
   border-bottom: #bbbbbb 1px solid;
 }
 

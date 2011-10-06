@@ -5483,6 +5483,7 @@ if ( !jQuery.support.htmlSerialize ) {
 	wrapMap._default = [ 1, "div<div>", "</div>" ];
 }
 
+
 jQuery.fn.extend({
 	text: function( text ) {
 		if ( jQuery.isFunction(text) ) {

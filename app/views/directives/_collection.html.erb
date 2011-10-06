@@ -1,0 +1,20 @@
+<div id="directives">
+  <div class="title">
+    指令列表
+  </div>
+  <ul class="list">
+  <% collection.each do |directive|%>
+    <li>
+      <span style="float:left;color:green;width:50px"><%=directive.id %></span>
+      <span style="float:left" title="<%=directive.command_name %>">
+        <%=directive.command_name[0..80] %>
+      </span>
+      <span style="float:right">
+        <%=directive.human_state_name %>
+      </span>
+      <div style="clear:both" />
+    </li>
+  <% end %>
+  </ul>
+</div>
+

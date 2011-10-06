@@ -8,6 +8,7 @@ class Directive < ActiveRecord::Base
   belongs_to :machine
   belongs_to :operation
   belongs_to :directive_template
+  belongs_to :template, :class_name => 'DirectiveTemplate'
   
   default_scope order("operation_id asc, id asc")
 

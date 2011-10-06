@@ -1,6 +1,23 @@
-当前正在运行的操作
-    <ul>
-    <% parent.operations.each{|operation|%>
-    <li><%=operation.name %></li>
-    <% }%>
-    </ul>
+<div id="operations">
+  <div class="title">
+    操作列表
+  </div>
+  <ul class="list" style="background-color:#bbb">
+  <% parent.operations.each do |operation|%>
+    <li box-href="<%=operation_machines_path(operation.id) %>" box-type="last">
+      <span style="float:left;margin-right:4px">
+        <%=image_tag 'refresh.png', :onclick=>'$(this).parent().parent().trigger("refresh.application"); return false;' %>
+      </span>
+      <span style="float:left" onclick="return $(this).parent().trigger('load_toggle.application')">
+        <%=operation.name %>
+      </span>
+      <span style="float:right">
+        <%=operation.human_state_name %>
+      </span>
+      <div style="clear:both"></div>
+      <div></div>
+    </li>
+  <% end %>
+  </ul>
+</div>
+

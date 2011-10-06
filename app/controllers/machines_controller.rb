@@ -19,6 +19,10 @@ class MachinesController < ResourceController
 #  end
 
   def reset
-    respond_with current_app.machines.find(params[:id]).resume
+    @directive = Machine.find(params[:id]).resume
+  end
+  
+  def directives
+    @directives = Machine.find(params[:id]).directives
   end
 end

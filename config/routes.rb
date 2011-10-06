@@ -99,11 +99,24 @@ Apposs::Application.routes.draw do
     get :rooms, :on => :member
   end
   
+  resources :machines do
+    member do
+      put :reset
+      get :directives
+    end
+  end
+  
   resources :envs do
     get :upload_properties, :on => :collection
   end
 
   resources :operation_templates
+  
+  resources :operations do
+    resources :machines, :module => 'operation' do
+      get :directives, :on => :member
+    end
+  end
   resources :softwares
   
   resources :directive_groups do
