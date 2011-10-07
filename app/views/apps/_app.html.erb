@@ -3,6 +3,7 @@
     <div class="title">应用设置</div>
     <ul class="list">
       <li><%=link_to '管理软件包', app_softwares_path(app), :remote => true %></li>
+      <li><%=link_to '上传配置文件', edit_app_env_path(app,'online'), :target => 'blank' %></li>
     </ul>
   </div>
   

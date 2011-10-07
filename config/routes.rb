@@ -72,6 +72,8 @@ Apposs::Application.routes.draw do
   resources :rooms
 
   resources :apps do
+    resources :envs
+
     resources :machines do
       member do
         get :command_state
@@ -103,10 +105,6 @@ Apposs::Application.routes.draw do
     end
   end
   
-  resources :envs do
-    get :upload_properties, :on => :collection
-  end
-
   resources :operation_templates
   
   resources :operations do

@@ -11,17 +11,15 @@
     更新配置信息：<span style="color:green"><%=@env.app.name %></span>
   </div>
   <fieldset>
-    <legend>上传完整的配置文件</legend>
-    <%=form_for @env, :html => { :multipart => true } do |f| %>
-      <%=f.hidden_field :id %>
+  <legend>上传完整的配置文件</legend>
+    <%=form_for @env, :url => app_env_path(@env.app_id,@env.id), :html => { :multipart => true,:method => "put" } do |f| %>
       <%=f.file_field :property_file %>
       <%=f.submit '提交' %>
     <% end %>
   </fieldset>
   <fieldset>
     <legend>修改当前环境的配置内容</legend>
-    <%=form_for @env do |f| %>
-      <%=f.hidden_field :id %>
+    <%=form_for @env, :url => app_env_path(@env.app_id,@env.id), :html => { :method => "put" } do |f| %>
       <%=f.text_area :property_content %>
       <br />
       <%=f.submit '提交' %>
