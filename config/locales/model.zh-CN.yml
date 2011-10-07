@@ -11,6 +11,7 @@ zh-CN:
         hold: "暂停"
         normal: "正常"
         pause: "暂停"
+        clearing: '撤销中'
       events:
         download: "下载"
         invoke: "执行"

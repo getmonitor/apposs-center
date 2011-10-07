@@ -1,26 +1,12 @@
 # coding: utf-8
-class OperationsController < BaseController
-  def index
-    respond_with current_app.operations.without_state(:done).order('id asc').collect { |cs|
-      cs.attributes.update(
-          "name" => "#{cs.id}. #{cs.name}",
-          "state" => cs.human_state_name,
-          "children" => cs.machines.uniq.collect { |m|
-            m.attributes.update(
-                "id" => "#{cs.id}|#{m.id}",
-                "state" => "",
-                "children" => m.directives.where(:operation_id => cs.id).collect { |o|
-                  o.attributes.update(
-                      "id" => "#{cs.id}|#{m.id}|#{o.id}",
-                      "leaf" => "true",
-                      "state" => o.human_state_name,
-                      "name" => "#{o.id}. #{o.command_name}"
-                  )
-                }
-            )
-          }
-      )
-    }
+class OperationsController < ResourceController
+  def enable
+    Operation.find(params[:id]).enable
+  end
+
+  def clear
+    @operation = Operation.find(params[:id])
+    @result = @operation.clear
   end
 
   # TODO deprecated
@@ -32,7 +18,4 @@ class OperationsController < BaseController
     render :text => "操作已创建"
   end
 
-  def enable
-    render :text =>  current_app.operations.find(params[:id]).enable
-  end
 end

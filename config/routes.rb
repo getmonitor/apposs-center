@@ -85,11 +85,8 @@ Apposs::Application.routes.draw do
         post :execute
       end
     end
-    resources :operations do
-      member do
-        put :enable
-      end
-    end
+    resources :operations
+    
     resources :softwares
     resources :directives do
       member do
@@ -115,6 +112,10 @@ Apposs::Application.routes.draw do
   resources :operations do
     resources :machines, :module => 'operation' do
       get :directives, :on => :member
+    end
+    member do
+      put :enable
+      put :clear
     end
   end
   resources :softwares
