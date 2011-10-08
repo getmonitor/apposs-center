@@ -5,7 +5,7 @@ function alert(msg) {
   }
   $('#msg-div').html('<div class="msg">' + msg + '</div>');
   $('#msg-div').slideDown(500);
-  setTimeout(function(){ $('#msg-div').slideUp(500); }, 3500);
+  setTimeout(function(){ $('#msg-div').slideUp(500); }, 2500);
 }
 
 $(function() {

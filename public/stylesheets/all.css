@@ -103,7 +103,7 @@ ul.errors li{
 
 /** 定义提示信息格式 */
 #msg-div {
-    position: absolute;
+    position: fixed;
     left: 35%;
     top: 0;
     width: 300px;
