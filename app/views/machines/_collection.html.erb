@@ -1,7 +1,7 @@
-<div class="title">
+<h2>
   服务器列表，共<%=parent.machines.count %>台
   <%=link_to '刷新', app_machines_path(parent.id), :remote => true %>
-</div>
+</h2>
 <ul class="list" style="height:200px; overflow-y:auto">
   <% parent.machines.each{|machine|%>
   <li><label>

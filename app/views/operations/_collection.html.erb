@@ -1,22 +1,9 @@
 <div id="operations">
-  <div class="title">
-    操作列表
-  </div>
+  <h2>操作列表</h2>
   <ul class="list" style="background-color:#bbb">
   <% parent.operations.each do |operation|%>
-    <li box-href="<%=operation_machines_path(operation.id) %>" box-type="last">
-      <span style="float:left;margin-right:4px">
-        <%=image_tag 'refresh.png', :onclick=>'$(this).parent().parent().trigger("refresh.application"); return false;' %>
-      </span>
-      <span style="float:left" onclick="return $(this).parent().trigger('load_toggle.application')">
-        <%=operation.name %>
-      </span>
-      <span style="float:right">
-        <%=actions(operation) %>
-        <%=operation.human_state_name %>
-      </span>
-      <div style="clear:both"></div>
-      <div></div>
+    <li box-href="<%=operation_path(operation.id) %>">
+      <%=render 'operations/item', :operation => operation %>
     </li>
   <% end %>
   </ul>

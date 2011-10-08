@@ -1,8 +1,8 @@
 <div id="softwares">
   <fieldset style="display:none"></fieldset>
-  <div class="title">
+  <h2>
     软件列表 <%=link_to "单击创建", new_app_software_path(parent_id), :remote => true %>
-  </div>
+  </h2>
   <ul class="list">
   <% collection.each do |software| %>
     <li>

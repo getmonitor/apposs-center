@@ -33,19 +33,11 @@ $(function() {
         }
       });
     },
-    find_box: function(base_node){
-      switch(base_node.attr('box-type')){
-        case 'last':
-          return base_node.children().last();
-        case 'first': 
-          return base_node.children().first();
-        case 'before':
-          return base_node.prev();
-        case 'after':
-          return base_node.next();
-        default: 
-          return base_node;
+    link: function(node){
+      if(node.data('box-href')==null){
+        node.data("box-href",node.attr('box-href'));
       }
+      return node.data('box-href');
     },
     stopEverything: function(e) {
       $(e.target).trigger('ujs:everythingStopped');
@@ -57,19 +49,27 @@ $(function() {
   $('div[box-href],li[box-href]').live('load_toggle.application', function(e) {
     var base_node = $(e.currentTarget);
     application.load_toggle(
-      application.find_box(base_node),
-      base_node.attr('box-href')
+      base_node,
+      application.link(base_node)
     );
     return application.stopEverything(e);
   });
   $('div[box-href],li[box-href]').live('refresh.application', function(e) {
     var base_node = $(e.currentTarget);
     application.refresh(
-      application.find_box(base_node),
-      base_node.attr('box-href')
+      base_node,
+      application.link(base_node)
     );
     return application.stopEverything(e);
   });
-
+  $('a[handle]').live('ajax:success', function(e, data, status, xhr) {
+    var node = $(e.currentTarget).parent();
+    while(node.length > 0){
+      if(node.is('div[box-href],li[box-href]')){
+        return node.trigger("refresh.application");
+      }
+      node = node.parent();
+    }
+  });
 });
 

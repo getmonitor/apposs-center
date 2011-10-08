@@ -1,8 +1,8 @@
-<div class="title">
+<h2>
   操作模板
   <%=link_to "单击创建", new_app_operation_template_path(parent.id), :remote => true %>
   <%=link_to '刷新', app_operation_templates_path(parent.id), :remote => true %>
-</div>
+</h2>
 <ul class="list">
 <% parent.operation_templates.each{|template|%>
   <li>

@@ -1,0 +1,13 @@
+  <span style="float:left;margin-right:4px">
+    <%=image_tag 'refresh.png', :onclick=>'return $(this).parent().parent().children().last().trigger("refresh.application");' %>
+  </span>
+  <span style="float:left" onclick="return $(this).parent().children().last().trigger('load_toggle.application')" title="单击查看相关机器">
+    <%=operation.name %>
+  </span>
+  <span style="float:right">
+    <%=actions(operation) %>
+    <%=operation.human_state_name %>
+  </span>
+  <div style="clear:both"></div>
+  <div box-href="<%=operation_machines_path(operation.id) %>"></div>
+
