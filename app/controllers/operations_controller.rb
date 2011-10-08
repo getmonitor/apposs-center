@@ -6,7 +6,8 @@ class OperationsController < ResourceController
 
   def clear
     @operation = Operation.find(params[:id])
-    @result = @operation.clear
+    @operation.clear
+    @result = @operation.auto_ack
   end
 
   # TODO deprecated
