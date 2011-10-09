@@ -1,11 +1,11 @@
 //顶部显示瞬时消息
-function alert(msg) {
+function alert(msg,millisecond) {
   if(!document.getElementById('msg-div')){
     $(document.body).append('<div id="msg-div" style="display:none"></div>');
   }
   $('#msg-div').html('<div class="msg">' + msg + '</div>');
-  $('#msg-div').slideDown(500);
-  setTimeout(function(){ $('#msg-div').slideUp(500); }, 2500);
+  $('#msg-div').slideDown(300);
+  setTimeout(function(){ $('#msg-div').slideUp(300); }, millisecond || 2500);
 }
 
 $(function() {

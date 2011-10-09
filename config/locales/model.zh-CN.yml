@@ -18,6 +18,8 @@ zh-CN:
         error: "失败"
         ack: "确认"
         ok: "成功"
+        continue: "继续"
+        enable: "激活"
         clear: "清理"
     models:
       user: '用户'
