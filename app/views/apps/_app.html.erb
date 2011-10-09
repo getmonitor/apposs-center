@@ -21,5 +21,5 @@
   <% end%>
 </div>
 <div id="zone">
-  <%=render "/operations/collection", :parent => app %>
+  <%=render "/operations/collection", :parent => app,:collection => app.operations.without_state(:done) %>
 </div>

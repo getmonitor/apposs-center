@@ -10,10 +10,22 @@ class AppsController < BaseController
       format.js
     end
   end
+  
 
-  def rooms
-    respond_with(current_user.apps.find(params[:id]).machines.select([:room_id]).uniq.collect do |machine|
-      Room.find(machine.room_id)
-    end)
+  def operations
+    @app = current_user.apps.find(params[:id])
+    @collection = @app.operations.without_state(:done)
+    respond_to do |format|
+      format.js
+    end
   end
+
+  def old_operations
+    @app = current_user.apps.find(params[:id])
+    @collection = @app.operations.where(:state => :done)
+    respond_to do |format|
+      format.js
+    end
+  end
+
 end

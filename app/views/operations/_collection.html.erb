@@ -1,7 +1,11 @@
 <div id="operations">
-  <h2>操作列表</h2>
+  <h2>
+    <%=link_to '操作列表', operations_app_path(parent.id), :remote => true %>
+     | 
+    <%=link_to '历史操作(最近一个月)', old_operations_app_path(parent.id), :remote => true %>
+  </h2>
   <ul class="list" style="background-color:#bbb">
-  <% parent.operations.each do |operation|%>
+  <% collection.each do |operation|%>
     <li box-href="<%=operation_path(operation.id) %>">
       <%=render 'operations/item', :resource => operation %>
     </li>

@@ -87,10 +87,13 @@ Apposs::Application.routes.draw do
         post :execute
       end
     end
-    resources :operations
-    
     resources :softwares
-    get :rooms, :on => :member
+
+    member do
+      get :rooms
+      get :operations
+      get :old_operations
+    end
   end
   
   resources :directives do
