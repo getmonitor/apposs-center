@@ -90,14 +90,13 @@ Apposs::Application.routes.draw do
     resources :operations
     
     resources :softwares
-    resources :directives do
-      member do
-        put :ack
-      end
-    end
     get :rooms, :on => :member
   end
   
+  resources :directives do
+    put :event, :on => :member
+  end
+
   resources :machines do
     member do
       put :reset
@@ -112,8 +111,7 @@ Apposs::Application.routes.draw do
       get :directives, :on => :member
     end
     member do
-      put :enable
-      put :clear
+      put :event
     end
   end
   resources :softwares

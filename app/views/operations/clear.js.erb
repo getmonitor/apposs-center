@@ -1,5 +1,0 @@
-<% if @result %>
-alert('操作已经被撤销');
-<% else %>
-alert('操作不能撤销，当前状态为：<%=@operation.human_state_name %>')
-<% end %>

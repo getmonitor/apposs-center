@@ -3,7 +3,7 @@
   <ul class="list" style="background-color:#bbb">
   <% parent.operations.each do |operation|%>
     <li box-href="<%=operation_path(operation.id) %>">
-      <%=render 'operations/item', :operation => operation %>
+      <%=render 'operations/item', :resource => operation %>
     </li>
   <% end %>
   </ul>

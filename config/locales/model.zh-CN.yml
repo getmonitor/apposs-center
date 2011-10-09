@@ -17,7 +17,8 @@ zh-CN:
         invoke: "执行"
         error: "失败"
         ack: "确认"
-        ok: "成功"        
+        ok: "成功"
+        clear: "清理"
     models:
       user: '用户'
       app: '应用'

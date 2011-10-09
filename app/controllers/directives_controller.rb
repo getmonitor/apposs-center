@@ -1,7 +1,2 @@
-class DirectivesController < BaseController
-
-  def ack
-    render :text => Directive.find(params[:id]).ack
-  end
-  
+class DirectivesController < ResourceController
 end

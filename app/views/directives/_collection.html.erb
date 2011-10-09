@@ -2,15 +2,8 @@
   <h2>指令列表</h2>
   <ul class="list">
   <% collection.each do |directive|%>
-    <li>
-      <span style="float:left;color:green;width:50px"><%=directive.id %></span>
-      <span style="float:left" title="<%=directive.command_name %>">
-        <%=directive.command_name[0..80] %>
-      </span>
-      <span style="float:right">
-        <%=directive.human_state_name %>
-      </span>
-      <div style="clear:both" />
+    <li box-href="<%=directive_path(directive.id) %>">
+      <%= render 'directives/item', :resource => directive %>
     </li>
   <% end %>
   </ul>

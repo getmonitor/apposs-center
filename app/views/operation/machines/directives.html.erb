@@ -1,12 +1,7 @@
 <ul class="list" style="background-color:#fff">
   <% @directives.each do |directive| %>
-  <li>
-    <span style="float:left" title="<%=directive.command_name %>">
-      <%=directive.command_name[0..80] %>
-    </span>
-    <span style="float:right"><%=directive.human_state_name%></span>
-    <div style="clear:both"></div>
-    <div></div>
+  <li box-href="<%=directive_path(directive.id) %>">
+      <%= render 'directives/item', :resource => directive %>
   </li>
   <% end %>
 </ul>

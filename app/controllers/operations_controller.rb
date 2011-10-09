@@ -1,14 +1,5 @@
 # coding: utf-8
 class OperationsController < ResourceController
-  def enable
-    Operation.find(params[:id]).enable
-  end
-
-  def clear
-    @operation = Operation.find(params[:id])
-    @operation.clear
-    @result = @operation.auto_ack
-  end
 
   # TODO deprecated
   def create

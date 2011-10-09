@@ -8,6 +8,10 @@ class ResourceController < InheritedResources::Base
     current_user.apps.where(:id => params[:app_id]).first||App.new
   end
   
+  def event
+    @result = resource.send params[:event].to_sym
+  end
+  
   protected
     def begin_of_association_chain
       @current_user
