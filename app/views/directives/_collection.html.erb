@@ -1,5 +1,14 @@
 <div id="directives">
-  <h2>指令列表</h2>
+  <h2>
+  <% if defined? history %>
+    <%=link_to '指令列表', directives_machine_path(parent_id), :remote => true %>
+     | 历史指令(最近一个月)
+  <% else %>
+    指令列表  | 
+    <%=link_to '历史指令(最近一个月)', old_directives_machine_path(parent_id), :remote => true %>
+  <% end %>
+  
+  </h2>
   <ul class="list">
   <% collection.each do |directive|%>
     <li box-href="<%=directive_path(directive.id) %>">

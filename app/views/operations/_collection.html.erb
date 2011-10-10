@@ -1,8 +1,12 @@
 <div id="operations">
   <h2>
+  <% if defined? history %>
     <%=link_to '操作列表', operations_app_path(parent.id), :remote => true %>
-     | 
+     | 历史操作(最近一个月)
+  <% else %>
+    操作列表  | 
     <%=link_to '历史操作(最近一个月)', old_operations_app_path(parent.id), :remote => true %>
+  <% end %>
   </h2>
   <ul class="list" style="background-color:#bbb">
   <% (collection||parent.operations.without_state(:done)).each do |operation|%>

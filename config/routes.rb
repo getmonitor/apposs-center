@@ -59,6 +59,7 @@ Apposs::Application.routes.draw do
     member do
       put :reset
       get :directives
+      get :old_directives
     end
   end
   
