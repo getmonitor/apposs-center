@@ -50,6 +50,10 @@ Apposs::Application.routes.draw do
   resources :directives do
     put :event, :on => :member
   end
+  
+  resources :envs do
+    get :upload_properties, :on => :collection
+  end
 
   resources :machines do
     member do
