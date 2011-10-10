@@ -23,7 +23,7 @@ h2 a:link, h2 a:visited, h2 a:active{
 }
 
 h2 a:hover{
-  color:blue;
+  color:#000;
 }
 
 fieldset {
@@ -53,8 +53,9 @@ ul.list li{
   border-bottom: #bbbbbb 1px solid;
 }
 
-ul.list li:hover{
-  background-color:#aa55ff
+ul.list li:hover,ul.list li:hover a{
+  background-color:#9966cc;
+  color:#fff;
 }
 
 #zone{

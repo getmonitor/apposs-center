@@ -31,7 +31,7 @@ class Operation < ActiveRecord::Base
     event :ok do transition :running => :done end
 
     before_transition :on => [:enable,:continue], :do => :enable_directive
-    before_transition :on => [:clear], :do => :clear_directive
+    after_transition :on => [:clear], :do => :clear_directive
     after_transition  :on => :ok, :do => :continue_next
 
   end
@@ -39,9 +39,6 @@ class Operation < ActiveRecord::Base
   def clear_directive
     if STATE_COULD_BE_CLEAR.include?(self.state )
       directives.each{|d| d.clear}
-    end
-    if (directives.without_state(:done).count == 0) && self.clearing?
-      self.ack
     end
   end
   
