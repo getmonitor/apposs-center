@@ -18,6 +18,14 @@ h2{
   color:#FFF;
 }
 
+h2 a:link, h2 a:visited, h2 a:active{
+  color:#FFF;
+}
+
+h2 a:hover{
+  color:blue;
+}
+
 fieldset {
   margin:30px;
   border-radius: 10px;
