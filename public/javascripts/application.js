@@ -8,9 +8,9 @@ function alert(msg,millisecond) {
   setTimeout(function(){ $('#msg-div').slideUp(300); }, millisecond || 2500);
 }
 
-function try_alert(msg) {
+function try_alert(msg,millisecond) {
   if(msg!=""){
-    alert(msg);
+    alert(msg,millisecond);
   }
 }
 

@@ -4,7 +4,7 @@
       </span>
       <div style="display:inline;float:right">
         <%=actions(resource) %>
-        <span onclick="try_alert('<%=resource.response %>')">结果</span>
+        <span onclick="try_alert('<%=resource.response %>',10000)">结果</span>
         <%=resource.human_state_name %>
       </div>
       <div style="clear:both" />
