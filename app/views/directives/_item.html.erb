@@ -2,9 +2,10 @@
       <span style="float:left" title="<%=resource.command_name %>">
         <%=resource.command_name[0..80] %>
       </span>
-      <span style="float:right">
+      <div style="display:inline;float:right">
         <%=actions(resource) %>
+        <span onclick="try_alert('<%=resource.response %>')">结果</span>
         <%=resource.human_state_name %>
-      </span>
+      </div>
       <div style="clear:both" />
 

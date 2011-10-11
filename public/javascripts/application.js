@@ -8,6 +8,12 @@ function alert(msg,millisecond) {
   setTimeout(function(){ $('#msg-div').slideUp(300); }, millisecond || 2500);
 }
 
+function try_alert(msg) {
+  if(msg!=""){
+    alert(msg);
+  }
+}
+
 $(function() {
   var application;
   $.application = application = {

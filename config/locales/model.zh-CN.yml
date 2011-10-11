@@ -4,7 +4,7 @@ zh-CN:
       states:
         init: "已创建"
         ready: "已就绪"
-        running: "<span style='color:red;'>执行中</span>"
+        running: "执行中"
         failure: "失败"
         done: "完成"
         wait: "等待"

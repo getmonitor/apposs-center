@@ -53,9 +53,8 @@ ul.list li{
   border-bottom: #bbbbbb 1px solid;
 }
 
-ul.list li:hover,ul.list li:hover a{
+ul.list li:hover,ul.list li:hover{
   background-color:#9966cc;
-  color:#fff;
 }
 
 #zone{
