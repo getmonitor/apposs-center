@@ -38,18 +38,19 @@ class Directive < ActiveRecord::Base
     event :clear do transition [:disable, :init, :ready] => :done end
     event :download do transition :init => :ready end
     event :invoke do transition :ready => :running end
+    event :force_stop do transition :running => :done end
     event :error do transition :running => :failure end
     event :ok do transition :running => :done end
     event :ack do transition :failure => :done end
 
-    after_transition :on => :clear, :do => :response_clear
     after_transition :on => :invoke, :do => :fire_operation
     after_transition :on => :error, :do => :error_fire
     after_transition :on => [:ok,:ack], :do => :try_operation_done
+    before_transition :on => [:clear,:force_stop], :do => :put_response
   end
 
-  def response_clear
-    update_attribute :response, "be cleared"
+  def put_response
+    self.response = "from #{self.state}"
   end
 
   def fire_operation

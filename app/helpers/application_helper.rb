@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def actions object
-    raw (object.state_events - [:download,:fire,:continue]).collect{|event|
+    raw (object.state_events - [:download,:fire,:continue,:error,:invoke]).collect{|event|
       link_to(
         I18n.t("activerecord.state_machines.events.#{event}"),
         url_for(
