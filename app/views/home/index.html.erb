@@ -12,7 +12,11 @@
     </li>
   </ul>
   <div id="app">
-    <%=render "/apps/app", :app => @apps.first  %>
+    <% if @first %>
+    <%=render "/apps/app", :app => @first %>
+    <% else %>
+    当前没有被管理的应用
+    <% end%>
     <div class="clear" />
   </div>
 </div>
