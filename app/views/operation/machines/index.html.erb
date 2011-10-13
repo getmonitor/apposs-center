@@ -2,7 +2,7 @@
   <% @machines.each do |machine| %>
   <li>
     <span style="float:left;margin-right:4px">
-      <%=image_tag 'refresh.png', :onclick=>'return $(this).parent().parent().children().last().trigger("refresh.application");' %>
+      <%=image_tag 'refresh.png', :onclick=>'return $(this).parent().parent().children().last().trigger("refresh.application");', :title => '手动刷新' %>
     </span>
     <span style="float:left" onclick="return $(this).parent().children().last().trigger('load_toggle.application')">
       <%=machine.name %>

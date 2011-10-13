@@ -29,7 +29,7 @@ $(function() {
 
     load_toggle: function(node,url){
       if(node.html()==""){
-        node.html("正在装载...");
+        node.html("开始每5秒自动刷新......");
         application.startPoller(function(){
           console.info('load'+new Date());
           $.ajax({
@@ -53,7 +53,7 @@ $(function() {
         url: url,
         success: function(data,status,xhrs){
           node.html(data);
-          alert('已刷新');
+          alert('数据已更新，同时关闭自动刷新');
         }
       });
     },
