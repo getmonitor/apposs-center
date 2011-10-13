@@ -2,13 +2,17 @@
       <span style="float:left" title="<%=resource.command_name %>">
         <%=resource.command_name[0..80] %>
       </span>
-      <div style="display:inline;float:right;padding:0 4px;color:grey">
+      <span style="color:#901252;float:right">
+        <%=resource.human_state_name %>
+      </span>
+      <span style="display:inline;float:right;padding:0 4px;color:grey">
         <%=time_ago_in_words resource.updated_at %>前
-      </div>
+      </span>
       <div style="display:inline;float:right">
         <%=actions(resource) %>
-        <span onclick="try_alert('<%=resource.response %>',10000)">结果</span>
-        <%=resource.human_state_name %>
+        <% if resource.response %>
+        <span onclick="alert('<%=resource.response %>',10000)">查看结果</span>
+        <% end %>
       </div>
       <div style="clear:both" />
 

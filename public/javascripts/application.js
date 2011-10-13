@@ -8,29 +8,47 @@ function alert(msg,millisecond) {
   setTimeout(function(){ $('#msg-div').slideUp(300); }, millisecond || 2500);
 }
 
-function try_alert(msg,millisecond) {
-  if(msg!=""){
-    alert(msg,millisecond);
-  }
-}
-
 $(function() {
   var application;
   $.application = application = {
+
+    global_interval_handler: null,
+
+    startPoller: function(load_func, millisecond) {
+      application.stopPoller();
+      load_func();
+      application.global_interval_handler = setInterval(load_func,millisecond);
+    },
+
+    stopPoller: function() {
+      if(application.global_interval_handler){
+        clearInterval(application.global_interval_handler);
+        application.global_interval_handler = null;
+      } 
+    },
+
     load_toggle: function(node,url){
       if(node.html()==""){
         node.html("正在装载...");
-        $.ajax({
-          url: url,
-          success: function(data,status,xhrs){
-            node.html(data);
-          }
-        });
+        application.startPoller(function(){
+          console.info('load'+new Date());
+          $.ajax({
+            url: url,
+            success: function(data,status,xhrs){
+              console.info('loaded'+new Date());
+              node.html(data);
+              console.info('randered'+new Date());
+            }
+          });
+        },5000);
       }else{
+        application.stopPoller();
         node.empty();
       }
     },
+
     refresh: function(node,url){
+      application.stopPoller();
       $.ajax({
         url: url,
         success: function(data,status,xhrs){
@@ -79,6 +97,3 @@ $(function() {
   });
 });
 
-jQuery(document).ready(function() {
-  jQuery("abbr.timeago").timeago();
-});
