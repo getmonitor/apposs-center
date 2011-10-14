@@ -38,27 +38,25 @@ end
 #   gem 'webrat'
 # end
 gem "arel", "2.0.9"
-group :development do
+
+group :development,:test do
   gem "guard"
   gem "guard-rspec"
   gem "rspec-rails", '2.5.0'
-  gem "cucumber-rails"
-end if RUBY_PLATFORM !~ /java/
 
-group :test do
   gem "spork", "0.9.0.rc9"
   gem "guard-spork"
   gem "rspec"
-  gem "cucumber"
   gem "rspec-expectations"
-#gem "webrat"
   gem "libnotify"
   gem "rb-inotify"
+
+  gem "ruby-graphviz"
 end if RUBY_PLATFORM !~ /java/
 
 # gem "cucumber-rails", :group => ["development", "test"]
 # gem "capybara", :group => ["development", "test"]
-#gem "factory_girl_rails", :group => ["development", "test"]
+# gem "factory_girl_rails", :group => ["development", "test"]
 
 gem "rcov"
 gem "inherited_resources_views"
@@ -78,7 +76,4 @@ end
 gem "json"
 gem "state_machine"
 gem "acts_as_tree"
-gem "ruby-graphviz", :group => ["development"]
 gem "will_paginate", "~> 3.0.pre4"
-#gem "redis"
-#gem "mvn:org.springframework:spring"
