@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe App do
-  fixtures :users,:apps
+  fixtures :users,:apps,:properties
   it '能够正确执行状态迁移' do
     app = App.reals.first
     app.should_not be_nil
@@ -15,7 +15,6 @@ describe App do
     app.state.should == 'offline'
   end
   
-  fixtures :apps, :properties
   it '支持访问自身 property' do
     App.first.properties.size.should == 4
     App.first.properties['software'].should == 'app 1 software'
