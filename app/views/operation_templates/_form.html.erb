@@ -45,9 +45,6 @@ $( "#groups" ).accordion({
   change: function(event, ui){
     var newHeader = ui.newHeader;
     $(newHeader).next().attr("style","");
-    $(newHeader).next().find("li").draggable({
-      containment: 'document', appendTo: 'body', helper:'clone'
-    });
   }
 });
 

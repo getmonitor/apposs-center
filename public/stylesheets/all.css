@@ -53,7 +53,7 @@ ul.list li{
   border-bottom: #bbbbbb 1px solid;
 }
 
-ul.list li:hover,ul.list li:hover{
+ul.pointable li:hover,ul.pointable li:hover{
   background-color:#9966cc;
 }
 

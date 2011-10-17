@@ -1,1 +1,6 @@
 $("#directive_group_<%=params[:id] %>").next().html('<%= escape_javascript(render 'items', :collection => @collection) %>');
+
+$("#directive_group_<%=params[:id] %>").next().find("li").draggable({
+  containment: 'document', appendTo: 'body', helper:'clone'
+});
+
