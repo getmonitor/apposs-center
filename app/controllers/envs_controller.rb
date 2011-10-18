@@ -5,7 +5,11 @@ class EnvsController < ResourceController
   respond_to :html
 
   def edit
-    @env = App.find( params[:app_id]).envs[params[:id]]
+    app = App.find( params[:app_id])
+    @env = app.envs[params[:id]]
+    if @env.nil? and params[:id]=='online'
+      @env = app.envs.create :name => 'online'
+    end
   end
 
   def update
