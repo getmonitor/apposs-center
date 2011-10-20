@@ -7,13 +7,19 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
 
-  has_many :acls, :class_name => 'Stakeholder'
-  has_many :apps, :through => :acls, :source => :app
-  has_many :roles, :through => :acls, :source => :role
-
+  has_many :acls, :class_name => 'Stakeholder' do
+    def [] name
+      self.where(:resource_type => name).includes([:resource])
+    end
+  end
+  
+  has_many :apps, :through => :acls, :source => :resource, :source_type => 'App'
+  has_many :roles,:through => :acls
+  
   has_many :operations, :foreign_key => "operator_id"
 
   def is_admin?
-    not roles.where(:name => Role::Admin).first.nil?
+    not acls.where(:role_id => Role[Role::Admin]).first.nil?
   end
+  
 end

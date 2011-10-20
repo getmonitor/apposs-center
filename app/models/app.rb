@@ -5,7 +5,8 @@ class App < ActiveRecord::Base
   scope :reals, where(:virtual => false, :state => :running)
 
   # People
-  has_many :stakeholders
+  has_many :stakeholders, :as => :resource
+
   has_many :operators, :through => :stakeholders, :class_name => 'User'
 
   has_many :release_packs

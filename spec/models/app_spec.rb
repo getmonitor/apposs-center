@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe App do
-  fixtures :users,:apps,:properties
+  fixtures :users,:apps,:properties,:envs
   it '能够正确执行状态迁移' do
     app = App.reals.first
     app.should_not be_nil

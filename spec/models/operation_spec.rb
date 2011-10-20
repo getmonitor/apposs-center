@@ -7,14 +7,15 @@ describe Operation do
            :operation_templates,:rooms,:machines
   it "从操作模板中创建一个普通的操作" do
     app = App.first
-    ot = app.operation_templates.first
+    ot = app.operation_templates.where(:name => 'upgrade package').first
     directive_count = ot.expression.split(",").count
-    os = ot.gen_operation User.first, nil
-    os.directives.count.should == (directive_count * app.machines.count)
+    directive_count.should == 3
+    oper = ot.gen_operation User.first, nil
+    oper.directives.count.should == (directive_count * app.machines.count)
     machine = Machine.first
-    os2 = ot.gen_operation User.first,[machine.id]
-    os2.directives.count.should == directive_count
-    os2.directives.first.machine.should == machine
+    oper2 = ot.gen_operation User.first,[machine.id]
+    oper2.directives.count.should == directive_count
+    oper2.directives.first.machine.should == machine
   end
   
   it "创建一个自动继续的操作序列" do

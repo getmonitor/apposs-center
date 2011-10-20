@@ -12,8 +12,8 @@ describe Role do
     new_role = Role.create(:name => Role::Admin)
     new_role.valid?.should be_false
     new_role.errors.size.should == 1
-    new_role.errors.on(:name).should == '已经被使用'
+    new_role.errors[:name].first.should == '已经被使用'
 
   end
-  
+
 end
