@@ -30,7 +30,7 @@ class AddDownloadDirective < ActiveRecord::Migration
     group = DirectiveGroup.create(:name => 'default')
 
     DirectiveTemplate.create(
-      :name  => 'mkdir -p `dirname $profile_path` && wget "$site_url/store/$app_id/$env_id/pe.conf" -O "$profile_path" -o sync_profile.log && echo downloaded',
+      :name  => 'mkdir -p `dirname $profile_path` ; wget "$site_url/store/$app_id/$env_id/pe.conf" -O "$profile_path" -o sync_profile.log && echo downloaded',
       :alias => 'sync_profile',
       :directive_group => group
     )

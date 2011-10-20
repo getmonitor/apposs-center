@@ -14,7 +14,7 @@ class Property < ActiveRecord::Base
 
   scope :global, where(:resource_type => Property::GLOBAL)
   
-  scope :not_lock, where('locked <> 1')
+  scope :not_lock, where('locked = false or locked is null')
   
   def self.pairs
     all.inject({}){|hash,env| hash.update(env.name => env.value) }
