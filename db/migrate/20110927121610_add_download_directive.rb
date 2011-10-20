@@ -2,13 +2,23 @@
 class AddDownloadDirective < ActiveRecord::Migration
   def self.up
 
-    add_column    :properties, :locked, :boolean
-    
-    Property.global.create :name => "profile_path", :value => '/home/lifu/conf/pe.conf'
+    Property.create(
+      :resource_type => Property::GLOBAL,
+      :name => "profile_path", 
+      :value => '/home/lifu/conf/pe.conf'
+    )
     p "请更新 profile_path 全局变量"
-    Property.global.create :name => "site_url", :value => 'http://127.0.0.1:9999'
+    Property.create(
+      :resource_type => Property::GLOBAL,
+      :name => "site_url", 
+      :value => 'http://127.0.0.1:9999'
+    )
     p "请更新 site_url 全局变量"
   
+    change_table :properties do |t|
+      t.boolean :locked
+    end
+    
     App.reals.each{|app|
       app.properties.create :name => :app_id, :value => app.id, :locked => true
     }
