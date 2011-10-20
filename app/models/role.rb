@@ -4,4 +4,10 @@ class Role < ActiveRecord::Base
   Admin = "Admin"
   PE = "PE"
   APPOPS = "APPOPS"
+  
+  validates_uniqueness_of :name
+  
+  def self.[] name
+    Role.where(:name => name).first
+  end
 end
