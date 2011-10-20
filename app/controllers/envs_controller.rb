@@ -10,7 +10,11 @@ class EnvsController < ResourceController
     if @env.nil? and params[:id]=='online'
       @env = app.envs.create :name => 'online'
     end
-    @env.property_content = @env.app.properties.pairs.update( @env.properties.pairs ).collect{|k,v| "#{k}=#{v}"}.join("\n")
+    app_props = @env.app.properties.not_lock.pairs
+    env_props = @env.properties.not_lock.pairs
+    @env.property_content = app_props.update( env_props ).
+      collect{|k,v| "#{k}=#{v}"}.
+      join("\n")
   end
 
   def update
