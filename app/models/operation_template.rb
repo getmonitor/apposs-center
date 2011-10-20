@@ -48,27 +48,26 @@ class OperationTemplate < ActiveRecord::Base
 
     properties = Property.global.pairs
     properties.update( app.properties.pairs )
-    app.envs.each{|env|
-      properties.update(env.properties.pairs)
-      directive_templates do |directive_template, next_when_fail|
-        # 循环创建 directive 对象
-        machines.collect { |m|
-          command_name = directive_template.name
-          directive_template_id = directive_template.id
-          m.directives.create(
-              :directive_template_id => directive_template_id,
-              :operation_id => operation_id,
-              :room_id => m.room_id,
-              :machine_host => m.host,
-              :command_name => command_name,
-              :room_name => room_map[m.room_id],
-              :params => properties,
-              :next_when_fail => next_when_fail,
-              :state => is_hold ? 'hold' : 'init'
-          )
-        }
-      end
-    }
+    directive_templates do |directive_template, next_when_fail|
+      # 循环创建 directive 对象
+      machines.collect { |m|
+        command_name = directive_template.name
+        directive_template_id = directive_template.id
+        properties.update(m.env.properties.pairs) if m.env
+
+        m.directives.create(
+            :directive_template_id => directive_template_id,
+            :operation_id => operation_id,
+            :room_id => m.room_id,
+            :machine_host => m.host,
+            :command_name => command_name,
+            :room_name => room_map[m.room_id],
+            :params => properties,
+            :next_when_fail => next_when_fail,
+            :state => is_hold ? 'hold' : 'init'
+        )
+      }
+    end
   end
   
   def available_machine_ids
