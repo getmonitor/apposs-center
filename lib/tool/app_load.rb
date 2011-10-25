@@ -1,10 +1,13 @@
+# coding: utf-8
 require 'open-uri'
 require 'json'
 module Tool
 
   class AppLoad
     def initialize ids
-      @room_map = Room.all.group_by{|room| room.name}
+      result = {}
+      Room.all.each{ |room| result.update(room.name => room) }
+      @room_map = result
       @ids = ids
       @room_lock = Mutex.new
       @id_lock = Mutex.new
@@ -26,6 +29,7 @@ module Tool
 
     def do_load app_id
       app = App.find app_id
+      p "app: #{app}"
       name = build_name app
       url  = "http://opsfree.corp.taobao.com:9999/products/dumptree?_username=droid/droid&notree=1&leafname=#{URI.escape name}"
       data = try_url url
@@ -47,8 +51,10 @@ module Tool
             :app_id => app_id
           }
           
-          if ::Machine.where(attributes).first.nil?
+          if ::Machine.where(:name => machine_data['nodename']).first.nil?
             ::Machine.create(attributes)
+          else
+            p "机器重名 - #{machine_data['nodename']}"
           end
         }
       }

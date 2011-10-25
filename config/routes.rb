@@ -25,12 +25,6 @@ Apposs::Application.routes.draw do
   resources :apps do
     resources :envs
 
-    resources :machines do
-      member do
-        get :command_state
-        put :reset
-      end
-    end
     resources :operation_templates do
       member do
         get  :group_form
@@ -39,11 +33,13 @@ Apposs::Application.routes.draw do
       end
     end
     resources :softwares
-
+    resources :machines
+    
     member do
       get :rooms
       get :operations
       get :old_operations
+      get :reload_machines
     end
   end
   

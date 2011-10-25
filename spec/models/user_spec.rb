@@ -3,13 +3,9 @@ require 'spec_helper'
 
 describe User do
   fixtures :users,:roles,:apps, :stakeholders
-  it "具备正确的权限" do
+  it "执行赋权操作" do
     
     u = User.find 1
-    
-    u.acls.count.should == 2
-
-    u.apps.first.should_not be_nil
     
     u.is_admin?.should be_false
     # 返回值表示保存成功

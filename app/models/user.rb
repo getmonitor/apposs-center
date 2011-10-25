@@ -18,8 +18,8 @@ class User < ActiveRecord::Base
   
   has_many :operations, :foreign_key => "operator_id"
 
-  def grant role_name, resource = nil
-    role = Role[role_name]
+  def grant role, resource = nil
+    role = Role[role] if role.is_a?(String)
     resource = System.instance if resource.nil?
     self.acls.create(
       :role_id => role.id, 

@@ -19,7 +19,7 @@ class Admin::AppsController < Admin::BaseController
 
   def show
     records = []
-    Stakeholder.where(:app_id => params[:id]).collect do |record|
+    App.find(params[:id]).acls.collect do |record|
       records << record.attributes.update(
           'user' => User.find(record.user_id).email,
           'role' => Role.find(record.role_id).name
@@ -30,10 +30,14 @@ class Admin::AppsController < Admin::BaseController
 
   def create
     if params[:dispatch_to_user]
-      s = Stakeholder.create(:app_id => params[:app_id], :user_id => params[:user_id], :role_id => params[:role_id])
+      s = User.find(params[:user_id]).grant(
+        Role.find(params[:role_id]),
+        App.find(params[:app_id])
+      )
+
       render :text => {"errors" => s.errors}.to_json
     else
-      respond_with App.create(params[:app].update(:virtual => false))
+      respond_with App.create(params[:app].update(:virtual => false,:parent_id => 0))
     end
   end
 

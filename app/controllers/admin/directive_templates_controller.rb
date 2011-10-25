@@ -11,6 +11,7 @@ class Admin::DirectiveTemplatesController < Admin::BaseController
 
   def create
     directive_template = DirectiveTemplate.create(params[:directive_template])
+    directive_template.alias = directive_template.name if directive_template.alias.empty?
     render :text => directive_template.to_json
   end
 
