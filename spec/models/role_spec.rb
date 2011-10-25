@@ -5,7 +5,7 @@ describe Role do
 
   fixtures :users,:roles,:apps,:stakeholders
 
-  it "执行正确的基本操作" do
+  it "能够进行对象校验" do
     role = Role[Role::Admin]
     role.name.should == Role::Admin
     

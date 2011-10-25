@@ -18,8 +18,45 @@ class User < ActiveRecord::Base
   
   has_many :operations, :foreign_key => "operator_id"
 
-  def is_admin?
-    not acls.where(:role_id => Role[Role::Admin]).first.nil?
+  def grant role_name, resource = nil
+    role = Role[role_name]
+    resource = System.instance if resource.nil?
+    self.acls.create(
+      :role_id => role.id, 
+      :resource_type => resource.class.to_s, 
+      :resource_id => resource.id
+    )
   end
   
+  def ungrant role_name, resource = nil
+    role = Role[role_name]
+    resource = System.instance if resource.nil?
+    self.acls.where(
+      :role_id => role.id, 
+      :resource_type => resource.class.to_s, 
+      :resource_id => resource.id
+    ).delete_all
+  end
+
+  def is_admin?
+    not self.acls.where(:role_id => Role[Role::Admin].id).first.nil?
+  end
+  
+  def is_pe? resource
+    has_assign? Role[Role::PE], resource
+  end
+
+  def is_appops? resource
+    has_assign? Role[Role::APPOPS], resource
+  end
+  
+  def has_assign? role, resource = nil
+    resource = System.instance if resource.nil?
+    not acls.where(
+      :role_id => role.id, 
+      :resource_type => resource.class.to_s, 
+      :resource_id => resource.id
+    ).first.nil?
+  end
 end
+
