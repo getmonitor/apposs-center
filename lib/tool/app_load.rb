@@ -44,7 +44,7 @@ module Tool
         node_group_data['child'].each{|machine_data|
           room = get_and_update_room machine_data['site']
           attributes = {
-            :host => machine_data['oob_ip'],
+            :host => machine_data['nodename'], # oob_ip 路由不可达
             :name => machine_data['nodename'],
             :room_id => room.id,
             :port => 22,
