@@ -2,6 +2,11 @@
       <span style="float:left" title="<%=resource.command_name %>">
         <%=resource.command_name[0..80] %>
       </span>
+      <% if resource.response %>
+      <span style="float:right;padding-left:4px" onclick="alert('<%=resource.response %>',10000)" title="点击查看详细结果">
+        "<%=resource.response[0..5] %>"
+      </span>
+      <% end %>
       <span style="color:#901252;float:right">
         <%=resource.human_state_name %>
       </span>
@@ -10,9 +15,6 @@
       </span>
       <div style="display:inline;float:right">
         <%=actions(resource) %>
-        <% if resource.response %>
-        <span onclick="alert('<%=resource.response %>',10000)">查看结果</span>
-        <% end %>
       </div>
       <div style="clear:both" />
 

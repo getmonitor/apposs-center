@@ -12,6 +12,7 @@ namespace :daily do
     now  = Time.now
     sign = "taobao_daily%d%02d%02d" % [now.year, now.month, now.day]
     url  = "http://proxy.wf.taobao.org/DailyManage/tree-xml.ashx?sign=#{Digest::MD5.hexdigest(sign)}"
+    p "导入 - #{url}"
     body = open(url).read
     doc = REXML::Document.new body
     doc.get_elements('taobao/node/node').each { |e|

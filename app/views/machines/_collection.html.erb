@@ -4,6 +4,11 @@
   <%=link_to '重新获取', reload_machines_app_path(parent.id), :remote => true %>
 </h2>
 <ul class="list" style="height:200px; overflow-y:auto">
+  <li><label>
+    <a href="javascript:void 0;" select="all">全选</a>
+    <a href="javascript:void 0;" select="none">清除</a>
+  </label>
+  </li>
   <% parent.machines.each{|machine|%>
   <li><label>
     <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">

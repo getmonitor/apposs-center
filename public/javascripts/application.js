@@ -14,6 +14,16 @@ $(function() {
 
     global_interval_handler: null,
 
+    findParent: function(child, parent_tag) {
+      while(child.length > 0){
+        if(child.is(parent_tag)){
+          return child;
+        }
+        child = child.parent();
+      }
+      return null;
+    },
+
     startPoller: function(load_func, millisecond) {
       application.stopPoller();
       load_func();
@@ -88,11 +98,19 @@ $(function() {
   });
   $('a[handle]').live('ajax:success', function(e, data, status, xhr) {
     var node = $(e.currentTarget).parent();
-    while(node.length > 0){
-      if(node.is('div[box-href],li[box-href]')){
-        return node.trigger("refresh.application");
-      }
-      node = node.parent();
+    var parent = application.findParent(node,'div[box-href],li[box-href]');
+    if(parent){
+      parent.trigger("refresh.application");
+    }
+  });
+  $('ul a[select]').live('click', function(e) {
+    var node = $(e.currentTarget);
+    var checked = node.attr('select')=="all";
+    var ul_node = application.findParent(node,'ul');
+    if(ul_node){
+      ul_node.find('li input[type=checkbox]').each(function(index,input_ele){
+        input_ele.checked = checked;
+      });
     }
   });
 });
