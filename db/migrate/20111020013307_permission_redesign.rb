@@ -5,12 +5,16 @@ class PermissionRedesign < ActiveRecord::Migration
       t.rename :app_id, :resource_id
       t.string :resource_type
     end
-    
-    role_id = Role[Role::PE].id
 
-    Stakeholder.each do |ss|
-      if (ss.resource_type.nil? and ss.role_id=role_id)}
-        ss.update_attribute(:resource_type, 'App')
+    role = Role[Role::PE]
+
+    if not role.nil?
+      role_id = role.id
+
+      Stakeholder.each do |ss|
+        if (ss.resource_type.nil? and ss.role_id == role_id)
+          ss.update_attribute(:resource_type, 'App')
+        end
       end
     end
   end
