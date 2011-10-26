@@ -1,8 +1,14 @@
 # coding: utf-8
+
+# 其实就是一个基于Role 的 ACL 
 class Stakeholder < ActiveRecord::Base
+
   belongs_to :user
-  belongs_to :app
+
   belongs_to :role
 
-  validates_uniqueness_of :app_id, :scope => [:user_id, :role_id], :message => "您已将当前应用分配给指定用户和角色了"
+  belongs_to :resource, :polymorphic => true
+  
+  validates_uniqueness_of :role_id, :scope => [:user_id, :resource_id, :resource_type]
+
 end

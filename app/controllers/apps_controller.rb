@@ -1,3 +1,5 @@
+# coding: utf-8
+require 'tool/app_load.rb'
 class AppsController < BaseController
 
   def index
@@ -27,5 +29,12 @@ class AppsController < BaseController
       format.js
     end
   end
-
+  
+  def reload_machines
+    @app = current_user.apps.find(params[:id])
+    Tool::AppLoad.new([]).do_load @app.id
+    respond_to do |format|
+      format.js
+    end
+  end
 end
