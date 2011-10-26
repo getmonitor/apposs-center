@@ -1,7 +1,7 @@
 <h2>
   服务器列表，共<%=parent.machines.count %>台
   <%=link_to '刷新', app_machines_path(parent.id), :remote => true %>
-  <%=link_to '从管理中心刷新', reload_machines_app_path(parent.id), :remote => true %>
+  <%=link_to '重新获取', reload_machines_app_path(parent.id), :remote => true %>
 </h2>
 <ul class="list" style="height:200px; overflow-y:auto">
   <% parent.machines.each{|machine|%>
