@@ -3,10 +3,12 @@ module MachinesHelper
   def show_state machine
     normal = (machine.state == 'normal')
     raw %Q|
-    <span style='color:#{normal ? :green : :red}'>
-    #{machine.human_state_name}
+    <span style="float:right">
+      #{machine_actions machine, normal}
     </span>
-    #{machine_actions machine, normal}
+    <span style="padding:0 4px;float:right;color:#{normal ? :green : :red}">
+      #{machine.human_state_name}
+    </span>
     |
   end
   

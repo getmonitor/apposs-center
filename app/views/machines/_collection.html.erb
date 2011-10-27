@@ -10,11 +10,13 @@
   </label>
   </li>
   <% parent.machines.each{|machine|%>
-  <li><label>
-    <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
-    <%=machine.name %>
-  </label>
-  <%=show_state machine %>
+  <li>
+    <label title="<%=machine.name %>" style="weight:270px">
+      <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
+      <%=machine.name[0..32] %>
+    </label>
+    <%=show_state machine %>
+    <div style="clear:both"></div>
   </li>
   <% }%>
 </ul>
