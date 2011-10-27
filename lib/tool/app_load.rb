@@ -51,11 +51,18 @@ module Tool
             :app_id => app_id
           }
           
-          if ::Machine.where(:name => machine_data['nodename']).first.nil?
-            ::Machine.create(attributes)
+          if machine_data['state']=='working_offline'
+            ::Machine.where(:name => machine_data['nodename']).destroy_all
+          elsif machine_data['state']=='working_online'
+            if ::Machine.where(:name => machine_data['nodename']).first.nil?
+              ::Machine.create(attributes)
+            else
+              p "机器重名 - #{machine_data['nodename']}"
+            end
           else
-            p "机器重名 - #{machine_data['nodename']}"
+            p "未知的机器状态：#{machine_data['state']}"
           end
+
         }
       }
     end
