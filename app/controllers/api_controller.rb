@@ -29,7 +29,7 @@ class ApiController < ApplicationController
   def callback
     directive = Directive.where(:id => params[:oid]).first
     directive.callback(
-        "true"==params[:isok], params[:body].gsub(/%a$/,'')
+        "true"==params[:isok], params[:body]
     ) if directive
   	render :text => 'ok'
   end
