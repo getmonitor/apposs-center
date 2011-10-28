@@ -13,6 +13,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
 
 
       t.timestamps
+      
     end
 
     add_index :users, :email,                :unique => true
@@ -20,6 +21,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
     # add_index :users, :confirmation_token,   :unique => true
     # add_index :users, :unlock_token,         :unique => true
     # add_index :users, :authentication_token, :unique => true
+    User.create(:email => 'lifu@taobao.com', :password => 'hahaha')
   end
 
   def self.down

@@ -11,7 +11,7 @@ class PermissionRedesign < ActiveRecord::Migration
     if not role.nil?
       role_id = role.id
 
-      Stakeholder.each do |ss|
+      Stakeholder.find_each do |ss|
         if (ss.resource_type.nil? and ss.role_id == role_id)
           ss.update_attribute(:resource_type, 'App')
         end
