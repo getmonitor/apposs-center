@@ -84,7 +84,7 @@ class OperationTemplate < ActiveRecord::Base
       map.update( m.id => m)
     }
     pairs.each{|pair|
-      if block_given?
+      if block_given? and templates[pair[0]]
         yield templates[pair[0]], pair[1] == "true"
       end
     }
