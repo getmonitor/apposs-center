@@ -31,7 +31,7 @@ class ApiController < ApplicationController
     directive.callback(
         "true"==params[:isok], params[:body]
     ) if directive
-  	render :text => 'ok'
+  	render :text => ''
   end
   
   def load_hosts
