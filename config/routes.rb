@@ -22,6 +22,8 @@ Apposs::Application.routes.draw do
 
   resources :directive_groups
 
+  resources :directive_templates
+
   resources :apps do
     resources :envs
 
