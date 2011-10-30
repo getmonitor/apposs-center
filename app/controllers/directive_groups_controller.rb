@@ -4,7 +4,12 @@ class DirectiveGroupsController < ApplicationController
   end
   
   def items
-    @collection = DirectiveGroup.find(params[:id]).directive_templates
+    group = DirectiveGroup.find(params[:id])
+    if group.name == 'default'
+      @collection = group.directive_templates
+    else
+      @collection = current_user.directive_templates.where(:directive_group_id => group.id)
+    end
     respond_to do |format|
       format.js
     end

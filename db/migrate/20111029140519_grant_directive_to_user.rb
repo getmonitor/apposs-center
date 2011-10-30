@@ -24,6 +24,8 @@ class GrantDirectiveToUser < ActiveRecord::Migration
         dt.update_attribute :owner_id, user_id
       end
     end
+    
+    DirectiveGroup.create(:name => 'my_group')
   end
 
   def self.down

@@ -17,7 +17,7 @@
     <div id="source">
       <h4 style="margin:0;text-align:center">原子指令列表</h4>
       <div id="groups">
-      <% DirectiveGroup.find_each do |d_group| %>
+      <% DirectiveGroup.where(:name => [:default, :my_group]).each do |d_group| %>
         <h3 id="directive_group_<%=d_group.id %>">
           <%=link_to( d_group.name,items_directive_group_path(d_group.id), :remote => true) %>
         </h3>

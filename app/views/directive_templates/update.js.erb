@@ -1,0 +1,10 @@
+<% if resource.errors.count > 0 %>
+  $("#zone").
+    find("div.errors").
+    html('<ul class="errors"><%=raw resource.errors.to_a.collect{|msg| content_tag :li, msg}.join %></ul>');
+<% else %>
+  alert("保存成功！");
+  $("#zone").html('<%= escape_javascript(
+  render 'collection', :collection => current_user.directive_templates
+  ) %>');
+<% end %>

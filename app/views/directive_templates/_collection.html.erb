@@ -1,0 +1,20 @@
+<div id="main_list">
+  <fieldset style="display:none"></fieldset>
+  <h2>
+    我的指令列表 <%=link_to "单击创建", new_resource_path, :remote => true %>
+  </h2>
+  <ul class="list">
+  <% collection.each do |resource| %>
+    <li>
+      <span style="float:left;padding:0 4px"><%=resource.id %>.</span>
+      <span style="float:left;padding:0 4px;color:green;width:120px"><%=resource.alias %></span>
+      <span style="float:left;padding:0 4px;color:grey" title="<%=resource.name %>"><%=resource.name[0..70] %></span>
+      <span style="float:right">
+        <%=link_to "修改", edit_resource_path(resource.id), :remote => true %>
+        <%=link_to "删除", resource_path(resource.id), :remote => true, :method => :delete, :confirm => "确实要删除吗？" %>
+      </span>
+      <div style="clear:both" />
+    </li>
+  <% end %>
+  </ul>
+</div>
