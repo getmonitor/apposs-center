@@ -9,11 +9,6 @@ class AddDirectiveForMachine < ActiveRecord::Migration
       :directive_group => default_group
     )
     DirectiveTemplate.create(
-      :name => 'machine|stop',
-      :alias => 'machine|stop',
-      :directive_group => default_group
-    )
-    DirectiveTemplate.create(
       :name => 'machine|interrupt',
       :alias => 'machine|interrupt',
       :directive_group => default_group
@@ -30,10 +25,6 @@ class AddDirectiveForMachine < ActiveRecord::Migration
 
     DirectiveTemplate.where(
       :name => 'machine|pause',
-      :directive_group => default_group
-    ).delete_all
-    DirectiveTemplate.where(
-      :name => 'machine|stop',
       :directive_group => default_group
     ).delete_all
     DirectiveTemplate.where(
