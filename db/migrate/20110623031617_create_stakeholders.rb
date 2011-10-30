@@ -7,7 +7,8 @@ class CreateStakeholders < ActiveRecord::Migration
 
       t.timestamps
     end
-    u = User.create(:email => 'lifu@taobao.com', :password => 'hahaha')
+
+    u = User.where(:email => 'lifu@taobao.com').first
 
     Stakeholder.new(
       :user_id => u.id, :role_id => Role[Role::Admin].id
@@ -18,3 +19,4 @@ class CreateStakeholders < ActiveRecord::Migration
     drop_table :stakeholders
   end
 end
+

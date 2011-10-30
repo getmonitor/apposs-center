@@ -25,15 +25,15 @@ class AddDirectiveForMachine < ActiveRecord::Migration
 
     DirectiveTemplate.where(
       :name => 'machine|pause',
-      :directive_group => default_group
+      :directive_group_id => default_group.id
     ).delete_all
     DirectiveTemplate.where(
       :name => 'machine|interrupt',
-      :directive_group => default_group
+      :directive_group_id => default_group.id
     ).delete_all
     DirectiveTemplate.where(
       :name => 'machine|clean_all',
-      :directive_group => default_group
+      :directive_group_id => default_group.id
     ).delete_all
   end
 end

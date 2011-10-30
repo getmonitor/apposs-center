@@ -2,7 +2,7 @@ class App < ActiveRecord::Base
 
   acts_as_tree
 
-  scope :reals, where(:virtual => false, :state => :running)
+  scope :reals, where(:virtual => false, :state => 'running')
 
   # People
   has_many :acls, :as => :resource, :class_name => 'Stakeholder'
