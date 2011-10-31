@@ -23,16 +23,38 @@ class Machine < ActiveRecord::Base
 
   def resume
     reset
-    DirectiveGroup['default'].directive_templates['machine|reset'].gen_directive(
-        :room_id => room.id,
-        :room_name => room.name,
-        :machine_host => self.host,
-        :machine => self
-    )
+    inner_directive 'machine|reset'
+  end
+  
+  def pause
+    directive = inner_directive 'machine|pause'
+    error
+    directive
+  end
+  
+  def interrupt
+    directive = inner_directive 'machine|interrupt'
+    error
+    directive
+  end
+  
+  def clean_all
+    directives.without_state(:done).each{|directive|
+      directive.clear || directive.force_stop
+    }
+    inner_directive 'machine|clean_all'
   end
   
   def properties
     env.enable_properties
   end
   
+  def inner_directive command
+    DirectiveGroup['default'].directive_templates[command].gen_directive(
+        :room_id => room.id,
+        :room_name => room.name,
+        :machine_host => self.host,
+        :machine => self
+    )
+  end
 end

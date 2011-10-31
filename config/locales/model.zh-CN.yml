@@ -21,7 +21,7 @@ zh-CN:
         continue: "继续"
         enable: "激活"
         clear: "清理"
-        force_stop: "强行中止"
+        force_stop: "强制暂停"
     models:
       user: '用户'
       app: '应用'

@@ -38,8 +38,8 @@ class Directive < ActiveRecord::Base
     event :download do transition :init => :ready end
     event :invoke do transition :ready => :running end
     event :force_stop do transition :running => :done end
-    event :error do transition :running => :failure end
-    event :ok do transition :running => :done end
+    event :error do transition [:init,:running] => :failure end
+    event :ok do transition [:ready, :running] => :done end
     event :ack do transition :failure => :done end
 
     after_transition :on => :invoke, :do => :fire_operation

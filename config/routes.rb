@@ -55,6 +55,9 @@ Apposs::Application.routes.draw do
   resources :machines do
     member do
       put :reset
+      put :pause
+      put :interrupt
+      put :clean_all
       get :directives
       get :old_directives
     end
