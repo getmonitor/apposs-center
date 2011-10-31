@@ -1,0 +1,17 @@
+<div id="main_list">
+  <fieldset style="display:none"></fieldset>
+  <h2>
+    <%=resource_class.model_name.human %>列表
+  </h2>
+  <ul class="list">
+  <% collection.each do |item| %>
+    <li>
+      <span style="float:left"><%=item.name %></span>
+      <span style="float:right">
+        <%=link_to "权限设定", backend_app_acls_path(item.id), :remote => true %>
+      </span>
+      <div style="clear:both" />
+    </li>
+  <% end %>
+  </ul>
+</div>

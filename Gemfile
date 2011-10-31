@@ -63,6 +63,9 @@ gem "inherited_resources_views"
 gem "inherited_resources"
 
 #gem "jquery-rails"
+
+gem 'rails3-jquery-autocomplete'
+
 gem "devise"
 if /java/ === RUBY_PLATFORM
   gem "jdbc-mysql"

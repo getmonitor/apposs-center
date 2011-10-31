@@ -61,6 +61,14 @@ ul.pointable li:hover,ul.pointable li:hover{
   background-color:#9966cc;
 }
 
+table.list {
+  width: 100%;
+}
+
+table.list thead tr th , table.list tbody tr td{
+  border-bottom: 1px solid black;
+}
+
 #navleft{
   float:left;
   width:32%;
