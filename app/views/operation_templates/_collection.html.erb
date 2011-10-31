@@ -1,6 +1,8 @@
 <h2>
   操作模板
+  <% if current_user.is_pe? parent %>
   <%=link_to "单击创建", new_app_operation_template_path(parent.id), :remote => true %>
+  <% end %>
   <%=link_to '刷新', app_operation_templates_path(parent.id), :remote => true %>
 </h2>
 <ul class="list">
@@ -13,8 +15,10 @@
           form.action='<%=execute_app_operation_template_path(parent.id,template.id) %>';
           $(form).trigger('submit.rails');void 0;">选中执行</a>
         <%=link_to "分组执行", group_form_app_operation_template_path(parent.id,template.id), :remote => true %>
+        <% if current_user.is_pe? parent %>
         <%=link_to "修改", edit_app_operation_template_path(parent.id,template.id), :remote => true %>
         <%=link_to "删除", app_operation_template_path(parent.id,template.id), :remote => true,:method => :delete, :confirm => "确实要删除吗？" %>
+        <% end %>
       </span>
       <div style="clear:both" />
   </li>

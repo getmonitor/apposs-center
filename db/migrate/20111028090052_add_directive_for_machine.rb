@@ -3,21 +3,21 @@ class AddDirectiveForMachine < ActiveRecord::Migration
 
     default_group = DirectiveGroup.where(:name => 'default').first
 
-    DirectiveTemplate.create(
+    DirectiveTemplate.new(
       :name => 'machine|pause',
       :alias => 'machine|pause',
       :directive_group => default_group
-    )
-    DirectiveTemplate.create(
+    ).save!(:validate => false)
+    DirectiveTemplate.new(
       :name => 'machine|interrupt',
       :alias => 'machine|interrupt',
       :directive_group => default_group
-    )
-    DirectiveTemplate.create(
+    ).save!(:validate => false)
+    DirectiveTemplate.new(
       :name => 'machine|clean_all',
       :alias => 'machine|clean_all',
       :directive_group => default_group
-    )
+    ).save!(:validate => false)
   end
 
   def self.down
