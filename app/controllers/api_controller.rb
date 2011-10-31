@@ -22,7 +22,7 @@ class ApiController < ApplicationController
   #{host,Host},{oid,DirectiveId}
   def run
     Directive.find(params[:oid]).invoke
-    render :text => 'ok'
+    render :text => ''
   end
   
   # {isok,atom_to_list(IsOk)},{host,Host},{oid,DirectiveId},{body,Body}
