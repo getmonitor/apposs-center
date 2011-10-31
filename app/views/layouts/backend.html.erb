@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apposs</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <%=stylesheet_link_tag 'jquery-ui' %>
+  <%=stylesheet_link_tag 'all' %>
+  <%=javascript_include_tag :defaults %>
+  <%=javascript_include_tag "autocomplete-rails.js" %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+<%= yield %>
+</body>
+</html>

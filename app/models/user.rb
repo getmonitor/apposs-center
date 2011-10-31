@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
   
   has_many :operations, :foreign_key => "operator_id"
 
+  has_many :directive_templates, :foreign_key => 'owner_id'
+
   def grant role, resource = nil
     role = Role[role] if role.is_a?(String)
     resource = System.instance if resource.nil?

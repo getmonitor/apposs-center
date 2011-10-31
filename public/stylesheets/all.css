@@ -35,11 +35,15 @@ fieldset legend{
   font-weight:bolder;
 }
 
-#navleft{
-  float:left;
-  width:32%;
-  height:500px;
-  background-color:#eeeeee;
+form table td.label{
+  font-weight:bolder;
+  text-align:right;
+  padding: 0 20px;
+}
+
+form table td.label{
+  text-align:left;
+  padding: 0 20px;
 }
 
 ul.list{
@@ -55,6 +59,21 @@ ul.list li{
 
 ul.pointable li:hover,ul.pointable li:hover{
   background-color:#9966cc;
+}
+
+table.list {
+  width: 100%;
+}
+
+table.list thead tr th , table.list tbody tr td{
+  border-bottom: 1px solid black;
+}
+
+#navleft{
+  float:left;
+  width:32%;
+  height:500px;
+  background-color:#eeeeee;
 }
 
 #zone{

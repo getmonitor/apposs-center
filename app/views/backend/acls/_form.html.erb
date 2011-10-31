@@ -1,0 +1,26 @@
+  <legend><%=resource.new_record? ? "新增" : "修改"%>角色</legend>
+  <%= form_for("#{resource_instance_name.to_s.downcase}",
+      resource,
+      :url => resource.new_record? ? collection_url : resource_url(resource),
+      :html => { :method => (resource.new_record? ? "post" : "put") },
+      :remote => true) do|f| %>
+    <div class="errors" style="padding:8px"></div>
+    <table>
+      <tr>
+        <td class="label"><%=resource_class.human_attribute_name :alias %></td>
+        <td class="value"><%=f.text_field :alias %></td>
+      </tr>
+      <tr>
+        <td class="label"><%=resource_class.human_attribute_name :name %></td>
+        <td class="value"><%=f.text_field :name %></td>
+      </tr>
+      <tr>
+        <td cols="2">
+          <%=f.submit '提交' %>
+          <input type="reset" value="取消"
+            onclick="$('#main_list fieldset').fadeOut(100);" />
+        </td>
+      </tr>
+    </table>
+  <% end %>
+

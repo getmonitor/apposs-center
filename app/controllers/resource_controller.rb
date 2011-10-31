@@ -2,7 +2,7 @@ class ResourceController < InheritedResources::Base
 
   before_filter :authenticate_user!
 
-  respond_to :js
+  respond_to :js,:xml
 
   def current_app
     current_user.apps.where(:id => params[:app_id]).first||App.new

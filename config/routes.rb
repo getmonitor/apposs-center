@@ -19,8 +19,16 @@ Apposs::Application.routes.draw do
     resources :machines
     resources :rooms
   end
+  
+  namespace :backend, :module => 'backend' do
+    resources :apps do
+      resources :acls
+    end
+  end
 
   resources :directive_groups
+
+  resources :directive_templates
 
   resources :apps do
     resources :envs

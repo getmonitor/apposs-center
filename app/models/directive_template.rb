@@ -4,12 +4,15 @@ class DirectiveTemplate < ActiveRecord::Base
   GLOBAL_ID = 0
 
   belongs_to :directive_group
+
+  belongs_to :owner, :class_name => 'User'
   
-  validates_uniqueness_of :alias, :scope => [:directive_group_id]
+  validates_uniqueness_of :alias, :scope => [:directive_group_id, :owner_id]
   
   validates_presence_of :name,:alias
   
   has_many :directives
+  
   
   def gen_directive params
     directives.create(
