@@ -2,6 +2,7 @@
 class Machine < ActiveRecord::Base
   belongs_to :room
   belongs_to :env
+  belongs_to :app
 
   has_many :directives
 

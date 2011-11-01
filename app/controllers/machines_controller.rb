@@ -1,19 +1,23 @@
 class MachinesController < ResourceController
 
   def reset
-    @directive = Machine.find(params[:id]).resume
+    @machine = Machine.find(params[:id])
+    @directive = @machine.resume
   end
   
   def clean_all
-    @directive = Machine.find(params[:id]).clean_all
+    @machine = Machine.find(params[:id])
+    @directive = @machine.clean_all
   end
   
   def interrupt
-    @directive = Machine.find(params[:id]).interrupt
+    @machine = Machine.find(params[:id])
+    @directive = @machine.interrupt
   end
   
   def pause
-    @directive = Machine.find(params[:id]).pause
+    @machine = Machine.find(params[:id])
+    @directive = @machine.pause
   end
   
   def directives

@@ -10,8 +10,9 @@ class Admin::DirectiveTemplatesController < Admin::BaseController
   end
 
   def create
-    directive_template = DirectiveTemplate.create(params[:directive_template])
+    directive_template = current_user.directive_templates.new(params[:directive_template])
     directive_template.alias = directive_template.name if directive_template.alias.empty?
+    directive_template.save!
     render :text => directive_template.to_json
   end
 

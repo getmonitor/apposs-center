@@ -37,7 +37,7 @@ class Directive < ActiveRecord::Base
     event :clear do transition [:disable, :init, :ready] => :done end
     event :download do transition :init => :ready end
     event :invoke do transition :ready => :running end
-    event :force_stop do transition :running => :done end
+    event :force_stop do transition :running => :failure end
     event :error do transition [:init,:running] => :failure end
     event :ok do transition [:ready, :running] => :done end
     event :ack do transition :failure => :done end
@@ -49,7 +49,7 @@ class Directive < ActiveRecord::Base
   end
 
   def put_response
-    self.response = "from #{self.state}"
+    self.response = "stoped( when #{self.state})"
   end
 
   def fire_operation
