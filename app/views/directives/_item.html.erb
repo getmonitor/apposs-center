@@ -3,7 +3,7 @@
         <%=resource.command_name[0..80] %>
       </span>
       <% if resource.response %>
-      <span style="float:right;padding-left:4px" onclick="alert('<%=escape_javascript resource.response %>',10000)" title="点击查看详细结果">
+      <span style="float:right;padding-left:4px" onclick="alert('<%=javascript_escape resource.response.split("\n").join('<br />') %>',10000)" title="点击查看详细结果">
         "<%=resource.response[0..5] %>"
       </span>
       <% end %>
