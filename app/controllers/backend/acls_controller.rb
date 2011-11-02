@@ -6,4 +6,5 @@ class Backend::AclsController < Backend::BaseController
   belongs_to :app
   
   respond_to :js
+  
 end

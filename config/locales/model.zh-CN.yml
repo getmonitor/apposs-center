@@ -65,4 +65,7 @@ zh-CN:
       software:
         name: '软件名称'
         app_id: '应用'
+      stakeholder:
+        user_id: '用户'
+        role_id: '角色'
 
