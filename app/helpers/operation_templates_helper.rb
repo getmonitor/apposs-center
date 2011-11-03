@@ -3,7 +3,8 @@ module OperationTemplatesHelper
   def draggable_item d_template,checked
     raw %Q{
       #{image_tag 'delete.png', :onclick=>'$(this).parent().remove();'}
-      #{d_template.to_s}
+      #{d_template.alias || d_template.name}<br />
+      #{d_template.owner.email if d_template.owner_id}
       <input type="hidden"
         name="operation_template[source_ids][]" 
         value="#{d_template.id}|#{checked}" />

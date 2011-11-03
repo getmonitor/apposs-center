@@ -4,12 +4,13 @@ class DirectiveGroupsController < ApplicationController
   end
   
   def items
-    group = DirectiveGroup.find(params[:id])
-    if group.name == 'default'
-      @collection = group.directive_templates
-    else
-      @collection = current_user.directive_templates.where(:directive_group_id => group.id)
-    end
+#    group = DirectiveGroup.find(params[:id])
+#    if group.name == 'default'
+#      @collection = group.directive_templates
+#    else
+#      @collection = current_user.directive_templates.where(:directive_group_id => group.id)
+#    end
+    @collection = DirectiveTemplate.where(:directive_group_id => params[:id])
     respond_to do |format|
       format.js
     end

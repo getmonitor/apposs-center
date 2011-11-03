@@ -1,5 +1,6 @@
 <% collection.each do |item| %>
   <li class="draggable" value="<%=item.id%>">
-    <%=item.alias || item.name %>
+    <%=item.alias || item.name %><br />
+    <%=item.owner.email if item.owner_id%>
   </li>
 <% end %>
