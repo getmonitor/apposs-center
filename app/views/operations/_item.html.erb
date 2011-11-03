@@ -7,6 +7,9 @@
   <div style="display:inline;float:right">
     <%=actions(resource) %>
     <%=resource.human_state_name %>
+    <span style="padding:0 4px;color:grey">
+      <%=time_ago_in_words resource.updated_at %>前
+    </span>
   </div>
   <div style="clear:both"></div>
   <div box-href="<%=operation_machines_path(resource.id) %>"></div>
