@@ -25,8 +25,8 @@ class Operation < ActiveRecord::Base
     event :enable do transition [:hold,:wait] => :init end
     event :continue do transition :wait => :init end
     event :fire do transition :init => :running end
-    event :error do transition :running => :failure end
-    event :ack do transition [:failure,:clearing] => :done end
+    event :error do transition [:init,:running] => :failure end
+    event :ack do transition :failure => :done end
     event :ok do transition :running => :done end
 
     before_transition :on => [:enable,:continue], :do => :enable_directive

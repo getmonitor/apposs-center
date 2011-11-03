@@ -45,6 +45,7 @@ class Directive < ActiveRecord::Base
     after_transition :on => :invoke, :do => :fire_operation
     after_transition :on => :error, :do => :error_fire
     after_transition :on => [:ok,:ack], :do => :try_operation_done
+    after_transition :on => [:clear], :do => :try_operation_clear
     before_transition :on => [:clear,:force_stop], :do => :put_response
   end
 
@@ -65,6 +66,10 @@ class Directive < ActiveRecord::Base
     if has_operation? and operation.directives.without_state(:done).count == 0
       operation.ok || operation.ack
     end
+  end
+
+  def try_operation_clear
+    operation.error if has_operation?
   end
 
   # 独立指令没有对应的操作对象，此时 operation_id 为0
