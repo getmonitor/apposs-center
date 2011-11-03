@@ -4,7 +4,7 @@
       </span>
       <% if resource.response %>
       <span style="float:right;padding-left:4px" onclick="alert('<%=resource.response.split("\n").join('<br />') %>',10000)" title="点击查看详细结果">
-        "<%=resource.response[0..5] %>"
+        "<%=resource.response[-6..-1] %>"
       </span>
       <% end %>
       <span style="color:#901252;float:right">
