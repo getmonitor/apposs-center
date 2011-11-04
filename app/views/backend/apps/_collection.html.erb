@@ -6,8 +6,8 @@
   <ul class="list">
   <% collection.each do |item| %>
     <li>
-      <span style="float:left"><%=item.name %></span>
-      <span style="float:right">
+      <span style="float:left">
+        <%=item.name %>
         <%=link_to "权限设定", backend_app_acls_path(item.id), :remote => true %>
       </span>
       <div style="clear:both" />

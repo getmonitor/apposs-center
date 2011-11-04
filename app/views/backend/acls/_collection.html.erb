@@ -1,7 +1,7 @@
 <div id="sub_list">
   <fieldset style="display:none"></fieldset>
   <h2>
-    权限设定 <%=link_to "单击添加", new_resource_path, :remote => true %>
+    <%=App.find(params[:app_id]).name %> 权限设定 <%=link_to "单击添加", new_resource_path, :remote => true %>
   </h2>
   <table class="list">
   <thead>
