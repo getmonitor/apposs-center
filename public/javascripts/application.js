@@ -64,7 +64,6 @@ $(function() {
     },
 
     refresh: function(node,url){
-      application.stopPoller();
       $.ajax({
         url: url,
         success: function(data,status,xhrs){

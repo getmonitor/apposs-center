@@ -1,14 +1,5 @@
 class MachinesController < ResourceController
 
-  def index
-    @app = current_user.apps.find params[:app_id]
-    if current_user.is_pe?(@app)
-      @machines = @app.machines
-    else
-      @machines = @app.envs[:pre,true].machines
-    end
-  end
-
   def change_env
     @machine = Machine.find(params[:id])
     @machine.update_attribute :env_id, params['single_form']['env_id']
