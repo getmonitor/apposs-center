@@ -5,10 +5,9 @@ class OperationTemplatesController < ResourceController
   def execute
     @choosed_machine_ids = check_machine_ids(params[:machine_ids])
     if @choosed_machine_ids.size > 0
-      @operation = current_app.
-        operation_templates.
-          find(params[:id]).
-            gen_operation(current_user, @choosed_machine_ids)
+      @operation = OperationTemplate.
+        find(params[:id]).
+        gen_operation(current_user, @choosed_machine_ids)
     end
   end
 
@@ -21,8 +20,8 @@ class OperationTemplatesController < ResourceController
     group = params[:group]
     if group[:group_count] && group[:group_count].to_i > 0
       group_count = group[:group_count].to_i
-      operation_template = current_app.operation_templates.find(params[:id])
-      all_ids = operation_template.available_machine_ids
+      operation_template = OperationTemplate.find(params[:id])
+      all_ids = operation_template.available_machines( current_user ).collect{|m| m.id}
 
       previous_id = nil
       ss = group( all_ids, group_count )

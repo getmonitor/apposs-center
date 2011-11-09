@@ -14,6 +14,12 @@ $(function() {
 
     global_interval_handler: null,
 
+    // Make sure that every Ajax request sends the CSRF token
+    CSRFProtection: function(xhr) {
+      var token = $('meta[name="csrf-token"]').attr('content');
+      if (token) xhr.setRequestHeader('X-CSRF-Token', token);
+    },
+
     findParent: function(child, parent_tag) {
       while(child.length > 0){
         if(child.is(parent_tag)){
@@ -63,7 +69,6 @@ $(function() {
         url: url,
         success: function(data,status,xhrs){
           node.html(data);
-          alert('数据已更新，同时关闭自动刷新');
         }
       });
     },
@@ -80,6 +85,17 @@ $(function() {
     }
   };
 
+  if ('ajaxPrefilter' in $) {
+    $.ajaxPrefilter(function(options, originalOptions, xhr){
+      if ( !options.crossDomain ) { application.CSRFProtection(xhr); }
+    });
+  } else {
+    $(document).ajaxSend(function(e, xhr, options){
+      if ( !options.crossDomain ) { application.CSRFProtection(xhr); }
+    });
+  }
+  
+  
   $('div[box-href],li[box-href]').live('load_toggle.application', function(e) {
     var base_node = $(e.currentTarget);
     application.load_toggle(
@@ -102,6 +118,7 @@ $(function() {
     if(parent){
       parent.trigger("refresh.application");
     }
+    return application.stopEverything(e);
   });
   $('ul a[select]').live('click', function(e) {
     var node = $(e.currentTarget);
@@ -112,6 +129,29 @@ $(function() {
         input_ele.checked = checked;
       });
     }
+    return application.stopEverything(e);
   });
+  $('select[box-remote]').live('change',function(e){
+    if(this.selectedIndex == -1){
+      return application.stopEverything(e);
+    }//如果没有选中，则不作任何处理
+    var element = $(this);
+    var url = element.attr('url'),
+      method = element.attr('method'),
+      option = this.options[this.selectedIndex],
+      name = this.name;
+
+    var data = name + "=" + option.value;
+		if (element.data('params')) data = data + "&" + element.data('params'); 
+					
+    var options = {
+      url: url, type: method || 'GET', data: data
+    };
+
+    $.ajax(options);
+    return application.stopEverything(e);
+  });
+  
+  $('div[lazy=true]').trigger("refresh.application");
 });
 

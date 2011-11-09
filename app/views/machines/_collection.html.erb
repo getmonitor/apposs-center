@@ -1,7 +1,11 @@
+<%
+  machines = current_user.ownerd_machines(app)
+  is_pe = current_user.is_pe?(app)
+%>
 <h2>
-  服务器列表，共<%=parent.machines.count %>台
-  <%=link_to '刷新', app_machines_path(parent.id), :remote => true %>
-  <%=link_to '重新获取', reload_machines_app_path(parent.id), :remote => true %>
+  服务器列表，共<%=machines.count %>台
+  <%=link_to '刷新', app_machines_path(app.id), :remote => true %>
+  <%=link_to '重新获取', reload_machines_app_path(app.id), :remote => true %>
 </h2>
 <ul class="list" style="height:200px; overflow-y:auto">
   <li><label>
@@ -9,13 +13,21 @@
     <a href="javascript:void 0;" select="none">清除</a>
   </label>
   </li>
-  <% parent.machines.each{|machine|%>
+  <% machines.each{|machine|%>
   <li>
     <label title="<%=machine.name %>" style="weight:140px">
       <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
       <%=machine.name[0..10] %>
     </label>
     <%=show_state machine %>
+    <% if is_pe %>
+    <%=select(
+      "single_form", "env_id", 
+      options_for_select(app.envs.collect { |p| [p.name, p.id] }, machine.env_id),
+      {},
+      {'box-remote' => 'true',:method => 'put',:url => change_env_machine_path(machine.id)}
+    ) %>
+    <% end %>
     <div style="clear:both"></div>
   </li>
   <% }%>

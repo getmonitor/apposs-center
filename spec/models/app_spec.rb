@@ -21,4 +21,13 @@ describe App do
     App.first.properties['version'].should == '2'
     App.first.envs.first.properties['version'].should == '1'
   end
+  
+  it '支持查询时增加env' do
+    app = App.first
+    count = app.envs.count
+    app.envs[:unknown].should be_nil
+    app.envs.count.should == count
+    app.envs[:unknown,true].should_not be_nil
+    app.envs.count.should == count + 1
+  end
 end

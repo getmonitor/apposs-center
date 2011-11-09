@@ -53,7 +53,6 @@ Apposs::Application.routes.draw do
   
   resources :directives do
     put :event, :on => :member
-    put :force_stop, :on => :member
   end
   
   resources :envs do
@@ -62,6 +61,7 @@ Apposs::Application.routes.draw do
 
   resources :machines do
     member do
+      put :change_env
       put :reset
       put :pause
       put :interrupt
@@ -74,11 +74,9 @@ Apposs::Application.routes.draw do
   resources :operation_templates
   
   resources :operations do
+    put :event, :on => :member  
     resources :machines, :module => 'operation' do
       get :directives, :on => :member
-    end
-    member do
-      put :event
     end
   end
   resources :softwares

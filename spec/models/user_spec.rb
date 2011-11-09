@@ -25,4 +25,15 @@ describe User do
     u.is_appops?(App.find(1)).should be_false
   end
   
+  it "选择自己负责的机器" do
+    u = User.find 1
+    app = App.find 1
+    u.is_pe?(app).should be_true
+    u.is_appops?(app).should be_true
+    
+    app.machines.first.update_attribute :env, app.envs[:pre,true]
+    u.ownerd_machines(app).should == app.machines
+    u.ungrant(Role::PE, app)
+    u.ownerd_machines(app).count.should == app.envs[:pre].machines.count
+  end
 end

@@ -21,8 +21,12 @@ class App < ActiveRecord::Base
   has_many :operations
 
   has_many :envs do
-    def [] name
-      where(:name => name).first
+    def [] name, creatable=false
+      if creatable
+        where(:name => name).first || create(:name => name)
+      else
+        where(:name => name).first
+      end
     end
   end
 

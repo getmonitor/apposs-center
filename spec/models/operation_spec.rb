@@ -10,7 +10,7 @@ describe Operation do
     ot = app.operation_templates.where(:name => 'upgrade package').first
     directive_count = ot.expression.split(",").count
     directive_count.should == 3
-    oper = ot.gen_operation User.first, nil
+    oper = ot.gen_operation User.first, app.machines.collect{|m| m.id}
     oper.directives.count.should == (directive_count * app.machines.count)
     machine = Machine.first
     oper2 = ot.gen_operation User.first,[machine.id]
