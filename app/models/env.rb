@@ -17,22 +17,22 @@ class Env < ActiveRecord::Base
       item.value if item
     end
 
-    def []=name,value
+    def []=name,value,locked=false
       item = where(:name => name).first
       if item.nil?
-        new(:name => name, :value => value).save!
+        new(:name => name, :value => value, :locked => locked).save!
       else
-        item.update_attribute(:value, value) && item
+        item.update_attributes(:value => value, :locked => locked) && item
       end
     end
 
     def pairs
       all.inject({}){|hash,env| hash.update(env.name => env.value) }
-      end
+    end
   end
   
   def add_default_property
-    properties[:env_id] = self.id
+    properties[:env_id, self.id] = true
   end
 
   def check_for_property

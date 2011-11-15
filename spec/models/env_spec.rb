@@ -3,18 +3,18 @@ require 'spec_helper'
 
 describe Env do
   fixtures :apps, :envs, :properties
-  it "与应用模型相关联，支持数组下标操作" do
-    app = App.first
-    app.envs['线上'].should_not be_nil
-    app.envs['online'].should be_nil
-    app.envs.create :name => 'online'
-    app.envs['online'].should_not be_nil
-  end
-  
   it "支持访问自身的 property" do
     env = Env.first
     env.properties.count.should == 3
     env.enable_properties.count.should == 9
+
+    env.properties[:a] = 'b'
+    env.reload
+    env.properties[:a].should == 'b'
+    
+    env.properties[:a, :b] = true
+    env.reload
+    env.properties(:name => :a).first.locked.should be_true
   end
 
   it "支持输出当前环境的配置项信息，允许覆盖" do
@@ -82,5 +82,6 @@ newpackage=t_site_taobaoke-1.0.19-170.noarch.rpm
     env.properties.count.should == 1
     env.reload
     env.properties[:env_id].should == env.id.to_s
+    env.properties(:name => :env_id).first.locked.should == true
   end
 end
