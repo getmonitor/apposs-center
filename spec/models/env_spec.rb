@@ -67,14 +67,20 @@ newpackage=t_site_taobaoke-1.0.19-170.noarch.rpm
     env.properties['url'].should be_nil
   end
   
-  it "合并、下载配置信息" do
+  it "合并配置信息" do
     env = Env.first
-    env.sync_profile
-    directive_template_id = DirectiveGroup['default'].directive_templates['sync_profile'].id
-    env.machines.each{|m|
-      directive = m.directives.last
-      directive.directive_template_id.should == directive_template_id
-      directive.command_name.include?("$").should be_false
-    }
+    env.sync_profile do |data|
+      data.include?('root').should be_true
+      data.include?('app_id').should be_true
+      data.include?('env_id').should be_true
+    end
+  end
+  
+  it "创建env时增加缺省的env_id property" do
+    app = App.first
+    env = app.envs.create :name => 'not_exist'
+    env.properties.count.should == 1
+    env.reload
+    env.properties[:env_id].should == env.id.to_s
   end
 end

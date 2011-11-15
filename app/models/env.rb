@@ -7,6 +7,8 @@ class Env < ActiveRecord::Base
   
   attr_accessor :property_file, :property_content
   
+  after_create :add_default_property
+
   before_save :check_for_property
   
   has_many :properties, :as => :resource do
@@ -29,6 +31,10 @@ class Env < ActiveRecord::Base
       end
   end
   
+  def add_default_property
+    properties[:env_id] = self.id
+  end
+
   def check_for_property
     if self.property_file
       data = property_file.read
@@ -63,14 +69,15 @@ class Env < ActiveRecord::Base
       yield data
     end
 
-    machines.each{|m|
-      DirectiveGroup['default'].directive_templates['sync_profile'].gen_directive(
-          :room_id => m.room.id,
-          :room_name => m.room.name,
-          :machine_host => m.host,
-          :machine => m,
-          :params => prop_hash
-      )
-    }
+# 更新env时不再直接下发同步指令
+#    machines.each{|m|
+#      DirectiveGroup['default'].directive_templates['sync_profile'].gen_directive(
+#          :room_id => m.room.id,
+#          :room_name => m.room.name,
+#          :machine_host => m.host,
+#          :machine => m,
+#          :params => prop_hash
+#      )
+#    }
   end
 end
