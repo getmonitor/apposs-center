@@ -39,9 +39,9 @@ class OperationTemplate < ActiveRecord::Base
   # choosedMachineIds 要求必须是一个integer数组
   def build_directives operation_id, machine_ids, is_hold
     if machine_ids
-      machines = app.machines.where(:id => machine_ids[0..10]).select([:id, :host, :room_id])
+      machines = app.machines.where(:id => machine_ids[0..10])
     else
-      machines = app.machines.select([:id, :host, :room_id])
+      machines = app.machines
     end
     room_map = Room.
         where(:id => machines.collect { |m| m.room_id }.uniq).
