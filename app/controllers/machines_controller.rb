@@ -2,7 +2,8 @@ class MachinesController < ResourceController
 
   def change_env
     @machine = Machine.find(params[:id])
-    @machine.update_attribute :env_id, params['single_form']['env_id']
+    env_obj = @machine.app.envs.find params['single_form']['env_id']
+    @machine.update_attribute :env, env_obj
   end
   
   def reset
