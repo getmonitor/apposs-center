@@ -20,6 +20,17 @@ class Machine < ActiveRecord::Base
   state_machine :state, :initial => :normal do
     event :error do transition :normal => :pause end
     event :reset do transition :pause => :normal end
+    event :offline do transition [:normal, :pause] => :offline end
+    event :online do transition :offline => :normal end
+  end
+
+  def reassign app_id
+    transaction do
+      self.directives.each do |dd|
+        dd.update_attribute :operation_id, Operation::DEFAULT_ID
+      end
+      self.update_attribute(:app_id, app_id)
+    end
   end
 
   def resume

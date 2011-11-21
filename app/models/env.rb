@@ -80,4 +80,8 @@ class Env < ActiveRecord::Base
 #      )
 #    }
   end
+  
+  def to_s
+    self.name
+  end
 end

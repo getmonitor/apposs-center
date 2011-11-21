@@ -29,7 +29,8 @@ module Tool
 
     def do_load app_id
       app = App.find app_id
-      p "app: #{app}"
+      env_obj = app.envs[:online,true]
+      p "app: #{app}, env: #{env_obj}"
       name = build_name app
       url  = "http://opsfree.corp.taobao.com:9999/products/dumptree?_username=droid/droid&notree=1&leafname=#{URI.escape name}"
       data = try_url url
@@ -48,16 +49,26 @@ module Tool
             :name => machine_data['nodename'],
             :room_id => room.id,
             :port => 22,
-            :app_id => app_id
+            :app_id => app_id,
+            :env_id => env_obj.id
           }
           
           if machine_data['state']=='working_offline'
-            ::Machine.where(:name => machine_data['nodename']).destroy_all
+            ::Machine.where(:name => machine_data['nodename']).each do |m|
+              m.offline
+            end
           elsif machine_data['state']=='working_online'
-            if ::Machine.where(:name => machine_data['nodename']).first.nil?
+            m = ::Machine.where(:name => machine_data['nodename']).first
+            if m.nil?
               ::Machine.create(attributes)
             else
-              p "机器重名 - #{machine_data['nodename']}"
+              if m.app_id != app_id
+                p "移动机器：#{m.app_id} -> #{app_id}"
+                m.reassign(app_id)
+                m.update_attribute :env_id, env_obj.id
+              else
+                p "机器已存在 - #{machine_data['nodename']}"
+              end
             end
           else
             p "未知的机器状态：#{machine_data['state']}"

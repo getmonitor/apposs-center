@@ -3,7 +3,9 @@
 # 运维操作的实例，代表一次运维操作
 class Operation < ActiveRecord::Base
 
-  DEFAULT_ID = 0 # 某些指令独立执行，没有真实关联的操作对象，此时统一指定的操作ID
+  # 使用场景： 1. 某些指令独立执行，没有真实关联的操作对象
+  #           2. 机器被重新分配app后，历史指令需要切断与operation之间的联系，以免混乱
+  DEFAULT_ID = 0 
   STATE_COULD_BE_CLEAR=['hold','wait','init']
 
   belongs_to :operation_template

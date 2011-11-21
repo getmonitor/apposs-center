@@ -3,3 +3,8 @@ normal:
   name: sample-app
   state: running
   virtual: 0
+other:
+  id: 2
+  name: another-app
+  state: running
+  virtual: 0

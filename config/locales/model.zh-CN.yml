@@ -12,6 +12,7 @@ zh-CN:
         normal: "正常"
         pause: "暂停"
         clearing: '撤销中'
+        offline: '下线'
       events:
         download: "下载"
         invoke: "执行"
@@ -22,6 +23,7 @@ zh-CN:
         enable: "激活"
         clear: "清理"
         force_stop: "强制暂停"
+        offline: '下线'
     models:
       user: '用户'
       app: '应用'
