@@ -36,4 +36,11 @@ describe User do
     u.ungrant(Role::PE, app)
     u.ownerd_machines(app).count.should == app.envs[:pre].machines.count
   end
+  
+  it "导入指定的原子指令" do
+    u = User.find 1
+    u.directive_templates.count.should == 2
+    u.load_directive_templates DirectiveTemplate.where(:id => [4,5])
+    u.directive_templates.count.should == 4
+  end
 end

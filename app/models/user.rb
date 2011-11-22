@@ -20,6 +20,13 @@ class User < ActiveRecord::Base
 
   has_many :directive_templates, :foreign_key => 'owner_id'
 
+  def load_directive_templates new_directive_templates
+    new_directive_templates.each do |dt|
+      directive_templates << dt.clone
+    end
+    directive_templates
+  end
+
   def grant role, resource = nil
     role = Role[role] if role.is_a?(String)
     resource = System.instance if resource.nil?

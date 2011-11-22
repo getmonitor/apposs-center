@@ -1,0 +1,11 @@
+<% if @errors.count > 0 %>
+  $("#zone").
+    find("div.errors").
+    html('导入结束，错误信息如下：<ul class="errors"><%=raw @errors.collect{|msg| content_tag :li, msg}.join %></ul>');
+<% else %>
+$("#zone").html('<%= escape_javascript(
+  render 'collection', :collection => @directive_templates
+) %>');
+alert("导入完毕!");
+<% end %>
+

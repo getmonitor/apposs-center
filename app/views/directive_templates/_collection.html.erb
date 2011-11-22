@@ -1,7 +1,14 @@
 <div id="main_list">
   <fieldset style="display:none"></fieldset>
   <h2>
-    我的指令列表 <%=link_to "单击创建", new_resource_path, :remote => true %>
+  <%= form_for :simple_form, 
+    :as => :get, :remote => true,
+    :url => load_other_directive_templates_path do |f| %>
+    我的指令列表 
+    <input type="text" name="email" />
+    <%=f.submit '导入' %>
+    <%=link_to "创建", new_resource_path, :remote => true %>
+  <% end %>
   </h2>
   <ul class="list">
   <% collection.each do |resource| %>
@@ -10,8 +17,8 @@
       <span style="float:left;padding:0 4px;color:green;width:120px"><%=resource.alias %></span>
       <span style="float:left;padding:0 4px;color:grey" title="<%=resource.name %>"><%=resource.name[0..70] %></span>
       <span style="float:right">
-        <%=link_to "修改", edit_resource_path(resource.id), :remote => true %>
-        <%=link_to "删除", resource_path(resource.id), :remote => true, :method => :delete, :confirm => "确实要删除吗？" %>
+        <%=link_to "修改", edit_resource_path(resource), :remote => true %>
+        <%=link_to "删除", resource_path(resource), :remote => true, :method => :delete, :confirm => "确实要删除吗？" %>
       </span>
       <div style="clear:both" />
     </li>

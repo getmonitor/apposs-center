@@ -9,7 +9,6 @@ Apposs::Application.routes.draw do
 
   namespace :admin, :module => "admin" do
     root :to => 'home#index'
-    resources :directive_templates
     resources :directive_groups
     resources :apps do
       put :update_app_user_role, :on => :member
@@ -29,6 +28,11 @@ Apposs::Application.routes.draw do
   resources :directive_groups
 
   resources :directive_templates
+
+  resources :directive_templates do
+    post :load_other, :on => :collection
+    post :add_all, :on => :collection
+  end
 
   resources :apps do
     resources :envs
