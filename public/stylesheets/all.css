@@ -110,6 +110,7 @@ table.list thead tr th , table.list tbody tr td{
 ul.errors{
   border:1px dotted grey;
   padding:4px;
+  color:red;
 }
 
 ul.errors li{
@@ -117,7 +118,6 @@ ul.errors li{
   list-style:none;
   margin:8px;
   background-color:yellow;
-  color:red;
 }
 
 .clear {
