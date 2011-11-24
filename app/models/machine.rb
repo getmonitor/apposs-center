@@ -1,5 +1,8 @@
 # coding: utf-8
 class Machine < ActiveRecord::Base
+
+  default_scope where("state <> 'offline'")
+  
   belongs_to :room
   belongs_to :env
   belongs_to :app

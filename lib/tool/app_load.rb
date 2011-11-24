@@ -30,6 +30,7 @@ module Tool
     def do_load app_id
       app = App.find app_id
       env_obj = app.envs[:online,true]
+      
       p "app: #{app}, env: #{env_obj}"
       name = build_name app
       url  = "http://opsfree.corp.taobao.com:9999/products/dumptree?_username=droid/droid&notree=1&leafname=#{URI.escape name}"
@@ -39,13 +40,15 @@ module Tool
         return
       end
       p "load #{app_id} #{name} - #{url}"
+      
+      root_node = data[0]["opsfree_product.#{name}"]
 
-      data[0]["opsfree_product.#{name}"].each{|node_group_data|
+      root_node.each{|node_group_data|
 #        node_group_name = node_group_data['nodegroup_info']['detail']['nodegroup_name']
         node_group_data['child'].each{|machine_data|
           room = get_and_update_room machine_data['site']
           attributes = {
-            :host => machine_data['nodename'], # 可选 dns_ip
+            :host => machine_data['dns_ip'],
             :name => machine_data['nodename'],
             :room_id => room.id,
             :port => 22,
@@ -58,7 +61,7 @@ module Tool
               m.offline
             end
           elsif machine_data['state']=='working_online'
-            m = ::Machine.where(:name => machine_data['nodename']).first
+            m = ::Machine.unscoped.where(:name => machine_data['nodename']).first
             if m.nil?
               ::Machine.create(attributes)
             else
@@ -77,6 +80,13 @@ module Tool
 
         }
       }
+      
+      (current_machine_list(app) - real_machine_list(root_node)).each{|name|
+        # 相同name的机器只有一台
+        p "机器下线: #{name}"
+        Machine.where(:name => name).first.offline
+      }
+
     end
 
     def try_url(url)
@@ -110,6 +120,18 @@ module Tool
         name = "#{app.name}.#{name}"
       end
       "淘宝网.#{name}"
+    end
+  
+    def current_machine_list app
+      app.machines.select(:name).collect{|m| m.name}
+    end
+
+    def real_machine_list root_node
+      root_node.map{|node_group_data|
+        node_group_data['child'].map{|machine_data|
+          machine_data['nodename'] if machine_data['state']=='working_online'
+        }
+      }.flatten.reject{|item| item.nil? }
     end
 
     def hold app
