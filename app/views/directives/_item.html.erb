@@ -2,13 +2,11 @@
       <span style="float:left" title="<%=resource.command_name %>">
         <%=resource.command_name[0..80] %>
       </span>
-      <% if resource.response %>
-      <span style="float:right;padding-left:4px" onclick="alert('<%=resource.response.split(/\r\n|\n|\r/).join('<br />') %>',10000)" title="点击查看详细结果">
-        "<%=resource.response[-6..-1] %>"
-      </span>
-      <% end %>
       <span style="color:#901252;float:right">
         <%=resource.human_state_name %>
+        <% if resource.response %>
+        <%=link_to "\"#{resource.response[-6..-1]}\"", body_directive_path(resource), :remote => true %>
+        <% end %>
       </span>
       <span style="display:inline;float:right;padding:0 4px;color:grey">
         <%=time_ago_in_words resource.updated_at %>前

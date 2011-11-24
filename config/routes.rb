@@ -57,6 +57,7 @@ Apposs::Application.routes.draw do
   
   resources :directives do
     put :event, :on => :member
+    get :body, :on => :member
   end
   
   resources :envs do
