@@ -68,7 +68,7 @@ module Tool
               if m.app_id != app_id
                 p "移动机器：#{m.app_id} -> #{app_id}"
                 m.reassign(app_id)
-                m.update_attribute :env_id, env_obj.id
+                m.update_attributes attributes
               else
                 m.online
                 p "机器已存在 - #{machine_data['nodename']}"
