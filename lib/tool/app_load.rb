@@ -44,7 +44,6 @@ module Tool
       root_node = data[0]["opsfree_product.#{name}"]
 
       root_node.each{|node_group_data|
-#        node_group_name = node_group_data['nodegroup_info']['detail']['nodegroup_name']
         node_group_data['child'].each{|machine_data|
           room = get_and_update_room machine_data['site']
           attributes = {
@@ -68,11 +67,11 @@ module Tool
               if m.app_id != app_id
                 p "移动机器：#{m.app_id} -> #{app_id}"
                 m.reassign(app_id)
-                m.update_attributes attributes
               else
                 m.online
                 p "机器已存在 - #{machine_data['nodename']}"
               end
+              m.update_attributes attributes
             end
           else
             p "未知的机器状态：#{machine_data['state']}"
