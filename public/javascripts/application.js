@@ -47,13 +47,10 @@ $(function() {
       if(node.html()==""){
         node.html("开始每5秒自动刷新......");
         application.startPoller(function(){
-          console.info('load'+new Date());
           $.ajax({
             url: url,
             success: function(data,status,xhrs){
-              console.info('loaded'+new Date());
               node.html(data);
-              console.info('randered'+new Date());
             }
           });
         },5000);
