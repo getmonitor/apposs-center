@@ -67,6 +67,7 @@ module Tool
                 m.reassign(app_id)
                 m.update_attribute :env_id, env_obj.id
               else
+                m.online
                 p "机器已存在 - #{machine_data['nodename']}"
               end
             end
