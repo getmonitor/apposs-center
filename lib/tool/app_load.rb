@@ -127,7 +127,7 @@ module Tool
     end
   
     def extract_host machine_data
-      machine_data['dns_ip'].empty? ? machine_data['nodename'] : machine_data['dns_ip']
+      machine_data['dns_ip'].blank? ? machine_data['nodename'] : machine_data['dns_ip']
     end
 
     def current_machine_list app
