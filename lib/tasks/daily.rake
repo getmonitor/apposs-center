@@ -24,9 +24,7 @@ namespace :daily do
   task :machine => :environment do
     require 'tool/app_load.rb'
     loader = Tool::AppLoad.new App.reals.collect{|app| app.id }
-    (0...2).to_a.collect{
-      loader.add_loader
-    }.each{|t| t.join}
+    loader.add_loader.join
   end
 
   private
