@@ -83,7 +83,12 @@ module Tool
       (current_machine_list(app) - real_machine_list(root_node)).each{|name|
         # 相同name的机器只有一台
         p "机器下线: #{name}"
-        Machine.where(:name => name).first.offline
+        machine = Machine.where(:name => name).first
+        if machine
+          machine.offline
+        else
+          p "机器不存在: #{name}"
+        end
       }
 
     end
