@@ -15,7 +15,7 @@ module Tool
 
     def add_loader
       @ids.each do | app_id |
-        do_load app_id
+        do_load(app_id) rescue Rails.logger.info "装载机器失败: #{app_id}"
       end
     end
 
