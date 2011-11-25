@@ -31,7 +31,7 @@ module Tool
       app = App.find app_id
       env_obj = app.envs[:online,true]
       
-      p "app: #{app}, env: #{env_obj}"
+      Rails.logger.info "app: #{app}, env: #{env_obj}"
       name = build_name app
       url  = "http://opsfree.corp.taobao.com:9999/products/dumptree?_username=droid/droid&notree=1&leafname=#{URI.escape name}"
       data = try_url url
@@ -39,7 +39,7 @@ module Tool
         $stderr.puts "没有发现数据: #{name} - #{url}"
         return
       end
-      p "load #{app_id} #{name} - #{url}"
+      Rails.logger.info "load #{app_id} #{name} - #{url}"
       
       root_node = data[0]["opsfree_product.#{name}"]
 
@@ -47,7 +47,7 @@ module Tool
         node_group_data['child'].each{|machine_data|
           room = get_and_update_room machine_data['site']
           attributes = {
-            :host => machine_data['dns_ip'],
+            :host => extract_host(machine_data),
             :name => machine_data['nodename'],
             :room_id => room.id,
             :port => 22,
@@ -65,16 +65,16 @@ module Tool
               ::Machine.create(attributes)
             else
               if m.app_id != app_id
-                p "移动机器：#{m.app_id} -> #{app_id}"
+                Rails.logger.info "移动机器：#{m.app_id} -> #{app_id}"
                 m.reassign(app_id)
               else
                 m.online
-                p "机器已存在 - #{machine_data['nodename']}"
+                Rails.logger.info "机器已存在 - #{machine_data['nodename']}"
               end
               m.update_attributes attributes
             end
           else
-            p "未知的机器状态：#{machine_data['state']}"
+            Rails.logger.info "未知的机器状态：#{machine_data['state']}"
           end
 
         }
@@ -82,12 +82,12 @@ module Tool
       
       (current_machine_list(app) - real_machine_list(root_node)).each{|name|
         # 相同name的机器只有一台
-        p "机器下线: #{name}"
+        Rails.logger.info "机器下线: #{name}"
         machine = Machine.where(:name => name).first
         if machine
           machine.offline
         else
-          p "机器不存在: #{name}"
+          Rails.logger.info "机器不存在: #{name}"
         end
       }
 
@@ -126,6 +126,10 @@ module Tool
       "淘宝网.#{name}"
     end
   
+    def extract_host machine_data
+      machine_data['dns_ip'].empty? ? machine_data['nodename'] : machine_data['dns_ip']
+    end
+
     def current_machine_list app
       app.machines.select(:name).collect{|m| m.name}
     end
@@ -137,14 +141,6 @@ module Tool
         }
       }.flatten.reject{|item| item.nil? }
     end
-
-    def hold app
-      app.children.each{|child|
-        hold child
-      }
-      app.hold
-    end
-
 
   end
 end

@@ -12,7 +12,7 @@ namespace :daily do
     now  = Time.now
     sign = "taobao_daily%d%02d%02d" % [now.year, now.month, now.day]
     url  = "http://proxy.wf.taobao.org/DailyManage/tree-xml.ashx?sign=#{Digest::MD5.hexdigest(sign)}"
-    p "导入 - #{url}"
+    Rails.logger.info "导入 - #{url}"
     body = open(url).read
     doc = REXML::Document.new body
     doc.get_elements('taobao/node/node').each { |e|
@@ -32,12 +32,12 @@ namespace :daily do
       name = e.attributes['name']
       new_app = App.where(:name => name, :parent_id => parent_id).first
       if new_app.nil?
-        p "新导入 #{parent_id}-#{name}"
+        Rails.logger.info "新导入 #{parent_id}-#{name}"
         new_app = App.create(
             :name => name, :parent_id => parent_id, :virtual => (children.size > 0)
         )
       else
-        p "已存在 #{parent_id}-#{name}"
+        Rails.logger.info "已存在 #{parent_id}-#{name}"
       end
 
       ignore_dup(children).each{|child|
