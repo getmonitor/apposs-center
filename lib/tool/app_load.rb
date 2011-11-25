@@ -14,17 +14,9 @@ module Tool
     end
 
     def add_loader
-      Thread.new do |t|
-        while(app_id = get_id())
-          do_load app_id
-        end
+      @ids.each do | app_id |
+        do_load app_id
       end
-    end
-
-    def get_id
-      @id_lock.synchronize{
-        @ids.shift
-      }
     end
 
     def do_load app_id
