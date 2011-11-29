@@ -1,7 +1,7 @@
 # coding: utf-8
 class Machine < ActiveRecord::Base
 
-  default_scope where("`machines`.`state` <> 'offline'")
+  default_scope where("`machines`.`state` <> 'offline'").order(:name)
   
   belongs_to :room
   belongs_to :env
