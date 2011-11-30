@@ -26,7 +26,7 @@ class OperationTemplatesController < ResourceController
       previous_id = nil
       ss = group( all_ids, group_count )
       @operations = ss.collect{|a_group_ids|
-        operation_on_bottom = operation_template.gen_operation(current_user, a_group_ids, previous_id, group[:is_hold]=="true" )
+        operation_on_bottom = operation_template.gen_operation(current_user, a_group_ids, previous_id, group[:is_hold].present? )
         previous_id = operation_on_bottom.id
         operation_on_bottom
       }
