@@ -11,12 +11,12 @@ zh-CN:
         hold: "暂停"
         normal: "正常"
         pause: "暂停"
-        clearing: '撤销中'
         offline: '下线'
       events:
         download: "下载"
         invoke: "执行"
         error: "失败"
+        cancel: '撤销'
         ack: "确认"
         ok: "成功"
         continue: "继续"

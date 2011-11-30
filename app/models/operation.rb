@@ -25,6 +25,7 @@ class Operation < ActiveRecord::Base
   state_machine :state, :initial => :init do
     # 需要延迟使用的directive，可以初始化为hold状态
     event :enable do transition [:hold,:wait] => :init end
+    event :cancel do transition [:hold,:wait] => :done end
     event :continue do transition :wait => :init end
     event :fire do transition :init => :running end
     event :error do transition [:init,:running] => :failure end
@@ -33,6 +34,7 @@ class Operation < ActiveRecord::Base
 
     before_transition :on => [:enable,:continue], :do => :enable_directive
     after_transition  :on => :ok, :do => :continue_next
+    after_transition  :on => :cancel, :do => :cancel_directive
 
   end
 
@@ -40,6 +42,14 @@ class Operation < ActiveRecord::Base
     Directive.transaction do
       directives.order('id asc').each{|d|
         d.enable
+      }
+    end
+  end
+
+  def cancel_directive
+    Directive.transaction do
+      directives.each{|d|
+        d.clear
       }
     end
   end
