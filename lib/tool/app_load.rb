@@ -63,7 +63,7 @@ module Tool
                 m.online
                 Rails.logger.info "机器已存在 - #{machine_data['nodename']}"
               end
-              m.update_attributes attributes
+              m.update_attributes attributes.reject{|k,v| k == :env_id}
             end
           else
             Rails.logger.info "未知的机器状态：#{machine_data['state']}"
