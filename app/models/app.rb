@@ -19,7 +19,7 @@ class App < ActiveRecord::Base
   has_many :operation_templates
   
   has_many :operations
-
+  
   has_many :envs do
     def [] name, creatable=false
       if creatable
@@ -50,6 +50,12 @@ class App < ActiveRecord::Base
       end
   end
 
+  after_create :add_property
+
+  def add_property
+    properties[:app_id] = self.id
+  end
+  
   def to_s
   	send :name
   end
