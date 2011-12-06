@@ -20,7 +20,7 @@
   <fieldset>
     <legend>修改当前环境的配置内容</legend>
     <%=form_for @env, :url => app_env_path(@env.app_id,@env.name), :html => { :method => "put" } do |f| %>
-      <%=f.text_area :property_content, :value => @env.property_content %>
+      <%=f.text_area :property_content, :value => @env.property_content, :style => 'width:800px' %>
       <br />
       <%=f.submit '提交' %>
     <% end %>
