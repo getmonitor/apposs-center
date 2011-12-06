@@ -16,10 +16,16 @@ describe App do
   end
   
   it '支持访问自身 property' do
-    App.first.properties.size.should == 4
-    App.first.properties['software'].should == 'app 1 software'
-    App.first.properties['version'].should == '2'
-    App.first.envs.first.properties['version'].should == '1'
+    app = App.first
+    app.properties.size.should == 4
+    app.properties['software'].should == 'app 1 software'
+    app.properties['version'].should == '2'
+    app.envs.first.properties['version'].should == '1'
+
+    app.properties[:a].should be_nil
+    app.properties[:a, :b] = true
+    app.reload
+    app.properties.where(:name => :a).first.locked.should be_true
   end
   
   it '支持查询时增加env' do
@@ -29,5 +35,11 @@ describe App do
     app.envs.count.should == count
     app.envs[:unknown,true].should_not be_nil
     app.envs.count.should == count + 1
+  end
+  
+  it '应用创建时同时创建相关property' do
+    app = App.create :name => 'a_new_app'
+    app.properties[:app_id].should == app.id.to_s
+    app.properties.where(:name => :app_id).first.locked.should be_true
   end
 end

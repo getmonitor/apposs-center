@@ -36,12 +36,12 @@ class App < ActiveRecord::Base
       item.value if item
     end
 
-    def []=name,value
+    def []=name,value,locked=false
       item = where(:name => name).first
       if item.nil?
-        new(:name => name, :value => value).save!
+        new(:name => name, :value => value, :locked => locked).save!
       else
-        item.update_attribute(:value, value) && item
+        item.update_attributes(:value => value, :locked => locked) && item
       end
     end
 
@@ -53,7 +53,7 @@ class App < ActiveRecord::Base
   after_create :add_property
 
   def add_property
-    properties[:app_id] = self.id
+    properties[:app_id, self.id] = true
   end
   
   def to_s

@@ -14,7 +14,7 @@ describe Env do
     
     env.properties[:a, :b] = true
     env.reload
-    env.properties(:name => :a).first.locked.should be_true
+    env.properties.where(:name => :a).first.locked.should be_true
   end
 
   it "支持输出当前环境的配置项信息，允许覆盖" do
