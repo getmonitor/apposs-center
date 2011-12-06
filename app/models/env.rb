@@ -50,7 +50,7 @@ class Env < ActiveRecord::Base
   
   def reload_property_data data
     self.properties.not_lock.destroy_all
-    data.split( "\n" ).each{|line|
+    data.split( /\r|\n/ ).reject{|m| m.length==0 }.each{|line|
       k,v = line.split('=')
       self.properties[k]=v if v
     }

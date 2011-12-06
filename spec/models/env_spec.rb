@@ -53,9 +53,7 @@ describe Env do
     env.reload #清理对象缓存
     env.property_content = %Q|
 [config]
-url=www.alimama.com
-status=/home/a/project/cps/deploy/cps/status_ns.html
-package=t_site_taobaoke
+url=www.alimama.com\nstatus=/home/a/project/cps/deploy/cps/status_ns.html\rpackage=t_site_taobaoke
 package_addr=http://yum.corp.taobao.com/taobao/5/noarch/current//t_site_taobaoke/t_site_taobaoke-1.0.19-170.noarch.rpm
 newpackage=t_site_taobaoke-1.0.19-170.noarch.rpm
 |
@@ -63,6 +61,7 @@ newpackage=t_site_taobaoke-1.0.19-170.noarch.rpm
 
     env.reload #清理对象缓存
     env.properties['url'].should == 'www.alimama.com'
+    env.properties['package'].should == 't_site_taobaoke'
     env.properties.size.should == 5
     env.properties.destroy_all
     env.property_content = nil
