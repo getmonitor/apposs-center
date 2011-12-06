@@ -41,5 +41,8 @@ describe App do
     app = App.create :name => 'a_new_app'
     app.properties[:app_id].should == app.id.to_s
     app.properties.where(:name => :app_id).first.locked.should be_true
+    app.add_property #测试修改能力
+    app.reload
+    app.properties.where(:name => :app_id).first.locked.should be_true
   end
 end

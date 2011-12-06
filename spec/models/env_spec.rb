@@ -8,13 +8,18 @@ describe Env do
     env.properties.count.should == 3
     env.enable_properties.count.should == 9
 
-    env.properties[:a] = 'b'
+    env.properties[:a] = 'b' #创建普通属性
     env.reload
     env.properties[:a].should == 'b'
     
-    env.properties[:a, :b] = true
+    env.properties[:a, :b] = true #修改固有属性
     env.reload
     env.properties.where(:name => :a).first.locked.should be_true
+
+    env.properties[:other, 'sth'] = true #创建固有属性
+    env.reload
+    env.properties.where(:name => :other).first.locked.should be_true
+
   end
 
   it "支持输出当前环境的配置项信息，允许覆盖" do
