@@ -6,7 +6,9 @@ Apposs::Application.routes.draw do
   root :to => 'home#index'
 
   get "home/index"
-
+  
+  get "search/autocomplete_user_email"
+  
   namespace :admin, :module => "admin" do
     root :to => 'home#index'
     resources :directive_groups

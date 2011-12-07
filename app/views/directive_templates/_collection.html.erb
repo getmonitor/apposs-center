@@ -5,7 +5,7 @@
     :as => :get, :remote => true,
     :url => load_other_directive_templates_path do |f| %>
     我的指令列表 
-    <input type="text" name="email" />
+    <%=autocomplete_field_tag :email, '', search_autocomplete_user_email_path %>
     <%=f.submit '导入' %>
     <%=link_to "创建", new_resource_path, :remote => true %>
   <% end %>
