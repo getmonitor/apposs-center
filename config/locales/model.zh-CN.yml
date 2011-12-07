@@ -43,6 +43,7 @@ zh-CN:
         remember_me: '下次访问自动登录'
         last_sign_in_ip: '最近访问ip'
         last_sign_in_at: '最近访问时间'
+        updated_at: '最近更新时间'
       app:
         name: '名称'
       machine:

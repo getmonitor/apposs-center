@@ -23,6 +23,8 @@ Apposs::Application.routes.draw do
     resources :apps do
       resources :acls
     end
+    
+    resources :users
   end
 
   resources :directive_groups

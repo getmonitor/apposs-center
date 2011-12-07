@@ -1,0 +1,16 @@
+<div id="main_list">
+  <fieldset style="display:none"></fieldset>
+  <h2>
+    <%=resource_class.model_name.human %>列表
+  </h2>
+  <ul class="list">
+  <% collection.each do |r| %>
+    <li>
+      <%=r.email %>
+      <%= link_to "编辑", edit_resource_url(r) %>
+      <%= link_to "删除", resource_url(r), :confirm => '确定要删除?', :method => :delete %>
+      <div style="clear:both" />
+    </li>
+  <% end %>
+  </ul>
+</div>
