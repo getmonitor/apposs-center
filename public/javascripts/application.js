@@ -3,7 +3,7 @@ function alert(msg,millisecond) {
   if(!document.getElementById('msg-div')){
     $(document.body).append('<div id="msg-div" style="display:none"></div>');
   }
-  $('#msg-div').html('<div class="msg">' + msg + '</div>');
+  $('#msg-div').html('<div class="msg"><pre>' + msg + '</pre></div>');
   $('#msg-div').slideDown(300);
   setTimeout(function(){ $('#msg-div').slideUp(300); }, millisecond || 2500);
 }
