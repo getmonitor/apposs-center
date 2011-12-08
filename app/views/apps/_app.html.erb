@@ -7,7 +7,7 @@
         更新配置参数:
         <% app.envs.each do |env|
           if current_user.is_pe?(app) || env.name != 'online' %>
-          <%=link_to env.name, edit_app_env_path(app,env.name), :target => 'blank' %>
+          <%=link_to env.name, edit_app_env_path(app,env), :target => 'blank' %>
           <% end
         end %>
       </li>

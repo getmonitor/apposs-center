@@ -37,11 +37,18 @@ describe App do
     app.envs.count.should == count + 1
   end
   
+  it '应用创建时同时创建相关 env' do
+    app = App.create :name => 'a_new_app'
+    app.envs.count
+    app.envs[:online].should_not be_nil
+    app.envs[:pre].should_not be_nil
+  end
+
   it '应用创建时同时创建相关property' do
     app = App.create :name => 'a_new_app'
     app.properties[:app_id].should == app.id.to_s
     app.properties.where(:name => :app_id).first.locked.should be_true
-    app.add_property #测试修改能力
+    app.add_default_property #测试修改能力
     app.reload
     app.properties.where(:name => :app_id).first.locked.should be_true
   end

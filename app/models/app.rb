@@ -50,10 +50,15 @@ class App < ActiveRecord::Base
       end
   end
 
-  after_create :add_property
+  after_create :add_default_property, :add_default_env
 
-  def add_property
+  def add_default_property
     properties[:app_id, self.id] = true
+  end
+  
+  def add_default_env
+    envs[:online,true]
+    envs[:pre,true]
   end
   
   def to_s
