@@ -21,9 +21,9 @@ class Machine < ActiveRecord::Base
   end
 
   state_machine :state, :initial => :normal do
-    event :error do transition :normal => :pause end
-    event :reset do transition :pause => :normal end
-    event :offline do transition [:normal, :pause] => :offline end
+    event :error do transition :normal => :paused end
+    event :reset do transition :paused => :normal end
+    event :offline do transition [:normal, :paused] => :offline end
     event :online do transition :offline => :normal end
   end
 
