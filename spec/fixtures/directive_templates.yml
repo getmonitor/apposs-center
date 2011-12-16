@@ -43,4 +43,24 @@ directive_template8:
   directive_group_id: 3
   name: 'do inner'
   alias: 'inner'
+directive_template9:
+  id: 9
+  directive_group_id: 3
+  name: 'machine|reconnect'
+  alias: 'machine|reconnect'
+directive_template10:
+  id: 10
+  directive_group_id: 3
+  name: 'machine|clean_all'
+  alias: 'machine|clean_all'
+directive_template11:
+  id: 11
+  directive_group_id: 3
+  name: 'machine|pause'
+  alias: 'machine|pause'
+directive_template12:
+  id: 12
+  directive_group_id: 3
+  name: 'machine|interrupt'
+  alias: 'machine|interrupt'
 

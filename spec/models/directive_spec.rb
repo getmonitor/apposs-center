@@ -27,7 +27,7 @@ describe Directive do
     directive.state.should == 'failure'
     directive.response.should == '指令运行失败'
     directive.operation.state.should == 'failure'
-    directive.machine.state.should == 'pause'
+    directive.machine.state.should == 'paused'
     directive.ack
     directive.state.should == 'done'
   end

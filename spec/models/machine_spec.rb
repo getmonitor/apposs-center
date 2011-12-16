@@ -8,7 +8,7 @@ describe Machine do
   it "支持变更自身状态，同时生成下发指令" do
     m = Machine.create :name => 'localhost', :port => 22, :room => Room.first
     m.host.should == 'localhost'
-    m.resume
+    m.send_reset
     m.directives.first.command_name.should == 'machine|reset'
   end
   

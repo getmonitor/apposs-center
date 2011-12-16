@@ -75,6 +75,7 @@ Apposs::Application.routes.draw do
       put :pause
       put :interrupt
       put :clean_all
+      put :reconnect
       get :directives
       get :old_directives
     end

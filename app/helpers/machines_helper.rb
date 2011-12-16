@@ -22,6 +22,7 @@ module MachinesHelper
       actions << link_to('继续', reset_machine_path(machine.id), :remote => true, :method => :put)
     end
     actions << link_to('清除指令', clean_all_machine_path(machine.id), :remote => true, :method => :put, :confirm => "确实要清除吗？")
+    actions << link_to('重连', reconnect_machine_path(machine.id), :remote => true, :method => :put, :confirm => "重连前会断开现有连接，并中止当前指令，确实要重连吗？")
     actions.join "\n"
   end
 end
