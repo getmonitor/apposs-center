@@ -63,7 +63,7 @@ class ApiController < ApplicationController
   
   def machine_on
     begin 
-      m = Machine.find params[:id]
+      m = Machine.where( :host => params[:host] ).first
       result = m.send params[:event].to_sym
       render :text => result
     rescue Exception => e

@@ -39,15 +39,16 @@ describe ApiController do
         :disconnect => :disconnected,
         :pause => :paused
       }.each_pair do |event,state|
-        get :machine_on, :id => m.id, :event => event.to_sym
+        get :machine_on, :host => m.host, :event => event.to_sym
         response.should be_success
+        response.body.should == "true"
         m.reload.state.should == state.to_s
       end
     end
 
     it "访问不存在的机器" do
       m = Machine.first
-      get :machine_on, :id => 1000, :state => :pause
+      get :machine_on, :host => "unknown host", :state => :pause
       response.status.should == 404
     end
   end

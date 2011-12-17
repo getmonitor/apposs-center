@@ -6,7 +6,7 @@ describe App do
   
   describe "关联对象" do
 
-    before(:each) do
+    before :each do
       @app = App.reals.first
     end
 
@@ -34,19 +34,19 @@ describe App do
   
   it '执行状态迁移' do
     app = App.reals.first
-    app.should_not be_nil
-    app.state.should == 'running'
-    app.pause
-    app.state.should == 'hold'
-    app.use
-    app.state.should == 'running'
-    app.stop
-    app.state.should == 'offline'
+    {
+      :pause  => :hold, 
+      :use    => :running, 
+      :stop   => :offline
+    }.each_pair do |event, state|
+      app.send event.to_sym
+      app.state.should == state.to_s
+    end
   end
   
   describe '应用创建' do
 
-    before(:each) do
+    before :each do
       @app = App.create :name => 'a_new_app'
     end
 
