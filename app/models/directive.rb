@@ -59,7 +59,7 @@ class Directive < ActiveRecord::Base
 
   def error_fire
     operation.error if has_operation?
-    machine.error if machine
+    machine.pause if machine
   end
   
   def try_operation_done

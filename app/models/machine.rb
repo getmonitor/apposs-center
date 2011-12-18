@@ -1,7 +1,7 @@
 # coding: utf-8
 class Machine < ActiveRecord::Base
 
-  default_scope where("`machines`.`state` <> 'offline'").order(:name)
+  default_scope where("`machines`.`state` <> 'offlined' and `machines`.`state` <> 'offlined'").order(:name)
   
   belongs_to :room
   belongs_to :env
@@ -21,10 +21,10 @@ class Machine < ActiveRecord::Base
   end
 
   state_machine :state, :initial => :normal do
-    event :error do transition :normal => :pause end
-    event :reset do transition :pause => :normal end
-    event :offline do transition [:normal, :pause] => :offline end
-    event :online do transition :offline => :normal end
+    event :pause do transition all => :paused end
+    event :reset do transition all => :normal end
+    event :disconnect do transition all => :disconnected end
+    event :offline do transition all => :offlined end
   end
 
   def reassign app_id
@@ -36,30 +36,32 @@ class Machine < ActiveRecord::Base
     end
   end
 
-  def resume
-    reset
+  def send_pause
+    inner_directive 'machine|pause'
+  end
+  
+  def send_reset
     inner_directive 'machine|reset'
   end
   
-  def pause
-    directive = inner_directive 'machine|pause'
-    error
-    directive
+  def send_interrupt
+    inner_directive 'machine|interrupt'
   end
-  
-  def interrupt
-    directive = inner_directive 'machine|interrupt'
-    error
-    directive
+
+  def send_reconnect
+    inner_directive 'machine|reconnect'
   end
-  
+
+  def send_clean_all
+    inner_directive 'machine|clean_all'
+  end
+
   def clean_all
     directives.without_state(:done).each{|directive|
       directive.clear || directive.force_stop
     }
-    inner_directive 'machine|clean_all'
-  end
-  
+  end  
+
   def properties
     env.enable_properties
   end
