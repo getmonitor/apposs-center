@@ -2,6 +2,7 @@ class CreateKeywords < ActiveRecord::Migration
   def self.up
     create_table :keywords do |t|
       t.string :value
+      t.string :type
 
       t.timestamps
     end

@@ -1,7 +1,10 @@
+# coding: utf-8
 require 'spec_helper'
 
 describe Keyword do
-  fixtures :keywords
-  it '支持给关键字打标签' do
+  
+  it '支持关键字子类' do
+    keyword = Dangerous.create :value => 'rm'
+    keyword.type.should == 'Dangerous'
   end
 end
