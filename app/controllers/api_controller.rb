@@ -60,4 +60,14 @@ class ApiController < ApplicationController
       end
     end
   end
+  
+  def machine_on
+    begin 
+      m = Machine.where( :host => params[:host] ).first
+      result = m.send params[:event].to_sym
+      render :text => result
+    rescue Exception => e
+      render :status => 404, :text => e.to_s
+    end
+  end
 end

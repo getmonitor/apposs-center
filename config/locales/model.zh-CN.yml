@@ -10,8 +10,9 @@ zh-CN:
         wait: "等待"
         hold: "暂停"
         normal: "正常"
-        pause: "暂停"
-        offline: '下线'
+        paused: "暂停"
+        offlined: '下线'
+        disconnected: '断开'
       events:
         download: "下载"
         invoke: "执行"
@@ -24,6 +25,7 @@ zh-CN:
         clear: "清理"
         force_stop: "强制暂停"
         offline: '下线'
+        disconnect: '断开'
     models:
       user: '用户'
       app: '应用'

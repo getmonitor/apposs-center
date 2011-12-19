@@ -1,7 +1,7 @@
 [config]
-url=www.alimama.com
-status=/home/a/project/cps/deploy/cps/status_ns.html
+ url=www.alimama.com
+  status=/home/status_ns.html
 package=t_site_taobaoke
-package_addr=http://yum.corp.taobao.com/taobao/5/noarch/current//t_site_taobaoke/t_site_taobaoke-1.0.19-170.noarch.rpm
-newpackage=t_site_taobaoke-1.0.19-170.noarch.rpm
+  package_addr=http://yum.corp.taobao.com/taobao/t_site_taobaoke-1.0.19-170.noarch.rpm
+newpackage=t_site.rpm
 

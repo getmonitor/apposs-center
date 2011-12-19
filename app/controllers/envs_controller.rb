@@ -17,7 +17,7 @@ class EnvsController < ResourceController
   def update
     env = App.find( params[:app_id]).envs.find params[:id]
     if env.update_attributes( params[:env] )
-      env.sync_profile do |data|
+      env.export_profile do |data|
         file_folder = "#{Rails.root}/public/store/#{env.app.id}/#{env.id}"
         FileUtils.mkdir_p file_folder unless File.exist? file_folder
         File.open("#{file_folder}/pe.conf","w"){|f| f.write data }

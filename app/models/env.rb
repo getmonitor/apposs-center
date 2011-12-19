@@ -9,7 +9,7 @@ class Env < ActiveRecord::Base
   
   after_create :add_default_property
 
-  before_save :check_for_property
+  before_save :load_property
   
   has_many :properties, :as => :resource do
     def [] name
@@ -35,7 +35,7 @@ class Env < ActiveRecord::Base
     properties[:env_id, self.id] = true
   end
 
-  def check_for_property
+  def load_property
     if self.property_file
       data = property_file.read
       reload_property_data(data)
@@ -52,7 +52,7 @@ class Env < ActiveRecord::Base
     self.properties.not_lock.destroy_all
     data.split( /\r|\n/ ).reject{|m| m.length==0 }.each{|line|
       k,v = line.split('=')
-      self.properties[k]=v if v
+      self.properties[k.strip]=v if v
     }
   end
 
@@ -62,23 +62,12 @@ class Env < ActiveRecord::Base
       update( properties.pairs )
   end
 
-  def sync_profile
+  def export_profile
     prop_hash = enable_properties
     data = Property.build_property prop_hash
     if block_given?
       yield data
     end
-
-# 更新env时不再直接下发同步指令
-#    machines.each{|m|
-#      DirectiveGroup['default'].directive_templates['sync_profile'].gen_directive(
-#          :room_id => m.room.id,
-#          :room_name => m.room.name,
-#          :machine_host => m.host,
-#          :machine => m,
-#          :params => prop_hash
-#      )
-#    }
   end
   
   def to_s
