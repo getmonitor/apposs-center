@@ -59,9 +59,9 @@ class Machine < ActiveRecord::Base
 
   def clean_all
     directives.without_state(:done).each{|directive|
-      if directive.command_name.start_with? 'machine|'
+      if not directive.control?
         directive.clear || directive.force_stop
-      end rescue ''
+      end
     }
   end
 
