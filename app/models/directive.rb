@@ -77,4 +77,7 @@ class Directive < ActiveRecord::Base
     operation_id != Operation::DEFAULT_ID
   end
 
+  def control?
+    (self.command_name||'').start_with? 'machine|'
+  end
 end

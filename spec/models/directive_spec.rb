@@ -14,6 +14,13 @@ describe Directive do
       )
       directive.command_name.should == 'echo value1 value2 $ param1 value1'
     end
+    
+    it '判断是否为控制指令' do
+      directive = Directive.new :command_name => 'machine|for_control'
+      directive.control?.should be_true
+      directive = Directive.new
+      directive.control?.should be_false
+    end
   end
 
   describe '状态迁移' do
