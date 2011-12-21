@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.6'
+gem 'rails', '3.1.3'
 
 gem 'rake'
 
@@ -37,14 +37,14 @@ end
 # group :development, :test do
 #   gem 'webrat'
 # end
-gem "arel", "2.0.9"
+gem "arel"
 
 group :development,:test do
   gem "guard"
   gem "guard-rspec"
-  gem "rspec-rails", '2.5.0'
+  gem "rspec-rails"
 
-  gem "spork", "0.9.0.rc9"
+  gem "spork", '0.9.0.rc9'
   gem "guard-spork"
   gem "rspec"
   gem "rspec-expectations"
@@ -75,7 +75,7 @@ if /java/ === RUBY_PLATFORM
   gem "trinidad"
   gem "jruby-openssl"
 else
-  gem "mysql2", '< 0.3'
+  gem "mysql2"
   gem "thin"
 end
 gem "json"
