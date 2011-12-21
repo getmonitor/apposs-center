@@ -50,6 +50,9 @@ group :development,:test do
   gem "rspec-expectations"
   gem "libnotify"
   gem "rb-inotify"
+  gem "cucumber-rails"
+  gem "database_cleaner"
+  gem "guard-cucumber"
 
   gem "ruby-graphviz"
 end if RUBY_PLATFORM !~ /java/
