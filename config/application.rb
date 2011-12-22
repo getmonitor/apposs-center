@@ -6,11 +6,10 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
 
-require 'patch/inherited_resources_views'
-
 module Apposs
   class Application < Rails::Application
   
+    require File.expand_path('../patch/inherited_resources_views',  __FILE__)
     require 'openssl'
     config.time_zone = 'Beijing'
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
