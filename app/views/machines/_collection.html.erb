@@ -15,7 +15,7 @@
   </li>
   <% machines.each{|machine|%>
   <li>
-    <label title="<%=machine.name %>" style="weight:140px">
+    <label title="<%=machine.name+' ['+machine.host+']' %>" style="weight:140px">
       <input type="checkbox" name="machine_ids[]" value="<%=machine.id %>">
       <%=machine.name[0..10] %>
     </label>
