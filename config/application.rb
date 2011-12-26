@@ -9,6 +9,7 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 module Apposs
   class Application < Rails::Application
   
+    require File.expand_path('../patch/inherited_resources_views',  __FILE__)
     require 'openssl'
     config.time_zone = 'Beijing'
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]

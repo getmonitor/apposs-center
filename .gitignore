@@ -23,4 +23,4 @@ spec/tmp/*
 **.orig
 rerun.txt
 public/store
-config/enviroments/production.rb
+config/environments/production.rb

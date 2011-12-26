@@ -53,14 +53,17 @@ class Machine < ActiveRecord::Base
   end
 
   def send_clean_all
+    clean_all
     inner_directive 'machine|clean_all'
   end
 
   def clean_all
     directives.without_state(:done).each{|directive|
-      directive.clear || directive.force_stop
+      if not directive.control?
+        directive.clear || directive.force_stop
+      end
     }
-  end  
+  end
 
   def properties
     env.enable_properties
