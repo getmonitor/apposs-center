@@ -10,7 +10,7 @@
   <li>
       <span style="float:left"><%=template.name %></span>
       <span style="float:right">
-        <%=link_to "选中执行", execute_app_operation_template_path(parent.id,template.id), :form_to => 'execute_form' %>
+        <%=link_to "选中执行", execute_app_operation_template_path(parent.id,template.id), :form_to => 'execute_form', :confirm => "确定要执行本操作？" %>
         <%=link_to "分组执行", group_form_app_operation_template_path(parent.id,template.id), :remote => true %>
         <% if current_user.is_pe? parent %>
         <%=link_to "修改", edit_app_operation_template_path(parent.id,template.id), :remote => true %>
