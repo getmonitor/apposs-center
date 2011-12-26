@@ -10,10 +10,7 @@
   <li>
       <span style="float:left"><%=template.name %></span>
       <span style="float:right">
-        <a href="javascript:
-          var form = document.forms['execute_form'];
-          form.action='<%=execute_app_operation_template_path(parent.id,template.id) %>';
-          $(form).trigger('submit.rails');void 0;">选中执行</a>
+        <%=link_to "选中执行", execute_app_operation_template_path(parent.id,template.id), :form_to => 'execute_form' %>
         <%=link_to "分组执行", group_form_app_operation_template_path(parent.id,template.id), :remote => true %>
         <% if current_user.is_pe? parent %>
         <%=link_to "修改", edit_app_operation_template_path(parent.id,template.id), :remote => true %>

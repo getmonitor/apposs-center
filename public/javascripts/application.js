@@ -127,6 +127,17 @@ $(function() {
     }
     return application.stopEverything(e);
   });
+
+  $('a[form_to]').live('click',function(e){
+    var node = $(e.currentTarget);
+    var form = document.forms[node.attr('form_to')];
+    if(form){
+      form.action = node.attr('href');
+      $(form).trigger('submit.rails');
+    }
+    return application.stopEverything(e);
+  });
+
   $('select[box-remote]').live('change',function(e){
     if(this.selectedIndex == -1){
       return application.stopEverything(e);
