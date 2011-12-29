@@ -26,7 +26,7 @@ class Directive < ActiveRecord::Base
   # 反馈执行结果
   def callback( isok, body)
     self.isok = isok
-    self.response = body
+    self.response = body.valid_encoding? ? body : encode_try(body)
     isok ? ok : error
   end
 
@@ -79,5 +79,13 @@ class Directive < ActiveRecord::Base
 
   def control?
     (self.command_name||'').start_with? 'machine|'
+  end
+  
+  def encode_try text
+    ['GBK'].each do |from_enc|
+      result = text.encode 'utf-8', from_enc
+      return result if result.valid_encoding?
+    end
+    'Agent错误[编码不支持]'
   end
 end
