@@ -72,7 +72,7 @@ class OperationTemplate < ActiveRecord::Base
   end
   
   def available_machines user
-    user.ownerd_machines(app)
+    user.owned_machines(app)
   end
 
   def directive_templates
