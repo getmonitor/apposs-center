@@ -8,10 +8,14 @@
   <%=link_to '重新获取', reload_machines_app_path(app.id), :remote => true %>
 </h2>
 <ul class="list" style="height:200px; overflow-y:auto">
-  <li><label>
+  <input type="hidden" name="data" />
+  <li>
     <a href="javascript:void 0;" select="all">全选</a>
     <a href="javascript:void 0;" select="none">清除</a>
-  </label>
+    |
+    <strong>
+      <%=link_to "设定ssh用户", change_user_app_machines_path(app), :form_to => 'execute_form', :prompt => "请指定用于连接服务器的ssh用户" %>
+    </strong>
   </li>
   <% machines.each{|machine|%>
   <li>

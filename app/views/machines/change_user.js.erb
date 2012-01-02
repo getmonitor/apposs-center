@@ -1,0 +1,7 @@
+<% if @failed_machines.count > 0 %>
+  alert("更新不成功，下列机器尚未变更——
+  <%=escape_javascript( @failed_machines.select(&:name).join("\n") ) %>
+  ");
+<% else %>
+  alert("更新成功");
+<% end %>

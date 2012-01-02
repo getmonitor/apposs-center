@@ -131,7 +131,12 @@ $(function() {
   $('a[form_to]').live('click',function(e){
     var node = $(e.currentTarget);
     var form = document.forms[node.attr('form_to')];
+    
     if(form){
+      if(node.attr('prompt')){
+        var value = window.prompt(node.attr('prompt'));
+        form.data.value = value;
+      }
       form.action = node.attr('href');
       $(form).trigger('submit.rails');
     }

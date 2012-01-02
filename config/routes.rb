@@ -9,18 +9,6 @@ Apposs::Application.routes.draw do
   
   get "search/autocomplete_user_email"
   
-  namespace :admin, :module => "admin" do
-    root :to => 'home#index'
-    resources :directive_groups
-    resources :apps do
-      put :update_app_user_role, :on => :member
-    end
-    resources :users
-    resources :roles
-    resources :machines
-    resources :rooms
-  end
-  
   namespace :backend, :module => 'backend' do
     resources :apps do
       resources :acls
@@ -49,7 +37,12 @@ Apposs::Application.routes.draw do
       end
     end
     resources :softwares
-    resources :machines
+
+    resources :machines do
+      collection do
+        post :change_user
+      end
+    end
     
     member do
       get :rooms
