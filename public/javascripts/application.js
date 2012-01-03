@@ -1,5 +1,5 @@
 //顶部显示瞬时消息
-function alert(msg,millisecond) {
+function msg(msg,millisecond) {
   if(!document.getElementById('msg-div')){
     $(document.body).append('<div id="msg-div" style="display:none"></div>');
   }

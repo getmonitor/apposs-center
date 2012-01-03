@@ -1,3 +1,3 @@
-alert('生成<%=@directive.command_name %>指令');
+msg('生成<%=@directive.command_name %>指令');
 $("#machines").html('<%= escape_javascript(render "/machines/collection", :app => @machine.app) %>');
 

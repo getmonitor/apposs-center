@@ -4,5 +4,5 @@ $('#main_list fieldset').
     '<%= escape_javascript(render 'load_other', :collection => @directive_templates) %>'
   ).slideDown(500);
 <% else %>
-  alert("用户不存在！");
+  msg("用户不存在！");
 <% end %>
