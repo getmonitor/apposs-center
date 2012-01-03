@@ -14,7 +14,7 @@
     <a href="javascript:void 0;" select="none">清除</a>
     |
     <strong>
-      <%=link_to "设定ssh用户", change_user_app_machines_path(app), :form_to => 'execute_form', :prompt => "请指定用于连接服务器的ssh用户" %>
+      <%=link_to "设定连接用户", change_user_app_machines_path(app), :form_to => 'execute_form', :prompt => "请指定用于连接服务器的ssh用户" %>
     </strong>
   </li>
   <% machines.each{|machine|%>

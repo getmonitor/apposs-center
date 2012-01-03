@@ -1,10 +1,11 @@
 class MachinesController < ResourceController
 
   def change_user
-    machine_ids = check_machine_ids(params[:machine_ids])
+    @machine_ids = check_machine_ids(params[:machine_ids])
+    
     @failed_machines = current_user.
                                     owned_machines(App.find(params[:app_id])).
-                                    where(:id => machine_ids).inject([]) do |arr, machine|
+                                    where(:id => @machine_ids).inject([]) do |arr, machine|
       if machine.update_attribute :user, params[:data]
         arr
       else

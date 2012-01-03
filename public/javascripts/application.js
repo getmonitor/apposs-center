@@ -134,7 +134,19 @@ $(function() {
     
     if(form){
       if(node.attr('prompt')){
-        var value = window.prompt(node.attr('prompt'));
+        var value = '';
+        while(value==''){
+          value = '';
+          value = window.prompt(node.attr('prompt'));
+          if( value == undefined ){
+            return application.stopEverything(e);
+          }
+          if( value == '' ){
+            alert('输入内容不能为空');
+          }else{
+            break;
+          }
+        }
         form.data.value = value;
       }
       form.action = node.attr('href');
