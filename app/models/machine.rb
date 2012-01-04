@@ -28,11 +28,13 @@ class Machine < ActiveRecord::Base
   end
 
   def reassign app_id
+    app = App.find app_id
     transaction do
       self.directives.each do |dd|
         dd.update_attribute :operation_id, Operation::DEFAULT_ID
       end
       self.update_attribute(:app_id, app_id)
+      self.update_attribute(:env_id, app.envs[self.env.name.to_sym].id)
     end
   end
 
