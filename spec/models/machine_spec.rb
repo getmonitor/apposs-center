@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Machine do
   fixtures :machines,:rooms, :properties, 
            :directive_groups, :directive_templates, :operation_templates,
-           :users, :roles, :apps, :stakeholders
+           :users, :roles, :apps, :stakeholders, :envs
 
   describe '状态变迁支持' do
     before :each do
@@ -49,6 +49,7 @@ describe Machine do
 
       @m.reassign 2
       @m.app.should == App.find(2)
+      @m.app.envs.should include(@m.env)
       
       @m.directives.each do |dd|
         dd.operation_id.should == Operation::DEFAULT_ID
