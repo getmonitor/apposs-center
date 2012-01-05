@@ -7,7 +7,7 @@
   <% } %>
     <li class="info">
       <span><%= flash[:notice] %></span>
-      <span><%= current_user.email %>，欢迎使用淘宝运维系统！
+      欢迎<span><%= current_user.email %>
       <%= link_to "管理我的指令", directive_templates_path, :remote => true %>
       <%= link_to "退出", destroy_user_session_path %></span>
     </li>
