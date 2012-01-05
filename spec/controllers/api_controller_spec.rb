@@ -7,7 +7,7 @@ describe ApiController do
   
   describe "获取所有指令" do
     fixtures :directive_groups, :directive_templates,
-             :users, :apps, :roles,
+             :users, :apps, :roles, :stakeholders,
              :operation_templates,:rooms,:machines
   
     it "没有新的指令" do
