@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'http://ruby.taobao.org'
 
 gem 'rails', '3.1.3'
 
@@ -67,6 +67,7 @@ gem "inherited_resources"
 
 gem "jquery-rails"
 gem 'rails3-jquery-autocomplete'
+gem 'acts-as-taggable-on'
 
 gem "devise"
 if /java/ === RUBY_PLATFORM

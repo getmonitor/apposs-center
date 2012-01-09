@@ -1,5 +1,5 @@
 //顶部显示瞬时消息
-function alert(msg,millisecond) {
+function msg(msg,millisecond) {
   if(!document.getElementById('msg-div')){
     $(document.body).append('<div id="msg-div" style="display:none"></div>');
   }
@@ -131,7 +131,24 @@ $(function() {
   $('a[form_to]').live('click',function(e){
     var node = $(e.currentTarget);
     var form = document.forms[node.attr('form_to')];
+    
     if(form){
+      if(node.attr('prompt')){
+        var value = '';
+        while(value==''){
+          value = '';
+          value = window.prompt(node.attr('prompt'));
+          if( value == undefined ){
+            return application.stopEverything(e);
+          }
+          if( value == '' ){
+            alert('输入内容不能为空');
+          }else{
+            break;
+          }
+        }
+        form.data.value = value;
+      }
       form.action = node.attr('href');
       $(form).trigger('submit.rails');
     }

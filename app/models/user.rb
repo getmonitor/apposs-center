@@ -68,12 +68,13 @@ class User < ActiveRecord::Base
     ).first.nil?
   end
   
-  def ownerd_machines app
+  def owned_machines app
     if self.is_pe?(app)
       app.machines
     elsif self.is_appops?(app)
       app.envs[:pre,true].machines
     end
   end
+  
 end
 

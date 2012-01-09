@@ -38,9 +38,9 @@ describe User do
       app = App.find 1
 
       app.machines.first.update_attribute :env, app.envs[:pre,true]
-      @u.ownerd_machines(app).should == app.machines
+      @u.owned_machines(app).should == app.machines
       @u.ungrant(Role::PE, app)
-      @u.ownerd_machines(app).count.should == app.envs[:pre].machines.count
+      @u.owned_machines(app).count.should == app.envs[:pre].machines.count
     end
     
     it "导入指定的原子指令" do

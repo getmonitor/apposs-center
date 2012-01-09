@@ -1,5 +1,20 @@
 class MachinesController < ResourceController
 
+  def change_user
+    @machine_ids = check_machine_ids(params[:machine_ids])
+    
+    @failed_machines = current_user.
+                                    owned_machines(App.find(params[:app_id])).
+                                    where(:id => @machine_ids).inject([]) do |arr, machine|
+      if machine.update_attribute :user, params[:data]
+        arr
+      else
+        arr << machine
+      end
+    end
+  end
+  
+  #TODO 没有检查machine是否属于当前用户
   def change_env
     @machine = Machine.find(params[:id])
     env_obj = @machine.app.envs.find params['single_form']['env_id']
@@ -37,5 +52,9 @@ class MachinesController < ResourceController
   
   def old_directives
     @directives = Machine.find(params[:id]).directives.where(:state => :done)
+  end
+
+  def check_machine_ids machine_ids
+    (machine_ids||[]).collect { |s| s.to_i }.uniq
   end
 end
