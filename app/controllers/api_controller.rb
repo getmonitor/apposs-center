@@ -22,7 +22,7 @@ class ApiController < ApplicationController
   #{host,Host},{oid,DirectiveId}
   def run
     Directive.find(params[:oid]).invoke
-    render :text => ''
+  	render :text => params[:oid]
   end
   
   # {isok,atom_to_list(IsOk)},{host,Host},{oid,DirectiveId},{body,Body}
@@ -31,7 +31,7 @@ class ApiController < ApplicationController
     directive.callback(
         "true"==params[:isok], params[:body]
     ) if directive
-  	render :text => ''
+  	render :text => params[:oid]
   end
   
   def load_hosts
@@ -65,7 +65,7 @@ class ApiController < ApplicationController
     begin 
       m = Machine.where( :host => params[:host] ).first
       result = m.send params[:event].to_sym
-      render :text => result
+      render :text => "#{params[:host]}|#{result}"
     rescue Exception => e
       render :status => 404, :text => e.to_s
     end

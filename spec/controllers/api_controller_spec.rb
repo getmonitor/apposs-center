@@ -41,7 +41,7 @@ describe ApiController do
       }.each_pair do |event,state|
         get :machine_on, :host => m.host, :event => event.to_sym
         response.should be_success
-        response.body.should == "true"
+        response.body.should == "#{m.host}|true"
         m.reload.state.should == state.to_s
       end
     end
@@ -50,6 +50,46 @@ describe ApiController do
       m = Machine.first
       get :machine_on, :host => "unknown host", :state => :pause
       response.status.should == 404
+    end
+  end
+  
+  describe "指令处理结果反馈" do
+    before :each do
+      app = App.first
+      ot = app.operation_templates.where(:name => 'upgrade package').first
+      oper = ot.gen_operation( User.first, app.machines.collect{|m| m.id} )
+      oper.directives.each do |directive|
+        directive.download
+      end
+      @first_directive,@second_directive = oper.directives[0..1]
+      get :run, :oid => @first_directive.id
+      @first_directive.reload
+      @first_directive.running?.should be_true
+    end
+
+    it '指令执行成功' do
+      get :callback, :oid => @first_directive.id, :isok => :true, :body => 'well done'
+      @first_directive.reload
+      @first_directive.done?.should be_true
+      @first_directive.response.should == 'well done'
+    end
+
+    it '指令执行失败' do
+      get :callback, :oid => @first_directive.id, :isok => :false, :body => 'fail'
+      @first_directive.reload
+      @first_directive.failure?.should be_true
+      @first_directive.response.should == 'fail'
+    end
+
+    it '反馈信息支持GBK编码' do
+      get :callback, {
+        :oid => @first_directive.id, 
+        :isok => :true,
+        :body => "\xC4\xE3\xBA\xC3"
+      }
+      @first_directive.reload
+      @first_directive.done?.should be_true
+      @first_directive.response.should == '你好'
     end
   end
 end
