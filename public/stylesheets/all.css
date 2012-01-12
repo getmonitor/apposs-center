@@ -131,9 +131,9 @@ ul.errors li{
 /** 定义提示信息格式 */
 #msg-div {
     position: fixed;
-    left: 35%;
+    left: 25%;
     top: 0;
-    width: 300px;
+    width: 800px;
     z-index: 20000;
 }
 
