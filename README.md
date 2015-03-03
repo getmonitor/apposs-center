@@ -26,7 +26,7 @@ AppOSS作为一个运维自动化平台，主要包括两个部分：Center 和 
 安装步骤
 获取项目代码，进入项目目录
 
-git clone git@github.com:alibaba/apposs-center.git   
+git clone git@github.com:getmonitor/apposs-center.git   
 cd apposs-center
 安装相关gem
 
@@ -35,14 +35,14 @@ bundle install
 
 rake install:data
 
-# rake任务内容：
-#   1.根据样例，修改数据库配置  
-#       config/database.yml.example -> config/database.yml
-#   2.根据用户输入，设定 google oauth 的 client id 和 client secret
-#   （应用地址缺省是 http://localhost:3000, callback 地址缺省是 http://localhost:3000/auth/google_oauth2/callback）   
-#       config/initializers/omniauth.rb.example -> config/initializers/omniauth.rb
-#   3.准备初始化数据
-#       db/fixtures/*.rb.example -> db/fixtures/*.rb
+rake任务内容：
+  1.根据样例，修改数据库配置  
+    config/database.yml.example -> config/database.yml
+  2.根据用户输入，设定 google oauth 的 client id 和 client secret
+  （应用地址缺省是 http://localhost:3000, callback 地址缺省是 http://localhost:3000/auth/google_oauth2/callback）   
+    config/initializers/omniauth.rb.example -> config/initializers/omniauth.rb
+  3.准备初始化数据
+    db/fixtures/*.rb.example -> db/fixtures/*.rb
 其它准备
 
 mkdir log  
