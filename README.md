@@ -29,6 +29,9 @@ AppOSS作为一个运维自动化平台，主要包括两个部分：Center 和 
 git clone https://github.com/getmonitor/apposs-center.git   
 cd apposs-center
 安装相关gem
+centos
+yum install mysql-devel
+yum install graphviz
 
 bundle install  
 执行安装任务
