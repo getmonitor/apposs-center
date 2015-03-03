@@ -26,7 +26,7 @@ AppOSS作为一个运维自动化平台，主要包括两个部分：Center 和 
 安装步骤
 获取项目代码，进入项目目录
 
-git clone git@github.com:getmonitor/apposs-center.git   
+git clone https://github.com/getmonitor/apposs-center.git   
 cd apposs-center
 安装相关gem
 
