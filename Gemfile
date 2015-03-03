@@ -20,7 +20,8 @@ gem 'rake'
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
 if /1.9/ === RUBY_VERSION
-  gem "ruby-debug19", :require => 'ruby-debug'
+  #gem "ruby-debug19", :require => 'ruby-debug'
+  gem "debugger"
 else
   gem "ruby-debug"
 end
@@ -61,7 +62,7 @@ end if RUBY_PLATFORM !~ /java/
 # gem "capybara", :group => ["development", "test"]
 # gem "factory_girl_rails", :group => ["development", "test"]
 
-gem "rcov"
+gem "rcov","0.9.11"
 gem "inherited_resources_views"
 gem "inherited_resources"
 
